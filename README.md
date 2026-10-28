@@ -6,6 +6,8 @@ Proyecto de investigación del curso **Deep Learning (1INF52), semestre 2026-2**
 
 El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando se reemplazan los puntos proporcionados por una persona por puntos generados automáticamente a partir de características de DINOv3. El caso de estudio son imágenes satelitales Sentinel-2 de eventos de inundación del dataset Sen1Floods11.
 
+La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
+
 > **Estado actual:** el repositorio contiene la documentación del diseño de investigación, la propuesta inicial y los materiales para WAIMLAP. Los documentos aún no reportan experimentos ni resultados. Todavía no se incluyen código, notebooks, datos, pesos ni una demo ejecutable.
 
 ## Pregunta de investigación y alcance
@@ -27,7 +29,49 @@ Objetivos específicos:
 3. Generar puntos positivos y negativos automáticamente a partir de características de DINOv3 y un clasificador de agua.
 4. Intervenir el núcleo de SAM 2.1 ajustando únicamente su *mask decoder*, con ablaciones sobre la fuente y cantidad de prompts y el ajuste del decoder.
 5. Evaluar la generalización en Bolivia y en una prueba que excluya Paraguay del entrenamiento y la calibración, y documentar los fallos.
-6. Entregar una demo reproducible, un cuaderno de decisiones y los materiales académicos del proyecto.
+6. Entregar una demo reproducible con Gradio en Hugging Face Spaces, un cuaderno de decisiones y los materiales académicos del proyecto.
+
+## Fases de ejecución
+
+### Fase 1. Experimentación y entrenamiento en Google Colab
+
+**Objetivo:** desarrollar y evaluar el método de segmentación automática en notebooks ejecutados en Google Colab, y producir los componentes y resultados reproducibles que sustentarán la demo y el informe.
+
+**Actividades:**
+
+1. Preparar el entorno de Colab, documentar dependencias, hardware y semillas, gestionar el acceso a datos y modelos y preparar las particiones y el preprocesamiento de Sentinel-2.
+2. Reproducir la línea base de SAM 2.1 con prompts simulados desde etiquetas y realizar la disección de SAM 2.1 y DINOv3, incluyendo parámetros, FLOPs, características intermedias, campo receptivo, latencia y memoria.
+3. Extraer características con DINOv3 congelado, entrenar el clasificador de agua y generar puntos positivos y negativos automáticamente.
+4. Ajustar únicamente el mask decoder de SAM 2.1, manteniendo congelados sus encoders de imagen y de prompts, y ejecutar las ablaciones sobre fuente y cantidad de prompts y ajuste del decoder.
+5. Seleccionar configuraciones con validación, realizar la evaluación final y las pruebas geográficas reservadas, y analizar resultados y fallos según el protocolo documentado.
+6. Guardar fuera del almacenamiento temporal de la sesión las configuraciones, versiones de modelos, particiones, parámetros de preprocesamiento, métricas, predicciones y checkpoints. Documentar cómo reanudar el trabajo y reconstruir la inferencia sin depender del estado de una sesión de Colab.
+
+**Entregables:** notebooks reproducibles; entorno y configuraciones documentados; cuaderno de decisiones e hipótesis; resultados de la disección, las ablaciones y la evaluación; análisis de fallos; clasificador de agua entrenado y checkpoint del decoder ajustado. Los artefactos deberán identificar los modelos base utilizados y conservar los umbrales y parámetros necesarios para reproducir el flujo seleccionado.
+
+#### Cobertura de los requisitos académicos A, B y C
+
+Las fases A, B y C exigidas por el curso se cubrirán **dentro de la fase 1 de ejecución**. Son requisitos metodológicos y no añaden fases principales a la organización del proyecto.
+
+| Requisito académico | Trabajo previsto en Google Colab |
+| --- | --- |
+| **A. Disección instrumentada** | Reproducir la línea base asistida y analizar parámetros y FLOPs por bloque, características intermedias, campo receptivo, latencia y memoria. |
+| **B. Intervención en el núcleo** | Automatizar los prompts y ajustar solo el mask decoder, contrastando cada cambio con una hipótesis previa y su ablación controlada. |
+| **C. Estrés y análisis de fallos** | Evaluar la transferencia geográfica y estudiar errores en agua turbia, vegetación inundada, sombras de nubes y relieve. Registrar también lo que no funcione. |
+
+### Fase 2. Construcción y despliegue de la demo funcional
+
+**Objetivo:** convertir el flujo de inferencia seleccionado en la fase 1 en una aplicación con Gradio desplegada en Hugging Face Spaces, que permita probar la segmentación automática de agua sin proporcionar prompts humanos.
+
+**Actividades:**
+
+1. Integrar el preprocesamiento, la extracción de características, el clasificador de agua, la generación de puntos y la segmentación en un flujo reutilizable de inferencia.
+2. Cargar las versiones de SAM 2.1 y DINOv3 documentadas, los pesos del clasificador y el checkpoint del decoder correspondiente a la configuración seleccionada, junto con sus umbrales y parámetros. El despliegue realizará inferencia con esos artefactos; el entrenamiento permanecerá en Colab.
+3. Construir la interfaz con Gradio para cargar un chip Sentinel-2 compatible con el preprocesamiento definido y visualizar la imagen, la máscara de agua y los puntos automáticos. Incorporar comparaciones entre estrategias cuando sus componentes estén disponibles.
+4. Validar la carga de entradas y modelos, la coherencia de las predicciones con la inferencia de Colab y el consumo de recursos; preparar dependencias y acceso a pesos y desplegar la aplicación en Hugging Face Spaces con instrucciones de uso y limitaciones.
+
+**Entregables:** aplicación de Gradio y código de inferencia; dependencias y configuración de despliegue; acceso documentado a los pesos necesarios; demo funcional en Hugging Face Spaces; ejemplos de entrada e instrucciones de uso; comprobaciones de funcionamiento y correspondencia con el flujo evaluado.
+
+**Conexión entre ambas fases:** la fase 1 entregará una configuración seleccionada con validación, sus componentes entrenados y el preprocesamiento y posprocesamiento documentados. La fase 2 reutilizará esos artefactos para servir predicciones sin etiquetas de referencia. Los resultados experimentales y el análisis de fallos de la fase 1 sustentarán el informe y el póster, mientras que la fase 2 aportará la demostración funcional del método.
 
 ## Metodología propuesta
 
@@ -60,14 +104,6 @@ Los máximos del mapa de probabilidad producirán puntos positivos y las zonas d
 La línea base utilizará puntos simulados desde las máscaras reales. Como requiere etiquetas para construir los prompts, servirá como **referencia asistida**, sin representar un sistema desplegable. La alternativa de malla automática generará máscaras sin clase, que se identificarán como agua mediante su probabilidad media estimada por DINOv3 y el clasificador.
 
 La propuesta inicial contemplaba una comparación adicional con SAM 3 mediante texto. El protocolo descrito en el resumen y el póster se concentra en SAM 2.1 y prompts espaciales; SAM 2.1 no recibe prompts de texto.
-
-### Fases del proyecto
-
-| Fase | Trabajo previsto |
-| --- | --- |
-| **A. Disección instrumentada** | Reproducir la línea base asistida y analizar parámetros y FLOPs por bloque, características intermedias, campo receptivo, latencia y memoria. |
-| **B. Intervención en el núcleo** | Automatizar los prompts y ajustar solo el mask decoder, contrastando cada cambio con una hipótesis previa. |
-| **C. Estrés y análisis de fallos** | Evaluar la transferencia geográfica y estudiar errores en agua turbia, vegetación inundada, sombras de nubes y relieve. Registrar también lo que no funcione. |
 
 ## Datos y protocolo de evaluación
 
@@ -141,9 +177,9 @@ El curso exige una línea base reproducida, una intervención de núcleo con abl
 
 Estas fechas describen el cronograma académico y no acreditan que los entregables se hayan completado. Las bases del curso repiten la identificación E3 para el trabajo y el informe, y mencionan revisión con retroalimentación del workshop aunque consignan una fecha anterior al evento; ese punto requiere confirmación con el docente.
 
-La demo prevista permitirá cargar un chip Sentinel-2 y visualizar la máscara y los puntos utilizados, con comparaciones entre estrategias. La propuesta contempla Gradio/Hugging Face Spaces y, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
+La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
 
-**Pendiente de implementación:** incorporar el entorno y sus dependencias, instrucciones de acceso a datos y pesos, scripts o notebooks reproducibles, semillas y configuraciones, cuaderno de decisiones, resultados y demo. Al tratarse por ahora de un repositorio documental, todavía no hay instrucciones de instalación o ejecución.
+**Pendiente de implementación:** ejecutar ambas fases e incorporar sus artefactos al proyecto: entorno y dependencias, instrucciones de acceso a datos y pesos, scripts y notebooks reproducibles, semillas y configuraciones, cuaderno de decisiones, resultados y demo. Al tratarse por ahora de un repositorio documental, todavía no hay instrucciones de instalación o ejecución.
 
 ## Limitaciones y decisiones por verificar
 
@@ -152,6 +188,7 @@ La demo prevista permitirá cargar un chip Sentinel-2 y visualizar la máscara y
 - Existe una diferencia de resolución entre el preentrenamiento satelital de DINOv3 y Sentinel-2, además del cambio de imágenes naturales a satelitales para SAM.
 - Nubes, sombras, agua turbia y vegetación inundada requieren un análisis específico de errores.
 - Bolivia aporta solo 15 chips; el plan contempla una semilla y no promete significancia estadística ni mejoras de calidad.
+- La ejecución en Colab deberá contemplar interrupciones de sesión y disponibilidad de recursos, con almacenamiento persistente y checkpoints que permitan reanudar el trabajo. El hardware de Hugging Face Spaces se definirá según las necesidades de memoria y latencia medidas para la demo.
 - Se deben verificar las licencias de datos y modelos, los términos de acceso a los pesos y los recursos de cómputo antes de ejecutar los experimentos.
 
 ## Equipo y contexto académico
