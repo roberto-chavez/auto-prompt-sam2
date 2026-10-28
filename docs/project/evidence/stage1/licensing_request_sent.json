@@ -1,0 +1,23 @@
+{
+  "recorded_date": "2026-10-28",
+  "evidence_type": "user_supplied_outgoing_email",
+  "subject": "Sen1Floods11 v1.1: permission for academic research using S2Hand and LabelHand",
+  "recipient": "support@floodbase.com",
+  "sent_date_header": "Wed, 28 Oct 2026 18:05:23 -0500",
+  "original_eml_sha256": "26634f5332c56703bf17abb91659e9ffb0096d2c3ad26ee36c16e5c6ad03a69c",
+  "private_original_location": "artifacts/private/licensing_request_sent_2026-10-28.eml",
+  "raw_email_versioned": false,
+  "requested_scope": [
+    "Sen1Floods11 v1.1 S2Hand and LabelHand, 446 manually annotated chips",
+    "academic download, training and evaluation",
+    "publication of code, metrics and selected figures",
+    "publication of trained classifier and fine-tuned decoder weights",
+    "attribution and restrictions"
+  ],
+  "publisher_response_received": false,
+  "license_status": "pending_primary_source_confirmation",
+  "delivery_independently_verified": false,
+  "stage1_tracking_status": "concluded_by_explicit_user_instruction_with_license_reservation",
+  "reopen_condition": "review and reopen stage1 when a publisher response is received",
+  "note": "Outgoing request is evidence of consultation, not publisher authorization or proof of receipt."
+}

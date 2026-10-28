@@ -1,0 +1,34 @@
+{
+  "scope": "local_windows_bootstrap_fix_not_colab",
+  "pip_documentation": "https://pip.pypa.io/en/stable/topics/python-option/",
+  "checks": [
+    {
+      "name": "provision_fresh_pipless_venv",
+      "before_pip_returncode": 1,
+      "after_pip_check_returncode": 0,
+      "installed": {
+        "pip": "25.2",
+        "setuptools": "80.9.0",
+        "wheel": "0.45.1"
+      },
+      "offline_from_verified_pypi_wheels": true
+    },
+    {
+      "name": "stage1_unit_tests",
+      "returncode": 0,
+      "log": "test_canonical_hash (test_stage1.PersistenceTests.test_canonical_hash) ... ok\ntest_colab_temporary_root_blocked (test_stage1.PersistenceTests.test_colab_temporary_root_blocked) ... ok\ntest_each_identity_change_is_rejected (test_stage1.PersistenceTests.test_each_identity_change_is_rejected) ... ok\ntest_export_reports_absent_access_instead_of_claiming_authorization (test_stage1.PersistenceTests.test_export_reports_absent_access_instead_of_claiming_authorization) ... ok\ntest_export_uses_saved_identity_and_only_verified_json (test_stage1.PersistenceTests.test_export_uses_saved_identity_and_only_verified_json) ... ok\ntest_head_never_logs_token_or_follows_redirect (test_stage1.PersistenceTests.test_head_never_logs_token_or_follows_redirect) ... ok\ntest_incomplete_and_corrupt_generation_preserve_previous (test_stage1.PersistenceTests.test_incomplete_and_corrupt_generation_preserve_previous) ... ok\ntest_no_path_escape (test_stage1.PersistenceTests.test_no_path_escape) ... ok\ntest_payload_without_marker_is_rejected (test_stage1.PersistenceTests.test_payload_without_marker_is_rejected) ... ok\ntest_recover_in_new_interpreter (test_stage1.PersistenceTests.test_recover_in_new_interpreter) ... ok\ntest_state_and_compatible_resume (test_stage1.PersistenceTests.test_state_and_compatible_resume) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.786s\n\nOK\n"
+    },
+    {
+      "name": "updated_notebook_syntax",
+      "cells": 12,
+      "result": "passed",
+      "colab_execution": "not_run"
+    }
+  ],
+  "tested_files_sha256": {
+    "scripts/bootstrap_colab.py": "65c47dd4ba7d901ba7316274f088c2c79a169f2206d4ff15304b56c6e9a1bf4b",
+    "scripts/export_stage1_evidence.py": "5aade06f69acfae0b2a60329d108ceecf31575aabb78694926804563ef9386bd",
+    "tests/test_stage1.py": "5be54eeb3434946e3de34af933b17ee23d881d017cda9c1740db6462cd0eb612",
+    "notebooks/01_entorno_colab.ipynb": "1f60afc16e6f59e49f2906f5709b491eebfe24db172124091bb3680c6f2ee6c0"
+  }
+}

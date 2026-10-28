@@ -8,7 +8,7 @@ El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando
 
 La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
 
-> **Estado actual (2026-10-28):** la etapa 1 de la fase 1 dispone de notebook de entorno, dependencias fijadas, utilidades y pruebas locales. Su cierre está bloqueado por la validación real en Colab y los permisos/licencias pendientes. No hay datos, pesos, experimentos ni demo. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md).
+> **Estado actual (2026-10-28):** la etapa 1 de la fase 1 dispone de entorno y pruebas locales, además de una ejecución Colab de `recover` aportada por el equipo con retorno 0. Los informes del run confirman recuperación, CUDA y recursos en Tesla T4; los accesos a SAM y DINOv3 también están verificados. La etapa 1 queda cerrada por instrucción del usuario, con salvedad de licencia de Sen1Floods11: consulta enviada, respuesta pendiente. Se revisará y reabrirá al recibir respuesta. No hay datos, pesos, experimentos ni demo. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md).
 
 ## Pregunta de investigación y alcance
 
@@ -179,7 +179,7 @@ Estas fechas describen el cronograma académico y no acreditan que los entregabl
 
 La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
 
-**Etapa 1 implementada; cierre pendiente:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). Las etapas 2–9 y la fase 2 siguen sin implementar.
+**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). Las etapas 2–9 y la fase 2 siguen sin implementar.
 
 Para llevar los archivos actuales a Colab sin depender de cambios aún no publicados: ejecute `python scripts/export_colab_bundle.py`, suba el ZIP generado a Drive y abra el notebook. Configure el SHA-256 del ZIP y la raíz persistente; siga sus pasos `prepare` y `recover` en runtimes distintos. Esto no descarga datos ni pesos. Los bloqueos de licencia/acceso deben resolverse antes de pasar a etapas dependientes.
 

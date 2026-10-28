@@ -14,6 +14,8 @@ sys.path.insert(0, str(REPO / "src"))
 from auto_prompt_sam2.artifacts import ArtifactStore, Run, digest
 from auto_prompt_sam2.access import head_access
 from auto_prompt_sam2.runtime import load_config, persistent_root
+sys.path.insert(0, str(REPO / "scripts"))
+from export_stage1_evidence import export_evidence
 
 
 class PersistenceTests(unittest.TestCase):
@@ -96,6 +98,27 @@ class PersistenceTests(unittest.TestCase):
             result = head_access("facebook/example", "revision", "weights.pt", secret)
         self.assertTrue(result["authorized"])
         self.assertNotIn(secret, json.dumps(result) + output.getvalue())
+
+    def test_export_uses_saved_identity_and_only_verified_json(self):
+        import zipfile
+        run = Run.create(self.root, self.identity)
+        run.store.publish("environment", json.dumps({"identity": self.identity}).encode(), self.identity)
+        run.store.publish("recovery_validation", b'{"persistence_smoke":"passed"}', self.identity)
+        run.store.publish("source_snapshot", b"not exported", self.identity)
+        ArtifactStore(self.root / "environment").publish("access", b'{"models":{}}', self.identity)
+        output = self.root / "evidence.zip"
+        manifest = export_evidence(self.root, run.run_id, output)
+        self.assertEqual(manifest["missing_artifacts"], [])
+        with zipfile.ZipFile(output) as archive:
+            self.assertEqual(set(archive.namelist()), {"environment.json", "recovery_validation.json",
+                "state.json", "access.json", "artifact_markers.json", "export_manifest.json"})
+
+    def test_export_reports_absent_access_instead_of_claiming_authorization(self):
+        run = Run.create(self.root, self.identity)
+        run.store.publish("environment", json.dumps({"identity": self.identity}).encode(), self.identity)
+        manifest = export_evidence(self.root, run.run_id, self.root / "evidence.zip")
+        self.assertEqual(set(manifest["missing_artifacts"]), {"access", "recovery_validation"})
+        self.assertFalse(manifest["stage1_closed"])
 
 
 if __name__ == "__main__":

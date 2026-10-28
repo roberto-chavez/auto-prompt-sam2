@@ -1,0 +1,14 @@
+{
+  "review_date": "2026-10-28",
+  "archive_filename": "access.zip",
+  "archive_sha256": "18e198ea6c6b1019342a43e60a28929b96fa8480db216e484c8fa942bc4c2e20",
+  "verified_access_reports": 2,
+  "run_identity_matches": true,
+  "sam2_authorized": true,
+  "dinov3_authorized": true,
+  "data_or_weight_bodies_downloaded": false,
+  "remaining_blockers": [
+    "Sen1Floods11: license grant for S2Hand and LabelHand unresolved; obtain publisher clarification before acquisition"
+  ],
+  "stage1_closed": false
+}

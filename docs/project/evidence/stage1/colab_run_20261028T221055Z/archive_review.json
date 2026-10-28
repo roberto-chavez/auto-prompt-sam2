@@ -1,0 +1,91 @@
+{
+  "review_date": "2026-10-28",
+  "origin": "user_supplied_run_directory_zip",
+  "archive_filename": "20261028T221055Z_1d0f6a92f4_aa07b10e.zip",
+  "archive_sha256": "6fa9f564c82b9c8fe317687b41f893182a4af6761644bf76e726f23ef2df50d7",
+  "run_id": "20261028T221055Z_1d0f6a92f4_aa07b10e",
+  "verified_generations": [
+    {
+      "artifact": "state",
+      "generation": "20261028T222605717909Z_e9857b788569",
+      "sha256": "7cda11d1f6baee1a4060ed57e2531338e6e9ec0206e0d6f0afdad9272c7cd799",
+      "size": 60,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "environment",
+      "generation": "20261028T221056090992Z_bb1d17063cd1",
+      "sha256": "59050889fefa3e6d0f1f6e666db99073e7dd01254d446afedde3ee7fc709c5cc",
+      "size": 4977,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "state",
+      "generation": "20261028T221055995383Z_74bcb1e5aa55",
+      "sha256": "d24f88abe6f1a42ec91f4c2cd71d23c732028f59f3eec6f46977f3fa43bbd0a0",
+      "size": 59,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "recovery_validation",
+      "generation": "20261028T222605681686Z_c2b406a89786",
+      "sha256": "38bdf57ac123d2938bb712f017e265ad0f722607e5a2659643145df9a8ceed6e",
+      "size": 5392,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "state",
+      "generation": "20261028T222605654899Z_20eb15d09383",
+      "sha256": "bd9e843df49ba08adc7d04af8da2e1474c58e8752fb1bbb2794616244a91d3ea",
+      "size": 59,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "smoke",
+      "generation": "20261028T221056151466Z_8bc9771996ef",
+      "sha256": "7827371d2dcf024f88797b7a75af53e45fefb0460f571b162250d88688bfe3be",
+      "size": 61,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "seed_probe",
+      "generation": "20261028T221056175670Z_465e65e2748c",
+      "sha256": "d7ab494950d48992072c4c06da729645bf2d144c80ae66ebfb78032ace73e0d3",
+      "size": 128,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "state",
+      "generation": "20261028T222605569238Z_b054a65938d1",
+      "sha256": "3fd0c6a628694321b76aebd379263d942edf89318259254b1ba964c9f54a7c25",
+      "size": 63,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "state",
+      "generation": "20261028T221055891149Z_731073654b1a",
+      "sha256": "820be9dcfd6bd1e3e1ce8d3003e841bb676a92106093b240321a95fd8fc72d80",
+      "size": 59,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    },
+    {
+      "artifact": "source_snapshot",
+      "generation": "20261028T221056216272Z_7e68a096bf74",
+      "sha256": "e6e10d97952c2639c6c0cd68b928a1957e043db118632f8e9d819915cbb5ace9",
+      "size": 58194,
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101"
+    }
+  ],
+  "source_snapshot_files_verified": 15,
+  "transport_renamed_files": [
+    "20261028T221055Z_1d0f6a92f4_aa07b10e/source_snapshot/20261028T221056216272Z_7e68a096bf74/payload.zip"
+  ],
+  "incomplete_artifact_present": true,
+  "access_report_present": false,
+  "stage1_closed": false,
+  "remaining": [
+    "access artifact is outside runs/<run_id>, at environment/access/<generation>",
+    "Sen1Floods11 license unresolved"
+  ],
+  "runtime_restart": "reported by user; timestamps and run history consistent but no independent session identifier"
+}

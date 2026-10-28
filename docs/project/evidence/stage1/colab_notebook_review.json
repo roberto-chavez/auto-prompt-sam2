@@ -1,0 +1,42 @@
+{
+  "review_date": "2026-10-28",
+  "evidence_origin": "user_supplied_colab_notebook",
+  "notebook_sha256": "922d2bb278c5dd6ee2191dfd30812af9c5f47d6fc12e6ee62701db45b6904a1a",
+  "notebook_file": "01_entorno_colab_recover_2026-10-28.ipynb",
+  "run_id": "20261028T221055Z_1d0f6a92f4_aa07b10e",
+  "bundle_sha256": "87f10497e0d65ca6e00453c3d4cf0ef240d148d29fc2f94d16eace81d58e2e9c",
+  "observed": {
+    "drive_mounted": true,
+    "source_bundle_hash_assertion_passed": true,
+    "tests_returncode": 0,
+    "recover_returncode": 0,
+    "gpu_metadata": "T4",
+    "runtime_metadata": "2026.07"
+  },
+  "inferred_from_recover_success": [
+    "import checks passed",
+    "50 Linux package pins and SAM source revision matched",
+    "installed packages matched prepare manifest",
+    "smoke content/SHA256 matched",
+    "Python/NumPy/torch CPU seed probe matched",
+    "incomplete artifact rejected",
+    "incompatible identity rejected"
+  ],
+  "not_visible_in_notebook": [
+    "access.json including authorized DINOv3 HEAD",
+    "environment.json and recovery_validation.json with measured RAM/VRAM/CUDA and resource blockers",
+    "bootstrap successful logs",
+    "independent proof of runtime deletion/recreation"
+  ],
+  "user_reports": [
+    "all cells ran without errors",
+    "prepare executed previously and attachment represents recover",
+    "DINOv3 account access approved"
+  ],
+  "stage1_closed": false,
+  "remaining_blockers": [
+    "export and review original persistent reports",
+    "Sen1Floods11 license grant remains unresolved"
+  ],
+  "credential_scan": "no literal Hugging Face token pattern found in attached notebook"
+}

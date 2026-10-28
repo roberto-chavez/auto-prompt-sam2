@@ -144,6 +144,8 @@ Crea o amplía el cuaderno de decisiones con justificación y uso de IA. No prep
 Al concluir esta etapa, actualiza docs/project/estado_actual_fase1.md con la fecha, el estado, el progreso realizado, los entregables, las validaciones y los pendientes o bloqueos.
 ```
 
+**Actualización de seguimiento (2026-10-28).** Por instrucción expresa del usuario, la etapa 1 se cierra con salvedad tras validar el entorno y archivar la consulta de licencia enviada a Floodbase. La licencia de Sen1Floods11 sigue pendiente; no se considera concedida por el correo. Se reabrirá la etapa al recibir respuesta. Esta excepción al cierre previo se documenta en el [cuaderno](cuaderno_decisiones.md) y el [estado](estado_actual_fase1.md), sin reescribir validaciones históricas ni iniciar adquisición de datos.
+
 ## 5. Etapa 2: datos, particiones y preprocesamiento
 
 **Objetivo.** Convertir los datos originales en entradas trazables manteniendo aislados los dos regímenes experimentales.

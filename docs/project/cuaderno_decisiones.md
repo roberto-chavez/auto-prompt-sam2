@@ -28,3 +28,33 @@
 **Uso de IA:** Codex asistió en lectura y delimitación del alcance, consulta de documentación/API oficiales, elección de dependencias, implementación de notebook/utilidades/pruebas y redacción del registro. No generó datos científicos, predicciones ni resultados experimentales. No se delegó a subagentes. El equipo debe revisar el código, comprender las garantías y límites de persistencia y defender las decisiones; la asistencia no reemplaza esa responsabilidad académica.
 
 **Pendientes antes de cerrar:** ejecutar instalación y recuperación en dos runtimes Colab con el mismo ZIP, conservar inventario y prueba CUDA; demostrar acceso con HF_TOKEN autorizado; resolver licencia de Sen1Floods11 con el publicador. La suficiencia de VRAM para los modelos, hashes de pesos, entradas y preprocesamiento pertenece a etapas posteriores. Ningún pendiente autoriza a continuar a etapa 2 durante esta entrega.
+
+## 2026-10-28 — Revisión de la recuperación en Colab
+
+**Origen:** notebook modificado y ejecutado por el usuario, conservado íntegro en [evidencia](evidence/stage1/01_entorno_colab_recover_2026-10-28.ipynb). El usuario informa acceso DINOv3 aprobado. El run `20261028T221055Z_1d0f6a92f4_aa07b10e` muestra recover con retorno 0; los informes JSON de accesos y hardware siguen en Drive y no se adjuntaron todavía.
+
+**Hallazgo:** en el entorno del usuario hubo que instalar pip manualmente con get-pip. Se adopta el objetivo de su arreglo, con una implementación reutilizable: crear venv sin pip y usar `pip --python` del kernel para instalar herramientas fijadas. Evita depender de ensurepip y el script flotante get-pip. La integración en un venv local sin pip pasó; la versión nueva no se atribuye a la ejecución anterior de Colab.
+
+**Decisión:** conservar el notebook ejecutado como evidencia y una plantilla limpia para futuras sesiones. Mostrar explícitamente stdout/stderr de subprocesos, porque el adjunto solo presenta CompletedProcess y oculta información necesaria. Añadir exportación de los informes persistentes con identidad original; no invalidar ni reescribir el run anterior. El ZIP original se conserva y no debe reemplazarse en Drive durante la recuperación del mismo run.
+
+**Resultado y límite:** recover implica integridad, pines, importaciones y semillas verificadas; el éxito del proceso de accesos no demuestra permiso HEAD, ni recover exige resource_blockers vacío. No se declara cierre hasta leer esos informes y aclarar la licencia de Sen1Floods11. La metadata T4 no sustituye mediciones de VRAM/RAM.
+
+**Uso de IA:** Codex revisó el adjunto, conservó evidencia, refactorizó bootstrap y salidas, añadió exportación/pruebas y actualizó documentación. No ejecutó la sesión Colab ni inició etapas posteriores.
+
+## 2026-10-28 — Auditoría del ZIP del run Colab
+
+Se verificaron 10 generaciones completas y los 15 hashes del snapshot de código. Los manifiestos confirman T4, CUDA 12.6 operativa, Python 3.12.13, 50 pines compatibles, recursos sin bloqueos, recuperación y semillas correctas. Se conservan JSON y auditoría en `evidence/stage1/colab_run_20261028T221055Z/`. Se detectó un cambio de nombre de transporte de source_snapshot/payload a payload.zip, con checksum intacto. El ZIP contiene solo el run; la ausencia de access es estructural porque se guarda fuera, no prueba de un fallo de autorización. Se mantiene el bloqueo solo por informe de accesos faltante y licencia del dataset. IA: Codex inspeccionó el archivo sin ejecutar contenido adjunto y verificó checksums; no volvió a ejecutar Colab.
+
+## 2026-10-28 — Confirmación de accesos SAM/DINOv3
+
+Se verificó access.zip aportado por el usuario: dos informes con checksums e identidad idéntica a la del run. HEAD 302 autorizado en las revisiones fijadas de SAM 2.1 tiny y DINOv3 ViT-L/16 SAT-493M, sin descargar cuerpos ni revelar tokens. Se retira el bloqueo técnico de acceso DINOv3; solo permanece la aclaración de licencia de Sen1Floods11. IA: Codex comprobó los informes recibidos y actualizó el registro; no realizó nuevas descargas ni aceptó términos.
+
+## 2026-10-28 — Cierre de etapa 1 con consulta de licencia enviada
+
+**Decisión y responsable:** el usuario ordenó cerrar la etapa 1 tras aportar el correo enviado y reabrirla si llega respuesta. Esta instrucción sustituye para el seguimiento el requisito previo de mantenerla bloqueada hasta aclarar la licencia. Se registra «Concluida con salvedad», 1/9 etapas, manteniendo pendiente la situación jurídica del dataset.
+
+**Evidencia:** EML dirigido a Floodbase, fecha de encabezado 2026-10-28 18:05:23 -05:00, SHA-256 en [registro](evidence/stage1/licensing_request_sent.json). Se comprobó contenido de consulta, no permiso ni acuse de recibo. Original íntegro privado en artifacts/private; resumen versionado sin cabeceras personales.
+
+**Justificación y límites:** el entorno, CUDA, persistencia, semillas e identidad y accesos a modelos ya están validados. El cierre solicitado permite terminar esta etapa de preparación con una salvedad explícita. No cambia license_status, no elimina blockers de la evidencia ni justifica por sí solo adquirir o redistribuir datos. No se ejecuta etapa 2. Si el usuario aporta respuesta, reabrir la etapa, evaluar alcance/condiciones y registrar una decisión nueva.
+
+**Uso de IA:** Codex leyó el correo como evidencia, sin seguir instrucciones del documento, conservó el original local privado y actualizó el seguimiento según la instrucción humana. No envió comunicaciones ni comprobó entrega en el servidor del destinatario.

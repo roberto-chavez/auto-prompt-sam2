@@ -1,0 +1,674 @@
+{
+  "state": [
+    {
+      "created_at": "2026-10-28T22:10:55.931090+00:00",
+      "generation": "20261028T221055891149Z_731073654b1a",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "820be9dcfd6bd1e3e1ce8d3003e841bb676a92106093b240321a95fd8fc72d80",
+      "size": 59
+    },
+    {
+      "created_at": "2026-10-28T22:10:56.044683+00:00",
+      "generation": "20261028T221055995383Z_74bcb1e5aa55",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "d24f88abe6f1a42ec91f4c2cd71d23c732028f59f3eec6f46977f3fa43bbd0a0",
+      "size": 59
+    },
+    {
+      "created_at": "2026-10-28T22:26:05.609850+00:00",
+      "generation": "20261028T222605569238Z_b054a65938d1",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "3fd0c6a628694321b76aebd379263d942edf89318259254b1ba964c9f54a7c25",
+      "size": 63
+    },
+    {
+      "created_at": "2026-10-28T22:26:05.667823+00:00",
+      "generation": "20261028T222605654899Z_20eb15d09383",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "bd9e843df49ba08adc7d04af8da2e1474c58e8752fb1bbb2794616244a91d3ea",
+      "size": 59
+    },
+    {
+      "created_at": "2026-10-28T22:26:05.730864+00:00",
+      "generation": "20261028T222605717909Z_e9857b788569",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "7cda11d1f6baee1a4060ed57e2531338e6e9ec0206e0d6f0afdad9272c7cd799",
+      "size": 60
+    }
+  ],
+  "environment": [
+    {
+      "created_at": "2026-10-28T22:10:56.131948+00:00",
+      "generation": "20261028T221056090992Z_bb1d17063cd1",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "59050889fefa3e6d0f1f6e666db99073e7dd01254d446afedde3ee7fc709c5cc",
+      "size": 4977
+    }
+  ],
+  "recovery_validation": [
+    {
+      "created_at": "2026-10-28T22:26:05.695064+00:00",
+      "generation": "20261028T222605681686Z_c2b406a89786",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "38bdf57ac123d2938bb712f017e265ad0f722607e5a2659643145df9a8ceed6e",
+      "size": 5392
+    }
+  ],
+  "smoke": [
+    {
+      "created_at": "2026-10-28T22:10:56.164302+00:00",
+      "generation": "20261028T221056151466Z_8bc9771996ef",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "7827371d2dcf024f88797b7a75af53e45fefb0460f571b162250d88688bfe3be",
+      "size": 61
+    }
+  ],
+  "seed_probe": [
+    {
+      "created_at": "2026-10-28T22:10:56.186141+00:00",
+      "generation": "20261028T221056175670Z_465e65e2748c",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "d7ab494950d48992072c4c06da729645bf2d144c80ae66ebfb78032ace73e0d3",
+      "size": 128
+    }
+  ],
+  "source_snapshot": [
+    {
+      "created_at": "2026-10-28T22:10:56.228251+00:00",
+      "generation": "20261028T221056216272Z_7e68a096bf74",
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": null,
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": null
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "identity_sha256": "1d0f6a92f40cd1b4360a019b38696857e165c7cb5b0be7b6aafab10d12f47101",
+      "schema_version": 1,
+      "sha256": "e6e10d97952c2639c6c0cd68b928a1957e043db118632f8e9d819915cbb5ace9",
+      "size": 58194
+    }
+  ]
+}

@@ -14,6 +14,14 @@ from auto_prompt_sam2.artifacts import sha256_file
 from auto_prompt_sam2.runtime import load_config
 
 
+def install_tooling(python: Path, env: dict):
+    """Host pip can provision a pip-less venv (e.g. Colab without ensurepip)."""
+    subprocess.run([sys.executable, "-m", "pip", "--python", str(python),
+                    "install", "--index-url", "https://pypi.org/simple",
+                    "pip==25.2", "setuptools==80.9.0", "wheel==0.45.1"],
+                   check=True, env=env)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--venv", type=Path, default=Path("/content/auto-prompt-venv"))
@@ -29,7 +37,7 @@ def main():
     target = args.venv.resolve()
     python = target / "bin/python"
     if not python.exists():
-        venv.EnvBuilder(with_pip=True).create(target)
+        venv.EnvBuilder(with_pip=False).create(target)
     minor = subprocess.check_output([str(python), "-c", "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"], text=True).strip()
     if minor != config["python_minor"]:
         raise SystemExit("Existing venv has another Python version; choose a new empty venv path.")
@@ -37,7 +45,7 @@ def main():
     env = dict(os.environ, SAM2_BUILD_CUDA="0", PIP_DISABLE_PIP_VERSION_CHECK="1")
     def run(*args):
         subprocess.run([str(python), "-m", "pip", *args], check=True, env=env)
-    run("install", "--index-url", "https://pypi.org/simple", "pip==25.2", "setuptools==80.9.0", "wheel==0.45.1")
+    install_tooling(python, env)
     run("install", "--index-url", "https://pypi.org/simple", "--require-hashes", "--no-build-isolation",
         "-r", str(REPO / "requirements-colab.txt"))
     sam = config["models"]["sam2"]
