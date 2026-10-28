@@ -1,2 +1,167 @@
 # auto-prompt-sam2
 
+**El costo del prompt: segmentación automática de agua superficial en Sentinel-2 con prompts derivados de DINOv3 para SAM 2.1.**
+
+Proyecto de investigación del curso **Deep Learning (1INF52), semestre 2026-2**, de Ingeniería Informática de la **Pontificia Universidad Católica del Perú (PUCP)**, con presentación prevista en **WAIMLAP 2026** (*Workshop on Artificial Intelligence and Machine Learning Applications*).
+
+El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando se reemplazan los puntos proporcionados por una persona por puntos generados automáticamente a partir de características de DINOv3. El caso de estudio son imágenes satelitales Sentinel-2 de eventos de inundación del dataset Sen1Floods11.
+
+> **Estado actual:** el repositorio contiene la documentación del diseño de investigación, la propuesta inicial y los materiales para WAIMLAP. Los documentos aún no reportan experimentos ni resultados. Todavía no se incluyen código, notebooks, datos, pesos ni una demo ejecutable.
+
+## Pregunta de investigación y alcance
+
+¿Cuánta calidad de segmentación, medida mediante la IoU de agua, se pierde al reemplazar los prompts humanos simulados de SAM 2.1 por prompts automáticos derivados de DINOv3? ¿Cómo cambia esa diferencia en un evento geográfico que no se utilizó para entrenamiento ni calibración?
+
+En este proyecto, un **prompt** es una indicación espacial que guía la máscara de SAM, por ejemplo, puntos positivos dentro del agua y negativos fuera de ella. El **costo del prompt** se refiere a la diferencia de calidad frente a una referencia asistida por etiquetas; la latencia y la memoria se medirán por separado.
+
+Las etiquetas de Sen1Floods11 incluyen agua permanente, como ríos y lagos. Por ello, el alcance es la **segmentación de agua superficial** en escenas de inundación, sin distinguir automáticamente agua permanente de agua causada por una inundación. La contribución prevista es una evaluación controlada de la automatización de prompts y su generalización geográfica.
+
+## Objetivos
+
+**Objetivo general:** cuantificar el costo de sustituir prompts humanos simulados por prompts automáticos en SAM 2.1 para segmentar agua en Sentinel-2, y analizar su comportamiento ante cambios de dominio y de evento geográfico.
+
+Objetivos específicos:
+
+1. Reproducir una línea base con SAM 2.1 congelado y puntos obtenidos de las etiquetas de referencia.
+2. Analizar la arquitectura de SAM 2.1 y DINOv3 mediante parámetros, FLOPs, características intermedias, campo receptivo, latencia y memoria.
+3. Generar puntos positivos y negativos automáticamente a partir de características de DINOv3 y un clasificador de agua.
+4. Intervenir el núcleo de SAM 2.1 ajustando únicamente su *mask decoder*, con ablaciones sobre la fuente y cantidad de prompts y el ajuste del decoder.
+5. Evaluar la generalización en Bolivia y en una prueba que excluya Paraguay del entrenamiento y la calibración, y documentar los fallos.
+6. Entregar una demo reproducible, un cuaderno de decisiones y los materiales académicos del proyecto.
+
+## Metodología propuesta
+
+El [resumen para WAIMLAP](docs/WAIMLAP/Abstract_CostOfThePrompt.md) detalla el protocolo que se resume aquí. La [propuesta inicial](docs/project/draft/propuesta_inicial_deep_learning.md) y sus diapositivas conservan el planteamiento original.
+
+```mermaid
+flowchart TD
+    A["Chip Sentinel-2 L1C"] --> B["Composición RGB: B4, B3, B2"]
+    B --> C["DINOv3 satelital congelado"]
+    C --> D["Clasificador de agua por parche"]
+    D --> E["Puntos positivos y negativos automáticos"]
+    B --> F["SAM 2.1: encoders congelados"]
+    E --> F
+    F --> G["Mask decoder congelado o ajustado"]
+    G --> H["Selección y unión de máscaras"]
+    H --> I["Evaluación en prueba, Bolivia y Paraguay excluido"]
+```
+
+### Modelos y generación de prompts
+
+| Componente | Función prevista |
+| --- | --- |
+| **SAM 2.1** | Modelo de segmentación principal, con la variante **tiny** como primera opción por las restricciones de cómputo. |
+| **DINOv3 ViT-L/16 satelital** | Extractor congelado de características por parche, con el checkpoint propuesto `facebook/dinov3-vitl16-pretrain-sat493m`. |
+| **Clasificador de agua (*probe*)** | Regresión logística sobre las características de DINOv3 para estimar probabilidades de agua, entrenada únicamente con etiquetas del conjunto de entrenamiento. |
+| **Mask decoder de SAM 2.1** | Único bloque de SAM que se ajustará, usando entropía cruzada binaria (BCE) y pérdida Dice. Los encoders de imagen y de prompts permanecerán congelados. |
+
+Los máximos del mapa de probabilidad producirán puntos positivos y las zonas de baja probabilidad producirán puntos negativos. SAM se ejecutará por componente conectado; se seleccionará la máscara con mayor IoU predicha y se unirán las máscaras para obtener una predicción binaria. También se contempla una variante del generador que use pseudoetiquetas de NDWI en lugar de etiquetas manuales.
+
+La línea base utilizará puntos simulados desde las máscaras reales. Como requiere etiquetas para construir los prompts, servirá como **referencia asistida**, sin representar un sistema desplegable. La alternativa de malla automática generará máscaras sin clase, que se identificarán como agua mediante su probabilidad media estimada por DINOv3 y el clasificador.
+
+La propuesta inicial contemplaba una comparación adicional con SAM 3 mediante texto. El protocolo descrito en el resumen y el póster se concentra en SAM 2.1 y prompts espaciales; SAM 2.1 no recibe prompts de texto.
+
+### Fases del proyecto
+
+| Fase | Trabajo previsto |
+| --- | --- |
+| **A. Disección instrumentada** | Reproducir la línea base asistida y analizar parámetros y FLOPs por bloque, características intermedias, campo receptivo, latencia y memoria. |
+| **B. Intervención en el núcleo** | Automatizar los prompts y ajustar solo el mask decoder, contrastando cada cambio con una hipótesis previa. |
+| **C. Estrés y análisis de fallos** | Evaluar la transferencia geográfica y estudiar errores en agua turbia, vegetación inundada, sombras de nubes y relieve. Registrar también lo que no funcione. |
+
+## Datos y protocolo de evaluación
+
+Se propone utilizar los **446 chips con anotaciones manuales de Sen1Floods11**, en su modalidad Sentinel-2 L1C: imágenes de **512 × 512 píxeles**, **10 m de resolución** y **13 bandas**. Las etiquetas son `1` para agua, `0` para no agua y `-1` para píxeles inválidos.
+
+| Partición | Chips | Uso previsto |
+| --- | ---: | --- |
+| Entrenamiento | 252 | Entrenar el clasificador de agua y ajustar el decoder. |
+| Validación | 89 | Seleccionar umbrales e hiperparámetros. |
+| Prueba | 90 | Evaluación final en eventos presentes en las particiones oficiales. |
+| Bolivia | 15 | Evaluación de transferencia a un evento reservado. |
+
+El protocolo incluye además una ejecución **leave-Paraguay-out**: los 67 chips de Paraguay se excluirán del entrenamiento, la calibración y la selección de modelos para evaluar la generalización a ese evento. Esta ejecución es independiente del uso habitual de las particiones oficiales, donde Paraguay aparece en entrenamiento, validación y prueba.
+
+El preprocesamiento propuesto usa RGB **B4, B3 y B2**, reflectancia dividida entre 10 000, recorte con un límite fijado a partir del entrenamiento y normalización propia de cada modelo. Los píxeles inválidos se excluirán de las pérdidas y métricas.
+
+Los umbrales se seleccionarán con validación. Prueba y Bolivia se evaluarán una vez al final. Como las particiones por chip pueden contener zonas vecinas de un mismo evento, la evidencia de transferencia geográfica se apoyará en Bolivia y en la ejecución que excluye Paraguay.
+
+### Ablaciones y métricas
+
+| Ablación | Comparación | Hipótesis previa |
+| --- | --- | --- |
+| **A1. Fuente del prompt** | Puntos simulados desde etiquetas, puntos de DINOv3, caja del chip completo y malla automática con clasificación de máscaras. | Los puntos de DINOv3 quedarán por debajo de la referencia asistida y por encima de la malla. |
+| **A2. Cantidad de puntos** | Variar la cantidad de puntos por componente y analizar puntos positivos y negativos. | La IoU aumentará hasta saturarse; los negativos ayudarán a reducir falsos positivos. |
+| **A3. Ajuste del decoder** | Mask decoder congelado frente a ajustado con prompts automáticos. | El ajuste beneficiará más a los eventos vistos que a Bolivia. |
+
+La métrica principal será la **IoU de la clase agua**, agregada sobre píxeles válidos y reportada también por evento y por chip. Se complementará con precisión, recall, Dice/F1 y mIoU de las dos clases. Los chips sin agua se excluirán de la IoU individual, pero se conservarán en las métricas agregadas y se reportará su área de falsos positivos.
+
+El análisis de eficiencia incluirá parámetros, FLOPs, mediana de latencia tras calentamiento y memoria GPU máxima, documentando hardware, precisión y condiciones de medición. Las hipótesis de las ablaciones son expectativas por contrastar, no resultados obtenidos.
+
+## Organización del repositorio
+
+```text
+auto-prompt-sam2/
+├── README.md
+└── docs/
+    ├── course/
+    │   └── tarea_final_deep_learning.md
+    ├── project/
+    │   └── draft/
+    │       ├── propuesta_inicial_deep_learning.md
+    │       └── El Costo del Prompt - INF52 PUCP_slides.pdf
+    └── WAIMLAP/
+        ├── Abstract_CostOfThePrompt.md
+        └── Poster_CostOfThePrompt.pptx
+```
+
+| Carpeta o documento | Contenido |
+| --- | --- |
+| [`docs/`](docs/) | Documentación académica y de investigación del proyecto. |
+| [`docs/course/`](docs/course/) | Documentos del curso Deep Learning. |
+| [Bases de la tarea final](docs/course/tarea_final_deep_learning.md) | Objetivos, fases obligatorias, criterios de evaluación, entregables y política de uso de IA. |
+| [`docs/project/`](docs/project/) | Documentación propia del proyecto. |
+| [`docs/project/draft/`](docs/project/draft/) | Propuesta inicial y materiales de su presentación. |
+| [Propuesta inicial](docs/project/draft/propuesta_inicial_deep_learning.md) | Pregunta de investigación, modelos, datos, hipótesis, riesgos y plan inicial. |
+| [Diapositivas de la propuesta](docs/project/draft/El%20Costo%20del%20Prompt%20-%20INF52%20PUCP_slides.pdf) | Presentación del entregable E1. |
+| [`docs/WAIMLAP/`](docs/WAIMLAP/) | Materiales para el evento de presentación del proyecto. |
+| [Resumen para WAIMLAP](docs/WAIMLAP/Abstract_CostOfThePrompt.md) | Diseño metodológico detallado, evaluación prevista, limitaciones y referencias bibliográficas. |
+| [Póster para WAIMLAP](docs/WAIMLAP/Poster_CostOfThePrompt.pptx) | Presentación visual del diseño de investigación y de la evaluación prevista. |
+
+## Entregables y reproducibilidad
+
+El curso exige una línea base reproducida, una intervención de núcleo con ablación controlada, evaluación bajo cambio de dominio, análisis de fallos, una demo y un cuaderno de decisiones. Cada ablación deberá registrar la hipótesis antes de ejecutarse, el cambio realizado y el resultado observado. El cuaderno también deberá indicar dónde se utilizó asistencia de IA.
+
+| Hito | Fecha consignada en los documentos |
+| --- | --- |
+| E1: propuesta de tema | 7 de octubre de 2026 |
+| E2: disección del modelo, intervención preliminar y cuaderno de decisiones | 21 de octubre de 2026 |
+| E3: entrega de trabajo e informe final de 4–8 páginas | 11 de noviembre de 2026 |
+| E4: presentación del póster en WAIMLAP | 18–20 de noviembre de 2026 |
+
+Estas fechas describen el cronograma académico y no acreditan que los entregables se hayan completado. Las bases del curso repiten la identificación E3 para el trabajo y el informe, y mencionan revisión con retroalimentación del workshop aunque consignan una fecha anterior al evento; ese punto requiere confirmación con el docente.
+
+La demo prevista permitirá cargar un chip Sentinel-2 y visualizar la máscara y los puntos utilizados, con comparaciones entre estrategias. La propuesta contempla Gradio/Hugging Face Spaces y, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
+
+**Pendiente de implementación:** incorporar el entorno y sus dependencias, instrucciones de acceso a datos y pesos, scripts o notebooks reproducibles, semillas y configuraciones, cuaderno de decisiones, resultados y demo. Al tratarse por ahora de un repositorio documental, todavía no hay instrucciones de instalación o ejecución.
+
+## Limitaciones y decisiones por verificar
+
+- Las etiquetas incluyen agua permanente y no permiten atribuir toda el agua segmentada a una inundación.
+- La composición RGB descarta bandas NIR/SWIR que podrían aportar información para identificar agua.
+- Existe una diferencia de resolución entre el preentrenamiento satelital de DINOv3 y Sentinel-2, además del cambio de imágenes naturales a satelitales para SAM.
+- Nubes, sombras, agua turbia y vegetación inundada requieren un análisis específico de errores.
+- Bolivia aporta solo 15 chips; el plan contempla una semilla y no promete significancia estadística ni mejoras de calidad.
+- Se deben verificar las licencias de datos y modelos, los términos de acceso a los pesos y los recursos de cómputo antes de ejecutar los experimentos.
+
+## Equipo y contexto académico
+
+- **Integrantes:** Eliezer Guido Villarreal Quispe y Roberto Abel Chavez Javier.
+- **Equipo:** Grupo 8, según las diapositivas de la propuesta.
+- **Institución:** Pontificia Universidad Católica del Perú, Facultad de Ciencias e Ingeniería, Ingeniería Informática.
+- **Curso:** Deep Learning (1INF52), semestre 2026-2.
+- **Docente:** Dr. César A. Beltrán Castañón.
+- **Evento previsto:** WAIMLAP 2026, Lima, Perú.
+
+Las referencias bibliográficas completas y los antecedentes se encuentran en el [resumen para WAIMLAP](docs/WAIMLAP/Abstract_CostOfThePrompt.md).
+
