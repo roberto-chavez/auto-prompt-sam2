@@ -1,0 +1,359 @@
+{
+  "started_at": "2026-10-28T20:59:57.626669+00:00",
+  "scope": "local_windows_not_colab",
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "exit_code": 0,
+      "stdout": "No broken requirements found.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_canonical_hash (test_stage1.PersistenceTests.test_canonical_hash) ... ok\ntest_colab_temporary_root_blocked (test_stage1.PersistenceTests.test_colab_temporary_root_blocked) ... ok\ntest_each_identity_change_is_rejected (test_stage1.PersistenceTests.test_each_identity_change_is_rejected) ... ok\ntest_head_never_logs_token_or_follows_redirect (test_stage1.PersistenceTests.test_head_never_logs_token_or_follows_redirect) ... ok\ntest_incomplete_and_corrupt_generation_preserve_previous (test_stage1.PersistenceTests.test_incomplete_and_corrupt_generation_preserve_previous) ... ok\ntest_no_path_escape (test_stage1.PersistenceTests.test_no_path_escape) ... ok\ntest_payload_without_marker_is_rejected (test_stage1.PersistenceTests.test_payload_without_marker_is_rejected) ... ok\ntest_recover_in_new_interpreter (test_stage1.PersistenceTests.test_recover_in_new_interpreter) ... ok\ntest_state_and_compatible_resume (test_stage1.PersistenceTests.test_state_and_compatible_resume) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.571s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python",
+        "scripts/validate_environment.py",
+        "prepare"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"run_id\": \"20261028T210028Z_1f5fd033ca_b8cd38fc\",\n  \"state\": \"running\",\n  \"blockers\": [\n    \"CUDA unavailable; GPU validation remains pending\"\n  ],\n  \"next\": \"Restart Colab, remount Drive, rerun setup and recover\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "scripts/validate_environment.py",
+        "recover"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"run_id\": \"20261028T210028Z_1f5fd033ca_b8cd38fc\",\n  \"persistence_smoke\": \"passed\",\n  \"artifact_sha256\": \"7827371d2dcf024f88797b7a75af53e45fefb0460f571b162250d88688bfe3be\",\n  \"rejected_incomplete\": true,\n  \"rejected_mismatch\": true,\n  \"seed_probe_reproduced\": true,\n  \"scope\": \"local\",\n  \"resource_blockers\": [\n    \"CUDA unavailable; GPU validation remains pending\"\n  ],\n  \"stage1_closed\": false,\n  \"note\": \"Smoke completion does not certify access/licenses or a real Colab restart\"\n}\n",
+      "stderr": ""
+    }
+  ],
+  "notebook": {
+    "cells": 9,
+    "code_syntax": "passed",
+    "execution": "not_run"
+  },
+  "environment": {
+    "cpu_count": 8,
+    "cuda_available": false,
+    "cudnn": null,
+    "disk": {
+      "local": {
+        "free_bytes": 508715458560,
+        "total_bytes": 1000186310656
+      },
+      "persistent": {
+        "free_bytes": 508715458560,
+        "total_bytes": 1000186310656
+      }
+    },
+    "gpus": [],
+    "identity": {
+      "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+      "dataset": {
+        "bucket": "sen1floods11",
+        "content_hashes": null,
+        "documentation_repo": "cloudtostreet/Sen1Floods11",
+        "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+        "id": "Sen1Floods11",
+        "license_status": "pending_primary_source_confirmation",
+        "version": "1.1"
+      },
+      "models": {
+        "dinov3": {
+          "filename": "model.safetensors",
+          "license": "DINOv3 License",
+          "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+          "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+          "weights_sha256": null
+        },
+        "sam2": {
+          "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+          "filename": "sam2.1_hiera_tiny.pt",
+          "license": "Apache-2.0",
+          "repo_id": "facebook/sam2.1-hiera-tiny",
+          "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+          "source_repo": "https://github.com/facebookresearch/sam2.git",
+          "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+          "weights_sha256": null
+        }
+      },
+      "precision": "float32",
+      "regime": "environment_only",
+      "seed": 42,
+      "source": {
+        "commit": "d88251d9db671e16ba2d81b956c86ec681bb0209",
+        "source_sha256": {
+          "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+          "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+          "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+          "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+          "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+          "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+          "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+          "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+          "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+          "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+          "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+          "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+          "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+          "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+          "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+        },
+        "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+        "working_tree_dirty": true
+      },
+      "split_sha256": null,
+      "stage": "phase1_stage1"
+    },
+    "imports": {
+      "cuda_smoke": "not_run_unavailable",
+      "dinov3_import": "DINOv3ViTModel",
+      "processor_import": "AutoImageProcessor",
+      "sam2_build_import": true,
+      "torch": "2.7.1+cpu",
+      "torchvision": "0.22.1+cpu"
+    },
+    "nvidia_smi_devices": [
+      {
+        "driver_version": "572.70",
+        "free_mib": 3935,
+        "name": "NVIDIA GeForce GTX 1650",
+        "total_mib": 4096
+      }
+    ],
+    "packages": {
+      "Jinja2": "3.1.6",
+      "MarkupSafe": "3.0.4",
+      "PyYAML": "6.0.2",
+      "SAM-2": "1.0",
+      "antlr4-python3-runtime": "4.9.3",
+      "certifi": "2026.10.23",
+      "charset-normalizer": "3.5.2",
+      "colorama": "0.4.6",
+      "filelock": "4.2.4",
+      "fsspec": "2026.9.0",
+      "huggingface-hub": "0.34.4",
+      "hydra-core": "1.3.2",
+      "idna": "3.20",
+      "iopath": "0.1.10",
+      "mpmath": "1.3.0",
+      "networkx": "3.7",
+      "numpy": "2.2.6",
+      "omegaconf": "2.3.1",
+      "packaging": "26.3",
+      "pillow": "11.3.0",
+      "pip": "25.2",
+      "portalocker": "4.4.2",
+      "psutil": "7.0.0",
+      "regex": "2026.9.29",
+      "requests": "2.34.2",
+      "safetensors": "0.6.2",
+      "setuptools": "80.9.0",
+      "sympy": "1.14.0",
+      "tokenizers": "0.22.2",
+      "torch": "2.7.1",
+      "torchvision": "0.22.1",
+      "tqdm": "4.67.1",
+      "transformers": "4.56.2",
+      "typing_extensions": "4.16.0",
+      "urllib3": "2.8.0",
+      "wheel": "0.45.1"
+    },
+    "persistent_root": "D:\\ProyectosZZZ\\proyectosUNI\\deep\\auto-prompt-sam2\\artifacts\\local-validation-8928e862",
+    "pins": {
+      "requirements_file": "requirements-colab.in",
+      "sam_source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "verified_pins": 15
+    },
+    "platform": "Windows-10-10.0.19045-SP0",
+    "precision": "float32",
+    "python": "3.12.11 (main, Sep 18 2025, 19:45:51) [MSC v.1944 64 bit (AMD64)]",
+    "ram_available_bytes": 5464936448,
+    "ram_total_bytes": 17009004544,
+    "recorded_at": "2026-10-28T21:00:28.086116+00:00",
+    "scope": "local",
+    "seed": 42,
+    "torch_cuda_runtime": null
+  },
+  "recovery": {
+    "artifact_sha256": "7827371d2dcf024f88797b7a75af53e45fefb0460f571b162250d88688bfe3be",
+    "hardware_after_recovery": {
+      "cpu_count": 8,
+      "cuda_available": false,
+      "cudnn": null,
+      "disk": {
+        "local": {
+          "free_bytes": 508715356160,
+          "total_bytes": 1000186310656
+        },
+        "persistent": {
+          "free_bytes": 508715356160,
+          "total_bytes": 1000186310656
+        }
+      },
+      "gpus": [],
+      "identity": {
+        "config_sha256": "6a46b089701ed376a38593e1f4809de1c6669e68ab26ba5d2ab4a8314f5a5ac9",
+        "dataset": {
+          "bucket": "sen1floods11",
+          "content_hashes": null,
+          "documentation_repo": "cloudtostreet/Sen1Floods11",
+          "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+          "id": "Sen1Floods11",
+          "license_status": "pending_primary_source_confirmation",
+          "version": "1.1"
+        },
+        "models": {
+          "dinov3": {
+            "filename": "model.safetensors",
+            "license": "DINOv3 License",
+            "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+            "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+            "weights_sha256": null
+          },
+          "sam2": {
+            "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+            "filename": "sam2.1_hiera_tiny.pt",
+            "license": "Apache-2.0",
+            "repo_id": "facebook/sam2.1-hiera-tiny",
+            "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+            "source_repo": "https://github.com/facebookresearch/sam2.git",
+            "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+            "weights_sha256": null
+          }
+        },
+        "precision": "float32",
+        "regime": "environment_only",
+        "seed": 42,
+        "source": {
+          "commit": "d88251d9db671e16ba2d81b956c86ec681bb0209",
+          "source_sha256": {
+            "configs/environment.yaml": "23707731d17ea65aad724fd601cb8f186152c9346901e84800fed1367d128bdf",
+            "notebooks/01_entorno_colab.ipynb": "01f5ff19a2c420c7e93f267778619b098fc72e5d4cd11775b0dafbed237163b3",
+            "requirements-colab.in": "8bfa211e2f670563ea576dca48260e088b58a2f5408dd3dcdd2f05eea925d236",
+            "requirements-colab.txt": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+            "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+            "scripts/bootstrap_colab.py": "f14ba12351a911c3c452957b0896f784ff07952b8fafa42f04ea2ee31d2af34b",
+            "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+            "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+            "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+            "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+            "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+            "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+            "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+            "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+            "tests/test_stage1.py": "8b349e7518f85b1cfc01b5e4a0fa694f312462a46ce42f738437dfaeb77c9e89"
+          },
+          "source_tree_sha256": "6c8d4cd3706425e0c5005fd73ec09e2d426cecdf3a2f68b2fc0be7054f8a437f",
+          "working_tree_dirty": true
+        },
+        "split_sha256": null,
+        "stage": "phase1_stage1"
+      },
+      "imports": {
+        "cuda_smoke": "not_run_unavailable",
+        "dinov3_import": "DINOv3ViTModel",
+        "processor_import": "AutoImageProcessor",
+        "sam2_build_import": true,
+        "torch": "2.7.1+cpu",
+        "torchvision": "0.22.1+cpu"
+      },
+      "nvidia_smi_devices": [
+        {
+          "driver_version": "572.70",
+          "free_mib": 3935,
+          "name": "NVIDIA GeForce GTX 1650",
+          "total_mib": 4096
+        }
+      ],
+      "packages": {
+        "Jinja2": "3.1.6",
+        "MarkupSafe": "3.0.4",
+        "PyYAML": "6.0.2",
+        "SAM-2": "1.0",
+        "antlr4-python3-runtime": "4.9.3",
+        "certifi": "2026.10.23",
+        "charset-normalizer": "3.5.2",
+        "colorama": "0.4.6",
+        "filelock": "4.2.4",
+        "fsspec": "2026.9.0",
+        "huggingface-hub": "0.34.4",
+        "hydra-core": "1.3.2",
+        "idna": "3.20",
+        "iopath": "0.1.10",
+        "mpmath": "1.3.0",
+        "networkx": "3.7",
+        "numpy": "2.2.6",
+        "omegaconf": "2.3.1",
+        "packaging": "26.3",
+        "pillow": "11.3.0",
+        "pip": "25.2",
+        "portalocker": "4.4.2",
+        "psutil": "7.0.0",
+        "regex": "2026.9.29",
+        "requests": "2.34.2",
+        "safetensors": "0.6.2",
+        "setuptools": "80.9.0",
+        "sympy": "1.14.0",
+        "tokenizers": "0.22.2",
+        "torch": "2.7.1",
+        "torchvision": "0.22.1",
+        "tqdm": "4.67.1",
+        "transformers": "4.56.2",
+        "typing_extensions": "4.16.0",
+        "urllib3": "2.8.0",
+        "wheel": "0.45.1"
+      },
+      "persistent_root": "D:\\ProyectosZZZ\\proyectosUNI\\deep\\auto-prompt-sam2\\artifacts\\local-validation-8928e862",
+      "pins": {
+        "requirements_file": "requirements-colab.in",
+        "sam_source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+        "verified_pins": 15
+      },
+      "platform": "Windows-10-10.0.19045-SP0",
+      "precision": "float32",
+      "python": "3.12.11 (main, Sep 18 2025, 19:45:51) [MSC v.1944 64 bit (AMD64)]",
+      "ram_available_bytes": 5554802688,
+      "ram_total_bytes": 17009004544,
+      "recorded_at": "2026-10-28T21:00:44.800322+00:00",
+      "scope": "local",
+      "seed": 42,
+      "torch_cuda_runtime": null
+    },
+    "note": "Smoke completion does not certify access/licenses or a real Colab restart",
+    "persistence_smoke": "passed",
+    "rejected_incomplete": true,
+    "rejected_mismatch": true,
+    "resource_blockers": [
+      "CUDA unavailable; GPU validation remains pending"
+    ],
+    "run_id": "20261028T210028Z_1f5fd033ca_b8cd38fc",
+    "scope": "local",
+    "seed_probe_reproduced": true,
+    "stage1_closed": false
+  },
+  "requirements_colab_sha256": "6eb7b90581c0c7b6628d9e2bb89a68143855568c27080c2c9e5ad42ff007f577",
+  "result": "passed_local_only",
+  "finished_at": "2026-10-28T21:00:47.638092+00:00"
+}

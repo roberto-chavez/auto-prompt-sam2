@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "stage": "phase1_stage1",
+  "seed": 42,
+  "python_minor": "3.12",
+  "platform": "linux-x86_64",
+  "precision": "float32",
+  "deterministic_algorithms": true,
+  "sam2_build_cuda": false,
+  "persistent_root_env": "AUTO_PROMPT_PERSIST_ROOT",
+  "persistent_root_default": "/content/drive/MyDrive/auto-prompt-sam2",
+  "disk_budget_gib": {"raw": 5, "base_models": 4, "cache": 12, "checkpoints": 5, "predictions": 2, "reserve": 2},
+  "minimum_local_free_gib": 10,
+  "require_cuda_for_stage_closure": true,
+  "models": {
+    "sam2": {
+      "repo_id": "facebook/sam2.1-hiera-tiny",
+      "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+      "filename": "sam2.1_hiera_tiny.pt",
+      "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+      "source_repo": "https://github.com/facebookresearch/sam2.git",
+      "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "license": "Apache-2.0",
+      "weights_sha256": null
+    },
+    "dinov3": {
+      "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+      "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+      "filename": "model.safetensors",
+      "license": "DINOv3 License",
+      "weights_sha256": null
+    }
+  },
+  "dataset": {
+    "id": "Sen1Floods11",
+    "version": "1.1",
+    "bucket": "sen1floods11",
+    "documentation_repo": "cloudtostreet/Sen1Floods11",
+    "documentation_revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+    "license_status": "pending_primary_source_confirmation",
+    "content_hashes": null
+  }
+}

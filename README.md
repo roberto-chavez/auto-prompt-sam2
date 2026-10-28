@@ -8,7 +8,7 @@ El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando
 
 La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
 
-> **Estado actual:** el repositorio contiene la documentación del diseño de investigación, la propuesta inicial y los materiales para WAIMLAP. Los documentos aún no reportan experimentos ni resultados. Todavía no se incluyen código, notebooks, datos, pesos ni una demo ejecutable.
+> **Estado actual (2026-10-28):** la etapa 1 de la fase 1 dispone de notebook de entorno, dependencias fijadas, utilidades y pruebas locales. Su cierre está bloqueado por la validación real en Colab y los permisos/licencias pendientes. No hay datos, pesos, experimentos ni demo. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md).
 
 ## Pregunta de investigación y alcance
 
@@ -179,7 +179,11 @@ Estas fechas describen el cronograma académico y no acreditan que los entregabl
 
 La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
 
-**Pendiente de implementación:** ejecutar ambas fases e incorporar sus artefactos al proyecto: entorno y dependencias, instrucciones de acceso a datos y pesos, scripts y notebooks reproducibles, semillas y configuraciones, cuaderno de decisiones, resultados y demo. Al tratarse por ahora de un repositorio documental, todavía no hay instrucciones de instalación o ejecución.
+**Etapa 1 implementada; cierre pendiente:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). Las etapas 2–9 y la fase 2 siguen sin implementar.
+
+Para llevar los archivos actuales a Colab sin depender de cambios aún no publicados: ejecute `python scripts/export_colab_bundle.py`, suba el ZIP generado a Drive y abra el notebook. Configure el SHA-256 del ZIP y la raíz persistente; siga sus pasos `prepare` y `recover` en runtimes distintos. Esto no descarga datos ni pesos. Los bloqueos de licencia/acceso deben resolverse antes de pasar a etapas dependientes.
+
+La estructura anterior describe la documentación original. Se añaden `configs/`, `notebooks/`, `src/auto_prompt_sam2/`, `scripts/`, `tests/` y evidencias en `docs/project/evidence/stage1/`.
 
 ## Limitaciones y decisiones por verificar
 

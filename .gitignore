@@ -1,0 +1,13 @@
+.venv*/
+.cache/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.env
+.env.*
+artifacts/
+data/
+weights/
+*.pt
+*.pth
+*.safetensors

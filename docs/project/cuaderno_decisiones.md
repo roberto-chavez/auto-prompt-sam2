@@ -1,0 +1,30 @@
+# Cuaderno de decisiones
+
+## 2026-10-28 — Fase 1, etapa 1: entorno y persistencia
+
+**Responsable de implementación:** asistente Codex, por solicitud del equipo. Revisión y comprensión por los integrantes: pendiente. Fuentes de alcance: README, bases del curso (incluida política de IA), resumen WAIMLAP y hoja de ruta, secciones 1–4. No se encontraron instrucciones `AGENTS.md` en el repositorio ni sus ancestros. Se preservó el PDF E1 no rastreado que ya estaba presente.
+
+**Hipótesis técnica previa:** un entorno aislado con versiones fijadas y artefactos inmutables verificables permitirá reconstruir el estado tras perder el proceso de Colab. Esto es una hipótesis de reproducibilidad, no una ablación científica ni una promesa de rendimiento. El resultado local y los límites están en [validacion_etapa1.md](validacion_etapa1.md).
+
+| Decisión | Justificación y límite |
+| --- | --- |
+| Solo etapa 1; detenerse antes de adquirir datos/pesos | Respeta el alcance solicitado. No hay splits, inferencia, features, entrenamiento ni demo. |
+| Python 3.12/Linux x86_64; entorno virtual independiente del kernel Colab | Evita depender de sus paquetes preinstalados. Cada comando científico futuro deberá usar el mismo intérprete. El bootstrap rechaza otro minor/plataforma; no resuelve silenciosamente versiones nuevas. |
+| PyTorch 2.7.1, torchvision 0.22.1, Transformers 4.56.2 | Pareja oficial torch/vision; satisface mínimos de SAM y la versión documentada de Transformers contiene DINOv3. Se verifican resolución transitiva, importaciones locales y `pip check`. Esto no demuestra compatibilidad binaria con una GPU Colab no observada. |
+| Lock transitivo con hashes y código SAM por commit | `requirements-colab.in` declara dependencias directas; `requirements-colab.txt` fija 50 distribuciones para Linux/Python 3.12. Los hashes son de las distribuciones publicadas. SAM se instala con `--no-deps --no-build-isolation`, desde SHA exacto; el manifiesto verifica `direct_url.json`. |
+| Sin extensión CUDA opcional de SAM por ahora | Facilita bootstrap sin compilar contra un nvcc desconocido. No cambia el modelo seleccionado. El posprocesamiento de componentes conectados que requiera `sam2._C` no queda validado; deberá resolverse explícitamente antes de utilizarlo. |
+| Semilla 42; float32; determinismo estricto; TF32 desactivado | Una política inicial explícita y reproducible, sin elegir precisión según resultados. `PYTHONHASHSEED` se fija antes de iniciar cada intérprete, además de RNG Python/NumPy/torch CPU y CUDA. Un fallo de una operación determinista futura debe documentarse, no ocultarse. |
+| Raíz persistente configurable por `AUTO_PROMPT_PERSIST_ROOT` | Drive es el valor por defecto; un path temporal no acredita persistencia. El modo Colab comprueba el montaje antes de escribir. La ruta no entra en la identidad, por lo que se puede recuperar una copia autorizada sin modificar la config. |
+| Generaciones inmutables y marcador de completitud | Primero escribe/verifica `payload.pending`, luego publica `payload` y `COMPLETE.json`; lectores comprueban hash, tamaño e identidad. No se supone que rename o fsync de Drive garantice durabilidad. Se conserva la generación anterior y no se borran restos incompletos. Un único escritor por run. |
+| Identidad conservadora para recuperar | Hash de config, lock y código/notebook, commit y estado local, modelos/revisiones, semilla y precisión. `split_sha256=null`, régimen `environment_only`: no se inventan splits. Fuente exacta en ZIP persistente cubre cambios sin commit. Los estados son planned/running/interrupted/complete/failed; complete del ensayo no cierra la etapa. |
+| Presupuestos de disco explícitos | 30 GiB persistentes y 10 GiB locales son estimaciones configurables, no medidas de consumo. Registrar RAM/VRAM libre/total y driver; no exigir una GPU de marca concreta ni afirmar que basta para entrenar. Revisar también cuota Drive, distinta del espacio informado por FUSE. |
+| Secretos Colab por stdin a proceso efímero | `userdata.get('HF_TOKEN')`; no login persistente, token en argv ni volcado de entorno. La verificación HEAD no sigue redirecciones ni guarda URLs firmadas. La prueba de no exposición usa un secreto ficticio; no se probó un secreto real en Colab. |
+| Bloqueo explícito de licencias/acceso | SAM público Apache-2.0 confirmado. DINOv3 gated manual, HEAD anónimo 401. Catálogos Sen1Floods11 declaran proprietary: no atribuir CC-BY desde espejos. No cambiar de modelo ni eludir permisos. Ver [registro](accesos_y_licencias.md). |
+
+**Ejecución y resultados:** se consultaron fuentes oficiales y se preparó el bootstrap. El primer test local del rechazo de `/content` detectó una diferencia de resolución de rutas Windows/POSIX; se corrigió normalizando ambas rutas antes de comparar y se repitió la prueba. Las evidencias finales conservan comandos, resultados y limitaciones. No se tomaron decisiones a partir de imágenes o resultados de segmentación.
+
+**Intervención del usuario:** ante Colab sin sesión iniciada en el navegador disponible, indicó expresamente «Continuar con validación local y dejar Colab pendiente». No se inició sesión ni se aceptaron licencias por su cuenta. Por tanto, no se presenta el ensayo local como validación Colab.
+
+**Uso de IA:** Codex asistió en lectura y delimitación del alcance, consulta de documentación/API oficiales, elección de dependencias, implementación de notebook/utilidades/pruebas y redacción del registro. No generó datos científicos, predicciones ni resultados experimentales. No se delegó a subagentes. El equipo debe revisar el código, comprender las garantías y límites de persistencia y defender las decisiones; la asistencia no reemplaza esa responsabilidad académica.
+
+**Pendientes antes de cerrar:** ejecutar instalación y recuperación en dos runtimes Colab con el mismo ZIP, conservar inventario y prueba CUDA; demostrar acceso con HF_TOKEN autorizado; resolver licencia de Sen1Floods11 con el publicador. La suficiencia de VRAM para los modelos, hashes de pesos, entradas y preprocesamiento pertenece a etapas posteriores. Ningún pendiente autoriza a continuar a etapa 2 durante esta entrega.

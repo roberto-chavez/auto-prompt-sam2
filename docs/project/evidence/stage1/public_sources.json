@@ -1,0 +1,112 @@
+{
+  "checked_at": "2026-10-28T21:00:09.765443+00:00",
+  "sources": {
+    "sam_setup": {
+      "url": "https://raw.githubusercontent.com/facebookresearch/sam2/2b90b9f5ceec907a1c18123530e92e794ad901a4/setup.py",
+      "sha256": "9ca49a33def161d2cafa56ddef744178fa56d3219242bd8b69909904c2e63dff",
+      "bytes": 5051
+    },
+    "sam_license": {
+      "url": "https://raw.githubusercontent.com/facebookresearch/sam2/2b90b9f5ceec907a1c18123530e92e794ad901a4/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    "data_readme": {
+      "url": "https://raw.githubusercontent.com/cloudtostreet/Sen1Floods11/b9e460dabe70230111a3c3d36cd0c5ce03606ee9/README.md",
+      "sha256": "ecac99942ca1a6404f651fd28fc05e6074e8a1a82b5a141d86827c968b52c1f9",
+      "bytes": 7348
+    },
+    "dinov3_license": {
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov3/6876159a11b4df116f30f667f8c9888617df0751/LICENSE.md",
+      "sha256": "25d122eb8f5b880fd23c736fb6ea8018ee45c12237e00b8a86d14c653904999e",
+      "bytes": 7503
+    },
+    "sam_source": {
+      "url": "https://api.github.com/repos/facebookresearch/sam2/commits/2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "confirmed": true
+    },
+    "data_documentation": {
+      "url": "https://api.github.com/repos/cloudtostreet/Sen1Floods11/commits/b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+      "revision": "b9e460dabe70230111a3c3d36cd0c5ce03606ee9",
+      "confirmed": true
+    }
+  },
+  "access": {
+    "checked_at": "2026-10-28T21:00:09.765443+00:00",
+    "models": {
+      "sam2": {
+        "repo_id": "facebook/sam2.1-hiera-tiny",
+        "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+        "filename": "sam2.1_hiera_tiny.pt",
+        "metadata_matches": true,
+        "gated": false,
+        "access": {
+          "http_status": 302,
+          "authorized": true,
+          "method": "HEAD_no_redirect",
+          "body_downloaded": false
+        },
+        "license": "apache-2.0"
+      },
+      "dinov3": {
+        "repo_id": "facebook/dinov3-vitl16-pretrain-sat493m",
+        "revision": "f692fa42da72c6797b67cd73494a168d1120d3ee",
+        "filename": "model.safetensors",
+        "metadata_matches": true,
+        "gated": "manual",
+        "access": {
+          "http_status": 401,
+          "authorized": false,
+          "method": "HEAD_no_redirect",
+          "body_downloaded": false
+        },
+        "license": "other"
+      }
+    },
+    "dataset": {
+      "source": {
+        "url": "https://storage.googleapis.com/sen1floods11/v1.1/catalog/sen1floods11_hand_labeled_source/collection.json",
+        "id": "sen1floods11_hand_labeled_source",
+        "license": "proprietary",
+        "metadata_sha256": "793356646cb5feed5ba6734b34fa402d93e7dbed9cb674f3f703db1b46484fb9",
+        "accessible": true
+      },
+      "label": {
+        "url": "https://storage.googleapis.com/sen1floods11/v1.1/catalog/sen1floods11_hand_labeled_label/collection.json",
+        "id": "sen1floods11_hand_labeled_label",
+        "license": "proprietary",
+        "metadata_sha256": "ef75180c5b6c3b8795383d063fba8cb9d91fc8141f11ae2aefea684cb3005488",
+        "accessible": true
+      },
+      "S2Hand": {
+        "object_metadata": {
+          "name": "v1.1/data/flood_events/HandLabeled/S2Hand/Bolivia_103757_S2Hand.tif",
+          "generation": "1601573197287337",
+          "size": "908533",
+          "md5Hash": "Oe7mGdC4EPKPTj4jboBwOw==",
+          "crc32c": "hXF65g=="
+        },
+        "http_status": 200,
+        "method": "HEAD",
+        "body_downloaded": false
+      },
+      "LabelHand": {
+        "object_metadata": {
+          "name": "v1.1/data/flood_events/HandLabeled/LabelHand/Bolivia_103757_LabelHand.tif",
+          "generation": "1601572621199497",
+          "size": "7609",
+          "md5Hash": "sYDDsZoqt9k0cxLRNmXrJQ==",
+          "crc32c": "FzaXNw=="
+        },
+        "http_status": 200,
+        "method": "HEAD",
+        "body_downloaded": false
+      }
+    },
+    "blockers": [
+      "dinov3: revision/file mismatch or HEAD access denied; confirm account grant and HF_TOKEN read permission",
+      "Sen1Floods11: license grant for S2Hand and LabelHand unresolved; obtain publisher clarification before acquisition"
+    ]
+  }
+}
