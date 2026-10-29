@@ -35,6 +35,20 @@ SOURCE_URLS = {
 
 
 def verify_stage1():
+    """Teammate's stage-1 Colab evidence is an ANTECEDENT only.
+
+    It documents a different person's run and never accredits the current user's execution.
+    A missing/changed antecedent is recorded, not fatal: E2 neither needs DINOv3 nor that run.
+    """
+    try:
+        return _verify_stage1_antecedent()
+    except (OSError, KeyError, ValueError) as error:
+        return {"status": "antecedent_unavailable_not_gating", "reason": type(error).__name__ + ": " + str(error)[:200],
+                "accredits_this_execution": False,
+                "license": "pending_publisher_reply; user_explicitly_requested_stage2_acquisition"}
+
+
+def _verify_stage1_antecedent():
     markers = json.loads((EVIDENCE1 / "artifact_markers.json").read_text("utf-8"))
     result = {}
     for name in ("environment", "recovery_validation"):
@@ -60,6 +74,8 @@ def verify_stage1():
     if not all(v["access"]["authorized"] and v["metadata_matches"] for v in access["models"].values()):
         raise ValueError("Stage-1 model access failed")
     result["access"] = {"sha256": sha}
+    result["status"] = "antecedent_verified"
+    result["accredits_this_execution"] = False
     result["license"] = "pending_publisher_reply; user_explicitly_requested_stage2_acquisition"
     return result
 

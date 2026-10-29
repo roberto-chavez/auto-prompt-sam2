@@ -139,8 +139,10 @@ def inspect_chip(kind, model, predictor, tensor, rgb, valid, params, config):
     return arrays, grids, metadata
 
 
-def run_stage4(root, mode):
+def run_stage4(root, mode, models=("sam", "dino")):
     require_colab_gpu()
+    if not models or any(m not in ("sam", "dino") for m in models):
+        raise ValueError("models must be a non-empty subset of sam,dino")
     import numpy as np
     import torch
     from auto_prompt_sam2.baseline import stage2_inputs
@@ -175,6 +177,7 @@ def run_stage4(root, mode):
     plans = {r: train_plan(v["manifest"], config["chips_per_regime"]) for r, v in inputs.items()}
     identity = {"stage": "phase1_stage4", "config_sha256": digest(config),
         "source_tree_sha256": source["source_tree_sha256"], "models": environment_config["models"],
+        "models_run": list(models),
         "regimes": {r: {"manifest_sha256": digest(v["manifest"]), "preprocessing_sha256": digest(v["params"]),
             "manifest_generation": v["manifest_generation"], "parameter_generation": v["parameter_generation"],
             "train_ids": [row["id"] for row in plans[r]]} for r, v in inputs.items()}}
@@ -217,6 +220,8 @@ def run_stage4(root, mode):
                     raise ValueError("Recovery artifact hash mismatch")
             report["artifacts"] = prior["artifacts"]
         for kind, model_key in (("sam", "sam2"), ("dino", "dinov3")):
+            if kind not in models:
+                continue  # E2 teardown prioritises SAM; DINOv3 (gated) must not block it.
             expected = prior["models"][kind]["checkpoint_sha256"] if prior else None
             if kind == "sam":
                 predictor, model_info = load_frozen_sam(environment_config["models"][model_key], root,
@@ -340,5 +345,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("prepare", "recover"))
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--models", default="sam,dino", help="comma list: sam | sam,dino (use the same value for recover)")
     args = parser.parse_args()
-    run_stage4(args.root, args.mode)
+    run_stage4(args.root, args.mode, tuple(m for m in args.models.split(",") if m))

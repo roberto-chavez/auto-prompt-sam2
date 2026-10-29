@@ -1,21 +1,14 @@
 {
-  "created_at": "2026-10-29T21:52:45.809817+00:00",
+  "created_at": "2026-10-29T22:52:45.326616+00:00",
   "kind": "local_cpu_validation_not_a_real_experiment",
   "python": "3.13.16",
-  "bundle": {
-    "path": "artifacts/auto-prompt-sam2-e2.zip",
-    "sha256": "d12e1ea7f4c8e1a8b79321d37110d086a360dba9b77aef43417f5d93167d842c",
-    "files": 50,
-    "contains_notebooks": false,
-    "contains_weights_or_data": false
-  },
   "syntax": {
     "scripts/audit_public_sources.py": "syntax_ok",
     "scripts/bootstrap_colab.py": "syntax_ok",
     "scripts/build_e2_notebooks.py": "syntax_ok",
     "scripts/check_access.py": "syntax_ok",
+    "scripts/e2_decision_log_draft.py": "syntax_ok",
     "scripts/export_colab_bundle.py": "syntax_ok",
-    "scripts/export_e2_bundle.py": "syntax_ok",
     "scripts/export_stage1_evidence.py": "syntax_ok",
     "scripts/export_stage2_bundle.py": "syntax_ok",
     "scripts/export_stage3_bundle.py": "syntax_ok",
@@ -54,25 +47,47 @@
     "tests/test_stage4.py": "syntax_ok"
   },
   "notebooks": {
-    "01_entorno_colab.ipynb": {
-      "code_cells": 2,
+    "E2_01_datos_baseline_teardown.ipynb": {
+      "code_cells": 9,
       "all_cells_parse": true,
       "no_outputs_no_execution_counts": true,
-      "embeds_bundle_sha256": true,
-      "sha256": "0ef0e2d15766bcdfe2f125ab1bc46afe5493abbcfe4580838fe1bc5d3d08110d"
+      "no_embedded_tokens_or_bundle_hashes": true,
+      "sha256": "86dafe2e33d7fcac26e93b117cd4927492863233872cfe52fb0a0a1030fd395a"
     },
-    "02_E2_teardown_intervencion.ipynb": {
-      "code_cells": 8,
+    "E2_02_intervencion_decoder.ipynb": {
+      "code_cells": 9,
       "all_cells_parse": true,
       "no_outputs_no_execution_counts": true,
-      "embeds_bundle_sha256": true,
-      "sha256": "3fe64ac8ca08ed3893747aa0ce702622ffc7e9f4bed9622f7a44e7a1223d27ca"
+      "no_embedded_tokens_or_bundle_hashes": true,
+      "sha256": "0afd562bafb3ebcfe6256db1a36ec3566a8f2a73f2b071de3535a0965dd3ccf1"
     }
+  },
+  "files_required_by_notebooks_present_in_repo": {
+    "checked": [
+      "scripts/bootstrap_colab.py",
+      "scripts/prepare_stage2.py",
+      "scripts/run_stage3.py",
+      "scripts/run_stage4.py",
+      "scripts/run_e2.py",
+      "scripts/e2_decision_log_draft.py",
+      "requirements-colab.txt",
+      "requirements-stage2.txt",
+      "configs/environment.yaml",
+      "configs/data.yaml",
+      "configs/baseline.yaml",
+      "configs/profiling.yaml",
+      "configs/e2_intervention.yaml",
+      "docs/project/validacion_etapa4.md",
+      "notebooks/01_entorno_colab.ipynb",
+      "notebooks/02_datos_y_splits.ipynb",
+      "notebooks/04_diseccion_modelos.ipynb"
+    ],
+    "missing": []
   },
   "unit_tests": {
     "exit_code": 0,
     "summary": [
-      "Ran 70 tests in 9.549s",
+      "Ran 70 tests in 20.685s",
       "",
       "OK"
     ],
@@ -96,7 +111,8 @@
     "real SAM weights",
     "CUDA/T4 behaviour and timing",
     "Google Drive persistence",
-    "Sen1Floods11 data",
+    "Sen1Floods11 download",
+    "Colab clone/bootstrap of this repository",
     "any segmentation quality or ablation result"
   ]
 }

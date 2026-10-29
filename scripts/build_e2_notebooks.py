@@ -1,42 +1,67 @@
-"""Generate the two E2 Colab notebooks (no outputs, never executed) with the REAL bundle SHA-256.
+"""Generate the two E2 Colab notebooks (no outputs, never executed) into notebooks/.
 
-Order: export bundle -> compute SHA -> build notebooks. Usage:
-    python scripts/export_e2_bundle.py && python scripts/build_e2_notebooks.py [--out DIR]
+They clone THIS repository from GitHub inside Colab (branch _E.V_), pin the exact commit in the
+user's Drive (e2/code_commit.txt) and run everything from that checkout. No ZIP bundles and no
+hashes embedded in notebooks, hence no circular dependency between notebooks, commits and hashes.
+Usage: python scripts/build_e2_notebooks.py
 """
-import argparse
 import json
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-import sys
-sys.path.insert(0, str(REPO / "src"))
-from auto_prompt_sam2.artifacts import sha256_file
+OUT = REPO / "notebooks"
 
 SETUP = '''from pathlib import Path
-import hashlib, json, os, subprocess, sys, zipfile
+import json, os, subprocess, sys
 from google.colab import drive
 
 drive.mount('/content/drive')
-PERSIST_ROOT = '/content/drive/MyDrive/auto-prompt-sam2'            # carpeta de trabajo en TU Drive
-BUNDLE = Path('/content/drive/MyDrive/auto-prompt-sam2-e2.zip')    # ZIP que subiste a la raíz de "Mi unidad"
-EXPECTED_BUNDLE_SHA256 = '@@SHA@@'                                  # SHA-256 real del ZIP (calculado al generar este notebook)
-REPO = Path('/content/auto-prompt-sam2-e2')
+GITHUB_URL = 'https://github.com/roberto-chavez/auto-prompt-sam2.git'
+BRANCH = '_E.V_'
+PINNED_COMMIT = ''    # '' = usa el commit ya fijado en tu Drive; en la 1.ª ejecución fija la punta actual de la rama
+UPDATE_CODE = False   # True SOLO para adoptar código nuevo de la rama (entonces rehaz E2 desde 'prepare')
+PERSIST_ROOT = '/content/drive/MyDrive/auto-prompt-sam2'   # datos, pesos, cachés y checkpoints: SOLO aquí
+REPO = Path('/content/auto-prompt-sam2')
 PYTHON = Path('/content/auto-prompt-venv/bin/python')
+Path(PERSIST_ROOT).mkdir(parents=True, exist_ok=True)
 
-assert BUNDLE.is_file(), f'No encuentro {BUNDLE}. Sube auto-prompt-sam2-e2.zip a la raíz de Mi unidad en Drive.'
-actual = hashlib.sha256(BUNDLE.read_bytes()).hexdigest()
-assert actual == EXPECTED_BUNDLE_SHA256, f'ZIP distinto al esperado: {actual}'
-print('ZIP verificado, SHA-256 =', actual)
-REPO.mkdir(parents=True, exist_ok=True)
-with zipfile.ZipFile(BUNDLE) as archive:
-    for item in archive.infolist():
-        assert (REPO / item.filename).resolve().is_relative_to(REPO.resolve()), 'Ruta insegura en el ZIP'
-    archive.extractall(REPO)
+def sh(args, cwd=None):
+    r = subprocess.run(args, cwd=cwd, text=True, capture_output=True)
+    if r.returncode:
+        raise RuntimeError(f'{args[:3]} falló:\\n{r.stdout}\\n{r.stderr}')
+    return r.stdout.strip()
 
+# --- Código desde GitHub, en una revisión fijada y reproducible --------------------------------------
+PIN_FILE = Path(PERSIST_ROOT) / 'e2/code_commit.txt'
+existed = REPO.exists()
+if not existed:
+    sh(['git', 'clone', '--branch', BRANCH, GITHUB_URL, str(REPO)])
+elif UPDATE_CODE:
+    sh(['git', 'fetch', 'origin', BRANCH], cwd=REPO)
+want = PINNED_COMMIT.strip() or ('' if UPDATE_CODE or not PIN_FILE.exists() else PIN_FILE.read_text().strip())
+if UPDATE_CODE and existed and not PINNED_COMMIT.strip():
+    want = sh(['git', 'rev-parse', 'FETCH_HEAD'], cwd=REPO)
+if want:
+    sh(['git', 'checkout', '--detach', want], cwd=REPO)
+COMMIT = sh(['git', 'rev-parse', 'HEAD'], cwd=REPO)
+assert not sh(['git', 'status', '--porcelain'], cwd=REPO), 'El código clonado tiene cambios locales'
+if PINNED_COMMIT.strip() or UPDATE_CODE or not PIN_FILE.exists():
+    PIN_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PIN_FILE.write_text(COMMIT)
+print('Código:', GITHUB_URL, '| rama', BRANCH, '| commit', COMMIT)
+print('Commit fijado en Drive:', PIN_FILE.read_text().strip())
+
+# --- Entorno ----------------------------------------------------------------------------------------
 child_env = dict(os.environ, PYTHONPATH=str(REPO / 'src'),
     AUTO_PROMPT_PERSIST_ROOT=PERSIST_ROOT, PYTHONHASHSEED='42',
     CUBLAS_WORKSPACE_CONFIG=':4096:8', HF_HUB_DISABLE_TELEMETRY='1',
     AUTO_PROMPT_EXECUTION_CONTEXT='google_colab_user_notebook')
+try:   # HF_TOKEN se lee de los secretos de Colab (activa "Acceso desde el notebook"); nunca se imprime ni se guarda
+    from google.colab import userdata
+    child_env['HF_TOKEN'] = userdata.get('HF_TOKEN')
+    print('HF_TOKEN leído de los secretos de Colab (valor no mostrado).')
+except Exception as error:
+    print('HF_TOKEN no disponible (' + type(error).__name__ + '): SAM es público; solo DINOv3 lo necesita.')
 LOG_DIR = Path(PERSIST_ROOT) / 'e2/notebook_logs'
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -65,26 +90,78 @@ command(['nvidia-smi'], 'nvidia_smi.log')
 command([str(PYTHON), '-c', 'import torch; assert torch.cuda.is_available(), "NO HAY GPU: cambia el tipo de entorno a GPU"; print("GPU:", torch.cuda.get_device_name(0), "| torch", torch.__version__)'], 'gpu_check.log')
 '''
 
-PREREQ = '''# E2 NO descarga ni reconstruye datos: lee lo que dejó la etapa 2 del equipo en PERSIST_ROOT.
+STAGE2 = '''# Descarga Sen1Floods11 v1.1 (446 pares S2Hand/LabelHand) a TU Drive, audita, crea los splits y fija el preprocesamiento.
+# Es la parte más lenta. Es reanudable: si Colab se corta, vuelve a ejecutar las celdas de entorno y esta.
+command([str(PYTHON), str(REPO / 'scripts/prepare_stage2.py'), '--root', PERSIST_ROOT,
+         '--evidence', str(Path(PERSIST_ROOT) / 'stage2/evidence')], 'stage2_prepare.log')'''
+
+STAGE2_CHECK = '''# Segunda pasada sin red: relee todo desde tu Drive y comprueba que coincide.
+command([str(PYTHON), str(REPO / 'scripts/prepare_stage2.py'), '--root', PERSIST_ROOT, '--offline',
+         '--evidence', str(Path(PERSIST_ROOT) / 'stage2/evidence')], 'stage2_offline.log')
+report = json.loads((Path(PERSIST_ROOT) / 'stage2/evidence/validation.json').read_text())
+print(json.dumps({k: {'counts': v['counts'], 'parameters_reused': v['parameters_reused'], 'reload': v['reload']}
+                  for k, v in report['regimes'].items()}, indent=2))
+assert report['models_executed'] is False and report['reserved_pixel_caches'] == []'''
+
+STAGE3 = '''# Reutiliza scripts/run_stage3.py: SAM 2.1 tiny congelado, puntos simulados desde etiquetas (referencia asistida), evaluador común.
+MODE3 = 'prepare'
+command([str(PYTHON), str(REPO / 'scripts/run_stage3.py'), MODE3, '--root', PERSIST_ROOT], 'stage3_' + MODE3 + '.log')'''
+
+STAGE3_SHOW = '''RUNS3 = sorted(p for p in (Path(PERSIST_ROOT) / 'stage3/evidence').iterdir() if p.is_dir() and (p / 'validation.json').is_file())
+assert RUNS3, 'No hay run completo de la etapa 3; revisa e2/notebook_logs/stage3_prepare.log'
+R3 = json.loads((RUNS3[-1] / 'validation.json').read_text())
+print('run_id:', R3['run_id'], '| estado:', R3['status'])
+for regime, value in R3['regimes'].items():
+    v = value['summary']['val']['pooled']['values']
+    print(regime, '-> val agrupado: IoU agua', v['water_iou'], '| precisión', v['precision'], '| recall', v['recall'], '| Dice', v['dice'])'''
+
+STAGE4 = '''# Teardown del modelo base (SAM 2.1 tiny): parámetros/FLOPs por bloque, features intermedias, ERF, latencia y memoria.
+# Solo SAM: DINOv3 es opcional y no bloquea E2.
+command([str(PYTHON), str(REPO / 'scripts/run_stage4.py'), 'prepare', '--models', 'sam', '--root', PERSIST_ROOT], 'stage4_sam_prepare.log')'''
+
+STAGE4_SHOW = '''from IPython.display import display, Image, HTML
+import csv, html
+RUNS4 = sorted(p for p in (Path(PERSIST_ROOT) / 'stage4/evidence').iterdir() if p.is_dir() and (p / 'validation.json').is_file())
+assert RUNS4, 'No hay run completo de la etapa 4; revisa e2/notebook_logs/stage4_sam_prepare.log'
+RUN4 = RUNS4[-1]
+R4 = json.loads((RUN4 / 'validation.json').read_text())
+print('run_id:', R4['run_id'], '| modelos:', R4['identity'].get('models_run'))
+print(json.dumps(R4['interpretation']['observed'], indent=1)[:3000])
+for table in sorted(RUN4.glob('sam_*_parameters.csv'))[:1] + sorted(RUN4.glob('sam_*_flops.csv'))[:1] + sorted(RUN4.glob('sam_*_timings.csv'))[:1]:
+    rows = list(csv.reader(table.open(encoding='utf-8', newline='')))
+    print(table.name)
+    display(HTML('<table>' + ''.join('<tr>' + ''.join('<td>' + html.escape(v) + '</td>' for v in row) + '</tr>' for row in rows) + '</table>'))
+for figure in sorted(RUN4.glob('sam_*_0_figure.png'))[:1]:
+    print(figure.name)
+    display(Image(filename=str(figure)))
+print('Evidencia completa:', RUN4.with_suffix('.zip'))'''
+
+DINO = '''RUN_DINO = False   # True = repetir el teardown incluyendo DINOv3 (gated; requiere HF_TOKEN con acceso aprobado). NO es necesario para E2.
+if RUN_DINO:
+    command([str(PYTHON), str(REPO / 'scripts/run_stage4.py'), 'prepare', '--models', 'sam,dino', '--root', PERSIST_ROOT], 'stage4_sam_dino_prepare.log')
+else:
+    print('DINOv3 omitido (opcional).')'''
+
+PREREQ = '''# E2 lee lo que dejó TU ejecución del notebook E2_01 en TU Drive. Nada depende de archivos de otra persona.
 root = Path(PERSIST_ROOT)
 required = {
-    'raw/acquisition (adquisición Sen1Floods11)': root / 'raw/acquisition',
-    'stage2/validation (informe de la etapa 2)': root / 'stage2/validation',
+    'raw/acquisition (descarga Sen1Floods11)': root / 'raw/acquisition',
+    'stage2/validation (datos preparados)': root / 'stage2/validation',
     'regimes/official/manifests': root / 'regimes/official/manifests',
     'regimes/official/preprocessing': root / 'regimes/official/preprocessing',
 }
-missing = [name for name, path in required.items() if not path.exists()]
 for name, path in required.items():
     print(('OK       ' if path.exists() else 'FALTA    ') + name)
-assert not missing, ('Faltan datos de la etapa 2 en tu Drive. NO continúes: pide a tu compañero que comparta la carpeta '
-                     '"auto-prompt-sam2" (o ejecuta el notebook 02 del repositorio con su ZIP). Ver PASOS_E2.md, sección 3.')
-'''
+assert all(p.exists() for p in required.values()), 'Faltan datos: ejecuta primero E2_01_datos_baseline_teardown.ipynb completo (celda de la etapa 2).'
+for label, folder in (('línea base (etapa 3)', root / 'stage3/evidence'), ('teardown (etapa 4)', root / 'stage4/evidence')):
+    done = sorted(p.name for p in folder.glob('*/validation.json')) if folder.exists() else []
+    print(('OK       ' if done else 'AVISO    ') + label + ': ' + ('run en tu Drive' if done else 'aún no ejecutada en tu Drive (E2 puede correr, pero la evidencia de Fase A estará incompleta)'))'''
 
 RESULTS = '''from IPython.display import display, Image, HTML
 import csv, html
 EVIDENCE = Path(PERSIST_ROOT) / 'e2/evidence'
 RUNS = sorted(p for p in EVIDENCE.iterdir() if p.is_dir() and (p / 'report.json').is_file())
-assert RUNS, 'No hay un prepare completo. Conserva e2/notebook_logs/prepare.log y envíalo.'
+assert RUNS, 'No hay un prepare completo. Conserva e2/notebook_logs/prepare.log.'
 RUN_DIR = RUNS[-1]
 REPORT = json.loads((RUN_DIR / 'report.json').read_text())
 print('run_id:', REPORT['run_id'], '| estado:', REPORT['status'])
@@ -102,8 +179,28 @@ display(Image(filename=str(RUN_DIR / 'curves.png')))
 for figure in sorted((RUN_DIR / 'examples').glob('*.png')):
     print(figure.name)
     display(Image(filename=str(figure)))
-print('Limitaciones declaradas:'); [print(' -', item) for item in REPORT['limitations']]
-'''
+print('Limitaciones declaradas:'); [print(' -', item) for item in REPORT['limitations']]'''
+
+DRAFT = '''EVID = Path(PERSIST_ROOT) / 'e2/evidence'
+RUN_DIR = sorted(p for p in EVID.iterdir() if p.is_dir() and (p / 'report.json').is_file())[-1]
+# Borrador (solo cifras medidas) para pegar en docs/project/cuaderno_decisiones.md; la interpretación queda PENDIENTE.
+command([str(PYTHON), str(REPO / 'scripts/e2_decision_log_draft.py'), str(RUN_DIR)], 'decision_log_draft.log')
+print('\\nArchivo:', RUN_DIR / 'e2_resultados_para_cuaderno_decisiones.md')'''
+
+ZIPCELL = '''from google.colab import files
+import hashlib
+# Regenera el ZIP incluyendo el borrador del cuaderno de decisiones y el commit de código usado.
+import zipfile
+EVID = Path(PERSIST_ROOT) / 'e2/evidence'
+RUN_DIR = sorted(p for p in EVID.iterdir() if p.is_dir() and (p / 'report.json').is_file())[-1]
+(RUN_DIR / 'code_commit.txt').write_text(COMMIT)
+target = RUN_DIR.with_name(RUN_DIR.name + '-final.zip')
+with zipfile.ZipFile(target, 'w', zipfile.ZIP_DEFLATED) as archive:
+    for p in sorted(RUN_DIR.rglob('*')):
+        if p.is_file():
+            archive.write(p, p.relative_to(RUN_DIR.parent).as_posix())
+print(target, hashlib.sha256(target.read_bytes()).hexdigest())
+files.download(str(target))'''
 
 
 def md(text, i):
@@ -121,88 +218,79 @@ def notebook(cells, name):
             "language_info": {"name": "python"}}, "nbformat": 4, "nbformat_minor": 5}
 
 
-def build(sha):
-    s = lambda t: t.replace("@@SHA@@", sha)
-    nb01 = notebook([
+def build():
+    nb1 = notebook([
         md("""
-# 01 · Entorno Colab para E2 (versión preparada)
+# E2 · Notebook 1 — Entorno, datos Sen1Floods11, línea base y teardown
 
-**NO EJECUTADO.** Este cuaderno solo prepara el entorno (ZIP verificado + venv + pines + GPU). No descarga datos ni pesos, no entrena y **no demuestra nada por sí mismo**. La copia intacta del original está en `originales/01_entorno_colab_original.ipynb`.
+**NO EJECUTADO.** Solo E2. Parte 1 de 2: deja en **tu Drive** (`MyDrive/auto-prompt-sam2`) los datos y la evidencia de la línea base (SAM 2.1 tiny congelado) y del teardown. Reutiliza el código del repositorio (`prepare_stage2.py`, `run_stage3.py`, `run_stage4.py`).
 
-Qué se corrigió respecto del original: el hash del ZIP ya no está vacío (es el SHA-256 real del ZIP de E2), la ruta apunta al ZIP de E2 (`auto-prompt-sam2-e2.zip`, que **no contiene notebooks**, así que no hay dependencia circular con su propio hash), se conservan las comprobaciones de integridad y se añade la comprobación explícita de GPU. Las verificaciones de accesos DINOv3/HEAD (etapa 1) ya las cerró el equipo en `main` y no se repiten aquí.
-
-Antes: Entorno de ejecución > Cambiar tipo de entorno > **T4 GPU**. Sube `auto-prompt-sam2-e2.zip` a la raíz de *Mi unidad*.
+* Runtime: **T4 GPU**. Todo el código se clona desde GitHub (rama `_E.V_`) y su commit queda fijado en tu Drive.
+* Los datos, pesos, cachés y checkpoints se guardan solo en tu Drive, nunca en GitHub.
+* Referencia asistida por etiquetas (no desplegable). No se usa el flujo automático DINOv3→SAM.
+* La evidencia ejecutada de tu compañero en `docs/project/evidence/` es antecedente; **no acredita tu ejecución**.
+* Licencia de Sen1Floods11: respuesta del publicador pendiente.
 """, 0),
-        code(s(SETUP), 1), code(GPU, 2),
-        md("Listo. Si las dos celdas terminaron sin error, abre `02_E2_teardown_intervencion.ipynb` y ejecuta sus celdas en orden. Este cuaderno 01 **no** acredita E2.", 3),
-    ], "01_entorno_colab.ipynb")
-    nb02 = notebook([
+        md("## 1. Entorno\nClona el código, fija el commit, crea el entorno aislado y lee `HF_TOKEN` de los secretos de Colab (sin mostrarlo).", 1),
+        code(SETUP, 2), code(GPU, 3),
+        md("## 2. Datos (etapa 2): descarga y preparación de Sen1Floods11\nDescarga los 446 pares a tu Drive, audita, crea splits y fija estadísticas con **solo train**. No abre test ni Bolivia para ajustar nada.", 4),
+        code(STAGE2, 5), code(STAGE2_CHECK, 6),
+        md("## 3. Línea base (etapa 3)\nSAM 2.1 tiny congelado sobre train/val con puntos simulados (1 positivo + 1 negativo por componente de agua). Máscara elegida por IoU **predicho**. Las métricas de esta celda son tuyas y **solo se interpretan tras revisar tus salidas**.", 7),
+        code(STAGE3, 8), code(STAGE3_SHOW, 9),
+        md("## 4. Teardown del modelo base (etapa 4, solo SAM)\nParámetros y FLOPs por bloque, features intermedias, mapa de campo receptivo, latencia y memoria máxima en la GPU que te asignó Colab.", 10),
+        code(STAGE4, 11), code(STAGE4_SHOW, 12),
+        md("### (Opcional) Incluir DINOv3\nNo es necesario para E2 y no bloquea nada. Requiere acceso aprobado a DINOv3 en Hugging Face y el secreto `HF_TOKEN`.", 13),
+        code(DINO, 14),
         md("""
-# 02 · E2 — Intervención preliminar sobre el decodificador de SAM 2.1 (Sen1Floods11)
+## Siguiente
+Abre `E2_02_intervencion_decoder.ipynb` (misma carpeta `notebooks/` de la rama `_E.V_`). Guarda **este cuaderno ejecutado** (Archivo → Descargar → .ipynb) y no cambies de commit entre notebooks (queda fijado en `e2/code_commit.txt`). Nada de esto marca E2 como acreditada.
+""", 15),
+    ], "E2_01_datos_baseline_teardown.ipynb")
+    nb2 = notebook([
+        md("""
+# E2 · Notebook 2 — Intervención preliminar: decoder de SAM 2.1 congelado vs ajustado
 
-**NO EJECUTADO. Solo E2.** Compara SAM 2.1 tiny con el *mask decoder* **congelado** (época 0) frente al **ajustado** (solo ese bloque; encoder de imagen y de prompts congelados), con pérdida BCE+Dice sobre un subconjunto pequeño y explícito de entrenamiento y evaluación en un subconjunto de validación.
+**NO EJECUTADO.** Solo E2. Compara el *mask decoder* **congelado** (época 0) con el **ajustado** (solo ese bloque; encoder de imagen y de prompts congelados), BCE+Dice sobre un subconjunto pequeño de train, evaluado en un subconjunto de val.
 
-* **Referencia asistida por etiquetas, no desplegable:** los puntos (1 positivo + 1 negativo por componente de agua) se simulan a partir de las etiquetas. No es el flujo automático DINOv3 → SAM y **DINOv3 no se usa**.
-* **Preliminar:** semilla única (42), subconjuntos pequeños, sin test ni Bolivia. Nada aquí generaliza a otros eventos.
-* La hipótesis se guarda en Drive **antes** de entrenar (celda de `prepare`). Los resultados reales aparecerán solo tras ejecutar en tu Colab.
-* La línea base (etapa 3) y el teardown (etapa 4) ya existen en el repositorio; E2 los reutiliza (mismo evaluador, mismos prompts, mismo modelo verificado por hash).
+* **Referencia asistida por etiquetas, no desplegable**; DINOv3 no se usa. Preliminar: semilla 42, subconjuntos pequeños, sin test ni Bolivia.
+* La hipótesis se guarda en tu Drive **antes** de cargar o entrenar el modelo (celda `prepare`).
+* Los resultados reales aparecerán solo cuando tú ejecutes. Hasta revisar tus salidas, métricas e interpretación siguen **pendientes**.
+* Requisito: haber ejecutado `E2_01_datos_baseline_teardown.ipynb` en tu cuenta. Runtime: **T4 GPU**.
 """, 0),
-        md("## 1. Preparar el entorno (ZIP verificado, venv, pines)\nRequiere GPU T4 y que `auto-prompt-sam2-e2.zip` esté en la raíz de *Mi unidad*.", 1),
-        code(s(SETUP), 2), code(GPU, 3),
-        md("## 2. Comprobar prerrequisitos de la etapa 2\nSi falta algo, la celda se detiene con un mensaje claro: no se reconstruyen splits ni estadísticas aquí.", 4),
-        code(PREREQ, 5),
-        md("## 3. Hipótesis y configuración (antes de entrenar)\nSe muestran exactamente los valores de `configs/e2_intervention.yaml`. No se cambian después de ver resultados.", 6),
+        md("## 1. Entorno (mismo commit que el notebook 1)", 1),
+        code(SETUP, 2), code(GPU, 3),
+        md("## 2. Prerrequisitos en tu Drive", 4), code(PREREQ, 5),
+        md("## 3. Hipótesis y configuración (antes de entrenar)\nTal como están en `configs/e2_intervention.yaml` del commit fijado. No se cambian tras ver resultados.", 6),
         code("print(json.dumps(json.loads((REPO / 'configs/e2_intervention.yaml').read_text()), indent=2, ensure_ascii=False))", 7),
         md("""
 ## 4. Ejecutar E2 (`prepare`)
-Hace en orden: pruebas unitarias, verificación del hash de SAM, **guardado de la hipótesis**, comprobación de paridad con el predictor de la etapa 3, época 0 (decoder congelado), entrenamiento solo del decoder (con auditoría de gradientes), evaluación de la mejor época y exportación de evidencia. Imprime el tiempo de cada época: no se estimó antes.
+En orden: pruebas, verificación del hash de SAM, **guardado de la hipótesis**, paridad con el predictor de la etapa 3, época 0 (decoder congelado), entrenamiento solo del decoder con auditoría de gradientes, evaluación de la mejor época y evidencia. Imprime el tiempo por época (no estimado de antemano).
 
-`prepare` crea un run nuevo. Si Colab se desconecta a medio entrenamiento: reabre, ejecuta las celdas 1–2 y cambia `MODE` a `'resume'` (mismo ZIP y mismo Drive; nunca dos escritores a la vez).
+Si Colab se corta durante el entrenamiento: reconecta, ejecuta las celdas 1–2 y cambia `MODE` a `'resume'` (nunca dos escritores).
 """, 8),
         code("""MODE = 'prepare'   # 'resume' SOLO para continuar un run interrumpido
 assert MODE in ('prepare', 'resume')
 command([str(PYTHON), str(REPO / 'scripts/run_e2.py'), MODE, '--root', PERSIST_ROOT], MODE + '.log')""", 9),
-        md("## 5. Ver resultados medidos\nTodo lo mostrado sale de `report.json` y archivos del run; no hay números escritos a mano.", 10),
+        md("## 5. Ver resultados medidos\nTodo sale de `report.json`; no hay números escritos a mano.", 10),
         code(RESULTS, 11),
+        md("## 6. Borrador del cuaderno de decisiones\nCopia solo las cifras medidas a un `.md`. La **interpretación** debe escribirla el equipo.", 12),
+        code(DRAFT, 13),
         md("""
-## 6. Recuperar en un runtime nuevo (`recover`)
-1. Anota el ZIP de evidencia impreso arriba y **descárgalo** (celda siguiente).
-2. *Entorno de ejecución > Desconectar y eliminar el entorno*. Vuelve a conectar con T4 GPU.
-3. Ejecuta **solo** las celdas 1–2 (entorno y prerrequisitos) y la celda de abajo. **No repitas `prepare`.**
-
-`recover` recarga SAM desde Drive en modo *offline*, verifica el hash del checkpoint, recarga el mejor decoder guardado y vuelve a evaluar ambos brazos; deben coincidir con lo guardado (IoU agrupado a 1e-6 y confusiones por chip idénticas). Si falla, **no cambies las tolerancias**: guarda el log.
-""", 12),
-        code("command([str(PYTHON), str(REPO / 'scripts/run_e2.py'), 'recover', '--root', PERSIST_ROOT], 'recover.log')", 13),
-        md("## 7. Descargar la evidencia\nEl ZIP contiene informe, tablas, curvas, ejemplos, predicciones y puntos. **No** incluye checkpoints, pesos, tokens ni imágenes de entrenamiento (la licencia de Sen1Floods11 sigue pendiente).", 14),
-        code("""from google.colab import files
-ZIPS = sorted((Path(PERSIST_ROOT) / 'e2/evidence').glob('*.zip'))
-assert ZIPS, 'No hay ZIP de evidencia'
-print(ZIPS[-1], hashlib.sha256(ZIPS[-1].read_bytes()).hexdigest())
-files.download(str(ZIPS[-1]))""", 15),
+## 7. Recuperar en un runtime nuevo (`recover`)
+Descarga primero la evidencia (sección 8). Luego *Entorno de ejecución → Desconectar y eliminar*, reconecta con T4, ejecuta **solo** las celdas 1–2 (entorno y prerrequisitos) y la celda siguiente. **No repitas `prepare`.** Recarga SAM desde tu Drive offline, verifica el hash, recarga el mejor decoder y reevalúa ambos brazos; deben coincidir (IoU agrupado a 1e-6 y confusiones por chip idénticas). Si falla, no cambies tolerancias.
+""", 14),
+        code("command([str(PYTHON), str(REPO / 'scripts/run_e2.py'), 'recover', '--root', PERSIST_ROOT], 'recover.log')", 15),
+        md("## 8. Descargar la evidencia\nEl ZIP incluye informe, tablas, curvas, ejemplos, predicciones, puntos, el borrador y el commit de código. **No** incluye checkpoints, pesos, tokens ni imágenes de entrenamiento.", 16),
+        code(ZIPCELL, 17),
         md("""
-## 8. Qué devolver y qué NO afirmar
-Devuelve: **este notebook ejecutado** (Archivo > Descargar > .ipynb, con salidas y errores), el ZIP de evidencia y, si hubo errores, `e2/notebook_logs/*.log`.
-
-E2 **no queda acreditada** por crear este cuaderno ni por correrlo: falta revisar los resultados, interpretarlos (incluyendo fallos y límites) y completar el cuaderno de decisiones con tus conclusiones. IA: Claude preparó código, pruebas y documentación; la comprensión y la defensa oral son tuyas.
-""", 16),
-    ], "02_E2_teardown_intervencion.ipynb")
-    return nb01, nb02
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--out", type=Path, default=REPO / "artifacts/notebooks")
-    parser.add_argument("--repo-copy", type=Path, default=REPO / "notebooks/05_e2_intervencion_decoder.ipynb")
-    args = parser.parse_args()
-    bundle = REPO / "artifacts/auto-prompt-sam2-e2.zip"
-    sha = sha256_file(bundle)
-    nb01, nb02 = build(sha)
-    args.out.mkdir(parents=True, exist_ok=True)
-    for name, nb in (("01_entorno_colab.ipynb", nb01), ("02_E2_teardown_intervencion.ipynb", nb02)):
-        (args.out / name).write_text(json.dumps(nb, indent=1, ensure_ascii=False) + "\n", "utf-8")
-    args.repo_copy.write_text(json.dumps(nb02, indent=1, ensure_ascii=False) + "\n", "utf-8")
-    print("bundle sha256", sha, "->", args.out)
+## 9. Qué devolver y qué NO afirmar
+Devuelve: **este notebook ejecutado** (y el E2_01 ejecutado), el ZIP final de evidencia y, si hubo errores, `e2/notebook_logs/*.log`. E2 **no queda acreditada** por crear o correr estos cuadernos: falta revisar resultados, interpretarlos (incluyendo fallos y límites) y completar el cuaderno de decisiones. IA: Claude preparó código, pruebas y documentación; la comprensión y la defensa oral son tuyas.
+""", 18),
+    ], "E2_02_intervencion_decoder.ipynb")
+    return {"E2_01_datos_baseline_teardown.ipynb": nb1, "E2_02_intervencion_decoder.ipynb": nb2}
 
 
 if __name__ == "__main__":
-    main()
+    for name, nb in build().items():
+        (OUT / name).write_text(json.dumps(nb, indent=1, ensure_ascii=False) + "\n", "utf-8")
+        print("wrote", OUT / name)
