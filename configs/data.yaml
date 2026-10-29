@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "dataset_version": "1.1",
+  "bucket": "sen1floods11",
+  "event_metadata_aliases": {"Mekong": "Cambodia"},
+  "clip_percentile": 99.0,
+  "clip_method": "exact_pooled_rgb_integer_histogram_linear",
+  "reflectance_divisor": 10000.0,
+  "rgb_bands_one_based": [4, 3, 2],
+  "sam": {"size": 1024, "mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]},
+  "dino": {"size": 512, "patch_size": 16, "mean": [0.430, 0.411, 0.296], "std": [0.213, 0.156, 0.143]},
+  "resize": {"mode": "bilinear", "antialias": true, "align_corners": false, "padding": 0},
+  "label_resize": "nearest",
+  "invalid_rgb_fill_before_normalize": 0.0,
+  "coordinate_tolerance_px": 0.000001,
+  "license_note": "Publisher clarification pending; acquisition explicitly requested by user on 2026-10-28. No redistribution of raster bytes."
+}

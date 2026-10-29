@@ -8,7 +8,7 @@ El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando
 
 La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
 
-> **Estado actual (2026-10-28):** la etapa 1 de la fase 1 dispone de entorno y pruebas locales, además de una ejecución Colab de `recover` aportada por el equipo con retorno 0. Los informes del run confirman recuperación, CUDA y recursos en Tesla T4; los accesos a SAM y DINOv3 también están verificados. La etapa 1 queda cerrada por instrucción del usuario, con salvedad de licencia de Sen1Floods11: consulta enviada, respuesta pendiente. Se revisará y reabrirá al recibir respuesta. No hay datos, pesos, experimentos ni demo. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md).
+> **Estado actual (2026-10-28):** etapas 1 y 2 concluidas (2/9), con consulta de licencia de Sen1Floods11 pendiente. Etapa 2: 446 pares manuales con hashes, ambos splits y preprocesamiento por régimen, validados localmente y con preparación/recuperación offline en Colab revisadas a partir del notebook y el informe del usuario. No hay pesos, modelos ejecutados, entrenamientos, evaluaciones finales ni demo. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md).
 
 ## Pregunta de investigación y alcance
 
@@ -179,11 +179,13 @@ Estas fechas describen el cronograma académico y no acreditan que los entregabl
 
 La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
 
-**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). Las etapas 2–9 y la fase 2 siguen sin implementar.
+**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). Las etapas 3–9 y la fase 2 siguen sin implementar.
 
 Para llevar los archivos actuales a Colab sin depender de cambios aún no publicados: ejecute `python scripts/export_colab_bundle.py`, suba el ZIP generado a Drive y abra el notebook. Configure el SHA-256 del ZIP y la raíz persistente; siga sus pasos `prepare` y `recover` en runtimes distintos. Esto no descarga datos ni pesos. Los bloqueos de licencia/acceso deben resolverse antes de pasar a etapas dependientes.
 
 La estructura anterior describe la documentación original. Se añaden `configs/`, `notebooks/`, `src/auto_prompt_sam2/`, `scripts/`, `tests/` y evidencias en `docs/project/evidence/stage1/`.
+
+Para repetir la etapa 2, use `python scripts/export_stage2_bundle.py` y el notebook 02, reutilizando el venv y la raíz persistente. El paquete nuevo no reemplaza el ZIP histórico de etapa 1. Los datos reales están en `artifacts/stage2-persistent/` local, ignorados por Git; el notebook permite adquirir/verificar los mismos objetos en Drive y ejecutar la recuperación `--offline`. [Validación de etapa 2](docs/project/validacion_etapa2.md) documenta comandos, estadísticas, límites y la evidencia Colab revisada.
 
 ## Limitaciones y decisiones por verificar
 

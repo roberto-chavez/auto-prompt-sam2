@@ -1,0 +1,54 @@
+{
+  "created_at": "2026-10-29T02:13:04.443460+00:00",
+  "checks": {
+    "unit_tests": {
+      "argv": [
+        "D:\\ProyectosZZZ\\proyectosUNI\\deep\\auto-prompt-sam2\\.venv-validation\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_canonical_hash (test_stage1.PersistenceTests.test_canonical_hash) ... ok\ntest_colab_temporary_root_blocked (test_stage1.PersistenceTests.test_colab_temporary_root_blocked) ... ok\ntest_each_identity_change_is_rejected (test_stage1.PersistenceTests.test_each_identity_change_is_rejected) ... ok\ntest_export_reports_absent_access_instead_of_claiming_authorization (test_stage1.PersistenceTests.test_export_reports_absent_access_instead_of_claiming_authorization) ... ok\ntest_export_uses_saved_identity_and_only_verified_json (test_stage1.PersistenceTests.test_export_uses_saved_identity_and_only_verified_json) ... ok\ntest_head_never_logs_token_or_follows_redirect (test_stage1.PersistenceTests.test_head_never_logs_token_or_follows_redirect) ... ok\ntest_incomplete_and_corrupt_generation_preserve_previous (test_stage1.PersistenceTests.test_incomplete_and_corrupt_generation_preserve_previous) ... ok\ntest_no_path_escape (test_stage1.PersistenceTests.test_no_path_escape) ... ok\ntest_payload_without_marker_is_rejected (test_stage1.PersistenceTests.test_payload_without_marker_is_rejected) ... ok\ntest_recover_in_new_interpreter (test_stage1.PersistenceTests.test_recover_in_new_interpreter) ... ok\ntest_state_and_compatible_resume (test_stage1.PersistenceTests.test_state_and_compatible_resume) ... ok\ntest_coordinate_inverse_non_square_patch_centers_and_labels (test_stage2.Stage2Contracts.test_coordinate_inverse_non_square_patch_centers_and_labels) ... ok\ntest_dino_normalization_and_no_crop (test_stage2.Stage2Contracts.test_dino_normalization_and_no_crop) ... ok\ntest_exact_percentile_histogram (test_stage2.Stage2Contracts.test_exact_percentile_histogram) ... ok\ntest_fit_reads_only_allowed_train_without_labels (test_stage2.Stage2Contracts.test_fit_reads_only_allowed_train_without_labels) ... ok\ntest_input_validity_is_independent_from_labels_and_invalid_fill (test_stage2.Stage2Contracts.test_input_validity_is_independent_from_labels_and_invalid_fill) ... ok\ntest_official_csv_id_pairing_and_hyphenated_event (test_stage2.Stage2Contracts.test_official_csv_id_pairing_and_hyphenated_event) ... ok\ntest_persistent_reload_and_wrong_regime_rejected (test_stage2.Stage2Contracts.test_persistent_reload_and_wrong_regime_rejected) ... ok\ntest_real_raster_band_order_signed_dtype_nodata_and_labels (test_stage2.Stage2Contracts.test_real_raster_band_order_signed_dtype_nodata_and_labels) ... D:\\ProyectosZZZ\\proyectosUNI\\deep\\auto-prompt-sam2\\.venv-validation\\Lib\\site-packages\\rasterio\\transform.py:178: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication\n  return Affine.translation(west, north) * Affine.scale(xsize, -ysize)\nok\ntest_sam_exact_official_transform_without_constructing_model (test_stage2.Stage2Contracts.test_sam_exact_official_transform_without_constructing_model) ... ok\ntest_splits_disjoint_and_paraguay_excluded (test_stage2.Stage2Contracts.test_splits_disjoint_and_paraguay_excluded) ... ok\n\n----------------------------------------------------------------------\nRan 21 tests in 3.559s\n\nOK\n"
+    },
+    "pip_check": {
+      "argv": [
+        "D:\\ProyectosZZZ\\proyectosUNI\\deep\\auto-prompt-sam2\\.venv-validation\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "returncode": 0,
+      "stdout": "No broken requirements found.\n",
+      "stderr": ""
+    },
+    "notebook": {
+      "code_cells_compiled": 4,
+      "execution": "not_executed_in_colab",
+      "sha256": "ad031b879e32326696882648bd345b7371f98592d3f1b702fad8eb2f56b866cf"
+    }
+  },
+  "tested_sources": {
+    "src/auto_prompt_sam2/access.py": "f824bfb41c8800cca46e6e36f92c9e02dca4a2b7589010ed6376832ae63a3ddf",
+    "src/auto_prompt_sam2/artifacts.py": "2fe29dd365f15ae543e23456aa3fa873cf8341853b54e998193f2d7bbe01ffdb",
+    "src/auto_prompt_sam2/data.py": "6e0c475867d39c431091b69e8ab36ae02c13a66c1fd3fd1de9cc832268fab58c",
+    "src/auto_prompt_sam2/preprocessing.py": "1b4f1f541fc3541326e9e67ff514fe9365ea8395be12fb9d62965b107438b019",
+    "src/auto_prompt_sam2/runtime.py": "ab5b41d2cb7898a3b9e92dbf299373e95f45b65b04925d7a81e3af9c7f5dfdcb",
+    "src/auto_prompt_sam2/__init__.py": "fb1f05b342149c34013ce1cf18c8b998bee52da066231fef8dbc8aeafa005a76",
+    "scripts/audit_public_sources.py": "fa23e7b4244bc82670152d404060479b532546eee909715dbd9875874231bed0",
+    "scripts/bootstrap_colab.py": "65c47dd4ba7d901ba7316274f088c2c79a169f2206d4ff15304b56c6e9a1bf4b",
+    "scripts/check_access.py": "89f8172731f67b0c14ef042f11c3bba6385cf91a2a409a1b35a4e86ae28003fa",
+    "scripts/export_colab_bundle.py": "5b1bf763a99c0cab956b483efcd8304a610c0e47c56edf7c8b28463c27d86571",
+    "scripts/export_stage1_evidence.py": "5aade06f69acfae0b2a60329d108ceecf31575aabb78694926804563ef9386bd",
+    "scripts/export_stage2_bundle.py": "f26abcb07049e032b1c3f29fc70b203cf16bb33c8abcc9f1fcc217b4957dc223",
+    "scripts/prepare_stage2.py": "521b464eee1e3160000d9989bbcb492ef6f637ad2cd58d26bd01bea356da705b",
+    "scripts/run_local_validation.py": "20a3a50a5a4bc5d8046551443851f3dc8484c5d2d8a7b0e75ea5b98a6b1c3605",
+    "scripts/validate_environment.py": "611a7a123473ce020eca287ddb6ce0d7ce4a5236a7f92e2dd397c3ff6f66607e",
+    "tests/test_stage1.py": "5be54eeb3434946e3de34af933b17ee23d881d017cda9c1740db6462cd0eb612",
+    "tests/test_stage2.py": "253947d43e724252e4da6fba1ac79734b4354f52d812862fd5e9f3f298f5a5b9"
+  }
+}
