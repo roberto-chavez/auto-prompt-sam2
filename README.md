@@ -8,7 +8,7 @@ El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando
 
 La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
 
-> **Estado actual (2026-10-29):** etapas 1–3 concluidas (3/9), con consulta de licencia de Sen1Floods11 pendiente. Referencia asistida SAM congelado ejecutada y recuperada en dos runtimes Colab T4; notebook, hashes, puntos, máscaras y métricas revisados. IoU agua de validación: 0.158044 official y 0.168434 leave-Paraguay-out; sin evaluación final ni entrenamiento. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md) y la [revisión de etapa 3](docs/project/validacion_etapa3.md).
+> **Estado actual (2026-10-29):** etapas 1–4 concluidas (4/9), con consulta de licencia de Sen1Floods11 pendiente. Referencia asistida SAM y disección de SAM/DINOv3 ejecutadas y recuperadas en runtimes Colab T4 distintos, con evidencia revisada. La etapa 4 cubre parámetros, FLOPs parciales por bloque, features intermedias, campo receptivo efectivo y latencia/memoria; pesos congelados intactos y hooks eliminados. IoU agua de validación de la etapa 3: 0.158044 official y 0.168434 leave-Paraguay-out. Etapas 5–9 y demo sin iniciar; sin entrenamiento ni evaluación final. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md) y la [interpretación y cierre de etapa 4](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md).
 
 ## Pregunta de investigación y alcance
 
@@ -189,7 +189,7 @@ Para repetir la etapa 2, use `python scripts/export_stage2_bundle.py` y el noteb
 
 Para la etapa 3, use `python scripts/export_stage3_bundle.py`, suba el ZIP de fuentes a Drive y ejecute el notebook 03 con GPU en Colab. Reutiliza las generaciones y estadísticas de etapa 2, sin reajustarlas. El notebook prepara la línea base de desarrollo para ambos regímenes y su recuperación en runtime nuevo; exporta notebook/JSON/artefactos para revisión. La referencia usa etiquetas para crear puntos y conocer ausencia de agua: **no es desplegable**. No ejecutar SAM en la PC ni abrir conjuntos reservados.
 
-Para la etapa 4, use `python scripts/export_stage4_bundle.py`, suba el ZIP a Drive y abra el notebook 04 con GPU. Ejecute `prepare` y, tras eliminar/recrear runtime, entorno y `recover`. Comparta notebook con salidas, JSON y ZIP de evidencia antes del cierre. Solo train por régimen; SAM y DINOv3 congelados, features/ERF y profiling sin entrenamiento ni prompts automáticos. Toda ejecución de modelos corresponde exclusivamente a Colab; la PC solo valida contratos sintéticos sin modelos.
+Para reproducir la etapa 4 ya concluida, use `python scripts/export_stage4_bundle.py`, suba el ZIP a Drive y abra el notebook 04 con GPU. Ejecute `prepare` y, tras eliminar/recrear runtime, entorno y `recover`. Conserve notebook con salidas, JSON y ZIP de evidencia para revisar la nueva ejecución; no hace falta repetir la ejecución ya aceptada para mantener el cierre actual. Solo train por régimen; SAM y DINOv3 congelados, features/ERF y profiling sin entrenamiento ni prompts automáticos. Toda ejecución de modelos corresponde exclusivamente a Colab; la PC permite pruebas sintéticas y revisión de artefactos guardados sin ejecutar modelos.
 
 ## Limitaciones y decisiones por verificar
 
