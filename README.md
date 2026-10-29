@@ -8,7 +8,7 @@ El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando
 
 La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
 
-> **Estado actual (2026-10-28):** etapas 1 y 2 concluidas (2/9), con consulta de licencia de Sen1Floods11 pendiente. Etapa 2: 446 pares manuales con hashes, ambos splits y preprocesamiento por régimen, validados localmente y con preparación/recuperación offline en Colab revisadas a partir del notebook y el informe del usuario. No hay pesos, modelos ejecutados, entrenamientos, evaluaciones finales ni demo. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md).
+> **Estado actual (2026-10-29):** etapas 1–3 concluidas (3/9), con consulta de licencia de Sen1Floods11 pendiente. Referencia asistida SAM congelado ejecutada y recuperada en dos runtimes Colab T4; notebook, hashes, puntos, máscaras y métricas revisados. IoU agua de validación: 0.158044 official y 0.168434 leave-Paraguay-out; sin evaluación final ni entrenamiento. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md) y la [revisión de etapa 3](docs/project/validacion_etapa3.md).
 
 ## Pregunta de investigación y alcance
 
@@ -179,13 +179,15 @@ Estas fechas describen el cronograma académico y no acreditan que los entregabl
 
 La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
 
-**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). Las etapas 3–9 y la fase 2 siguen sin implementar.
+**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). **Etapa 3 concluida:** [notebook de referencia asistida](notebooks/03_linea_base_asistida.ipynb), [configuración](configs/baseline.yaml) e [instrucciones/validaciones](docs/project/validacion_etapa3.md); ejecución y recuperación Colab revisadas en la [auditoría externa](docs/project/evidence/stage3/colab_run_20261029T134519Z/review.json). Las etapas 4–9 y la fase 2 siguen sin implementar.
 
 Para llevar los archivos actuales a Colab sin depender de cambios aún no publicados: ejecute `python scripts/export_colab_bundle.py`, suba el ZIP generado a Drive y abra el notebook. Configure el SHA-256 del ZIP y la raíz persistente; siga sus pasos `prepare` y `recover` en runtimes distintos. Esto no descarga datos ni pesos. Los bloqueos de licencia/acceso deben resolverse antes de pasar a etapas dependientes.
 
 La estructura anterior describe la documentación original. Se añaden `configs/`, `notebooks/`, `src/auto_prompt_sam2/`, `scripts/`, `tests/` y evidencias en `docs/project/evidence/stage1/`.
 
 Para repetir la etapa 2, use `python scripts/export_stage2_bundle.py` y el notebook 02, reutilizando el venv y la raíz persistente. El paquete nuevo no reemplaza el ZIP histórico de etapa 1. Los datos reales están en `artifacts/stage2-persistent/` local, ignorados por Git; el notebook permite adquirir/verificar los mismos objetos en Drive y ejecutar la recuperación `--offline`. [Validación de etapa 2](docs/project/validacion_etapa2.md) documenta comandos, estadísticas, límites y la evidencia Colab revisada.
+
+Para la etapa 3, use `python scripts/export_stage3_bundle.py`, suba el ZIP de fuentes a Drive y ejecute el notebook 03 con GPU en Colab. Reutiliza las generaciones y estadísticas de etapa 2, sin reajustarlas. El notebook prepara la línea base de desarrollo para ambos regímenes y su recuperación en runtime nuevo; exporta notebook/JSON/artefactos para revisión. La referencia usa etiquetas para crear puntos y conocer ausencia de agua: **no es desplegable**. No ejecutar SAM en la PC ni abrir conjuntos reservados.
 
 ## Limitaciones y decisiones por verificar
 

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "branch": "reference_assisted_not_deployable",
+  "seed": 42,
+  "regimes": ["official", "leave_paraguay_out"],
+  "roles": ["train", "val"],
+  "train_smoke_chips": 1,
+  "validation_scope": "all",
+  "prompts": {
+    "connectivity": 8,
+    "positive_per_component": 1,
+    "negative_per_component": 1,
+    "minimum_distance_px": 8.0,
+    "sampling": "seeded_permutation_greedy_without_replacement",
+    "component_order": "first_pixel_row_major",
+    "negative_pool": "all_valid_label_zero_pixels",
+    "distance_scope": "all_points_within_each_component_call",
+    "shortfall": "use_available_no_relaxation_no_component_drop"
+  },
+  "inference": {
+    "precision": "float32",
+    "autocast": false,
+    "apply_postprocessing": false,
+    "mask_threshold": 0.0,
+    "multimask_output": true,
+    "selection": "highest_predicted_iou_first_index_on_tie",
+    "output_hw": [512, 512],
+    "no_water": "empty_mask_no_sam_call_label_assisted_advantage"
+  },
+  "repeat_tolerance": {"mask_disagreement_pixels": 0, "scores_atol": 0.00001, "scores_rtol": 0.00001},
+  "metrics": {
+    "zero_denominator": "null_with_reason",
+    "miou": "mean_of_defined_class_ious_report_exclusions",
+    "individual_no_water_iou": "excluded_even_with_false_positives",
+    "quantiles": "numpy_linear",
+    "false_positive_area": "EPSG4326_to_WGS84_equal_area_EPSG6933"
+  }
+}

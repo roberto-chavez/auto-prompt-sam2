@@ -1,0 +1,668 @@
+{
+  "reviewed_at": "2026-10-29T15:07:20.181948+00:00",
+  "scope": "CPU artifact and label audit; no models",
+  "models_executed": false,
+  "reserved_access": [],
+  "checks": {
+    "intact_artifact_generations": 182,
+    "source_files_match_delivered_workspace": 33,
+    "different_runtime_boots": [
+      "43b81b69-26ae-4d65-be1e-0f79c25504f8",
+      "1d3f3d39-2926-4929-9b9f-68abbf117b0f"
+    ],
+    "notebook_sources_review": "Human review required alongside this structural audit"
+  },
+  "regimes": {
+    "official": {
+      "predictions_audited": 90,
+      "components": 8776,
+      "counts": {
+        "train": 1,
+        "val": 89
+      },
+      "val": {
+        "all_invalid_chips": 3,
+        "by_event": {
+          "Ghana": {
+            "chips": 11,
+            "confusion": {
+              "fn": 139856,
+              "fp": 495655,
+              "tn": 1095213,
+              "tp": 121692
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.27692045124844267,
+                "miou": 0.3967593938286992,
+                "nonwater_iou": 0.6328062706705402,
+                "precision": 0.19712090607065394,
+                "recall": 0.4652759722880695,
+                "water_iou": 0.1607125169868582
+              }
+            }
+          },
+          "India": {
+            "chips": 14,
+            "confusion": {
+              "fn": 13919,
+              "fp": 2254580,
+              "tn": 260584,
+              "tp": 427879
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.27390768429101703,
+                "miou": 0.13086077617814265,
+                "nonwater_iou": 0.10303497354574762,
+                "precision": 0.15950998691871898,
+                "recall": 0.9684946514017718,
+                "water_iou": 0.1586865788105377
+              }
+            }
+          },
+          "Mekong": {
+            "chips": 6,
+            "confusion": {
+              "fn": 21753,
+              "fp": 1090624,
+              "tn": 36564,
+              "tp": 185710
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.25031726037995766,
+                "miou": 0.0874442296606264,
+                "nonwater_iou": 0.03182408844318377,
+                "precision": 0.14550266622999936,
+                "recall": 0.8951475684820908,
+                "water_iou": 0.14306437087806903
+              }
+            }
+          },
+          "Nigeria": {
+            "chips": 4,
+            "confusion": {
+              "fn": 985,
+              "fp": 447311,
+              "tn": 254997,
+              "tp": 268778
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.5452704868479245,
+                "miou": 0.36870089883789336,
+                "nonwater_iou": 0.36257576856303136,
+                "precision": 0.3753416125649186,
+                "recall": 0.9963486467751322,
+                "water_iou": 0.3748260291127554
+              }
+            }
+          },
+          "Pakistan": {
+            "chips": 6,
+            "confusion": {
+              "fn": 41548,
+              "fp": 618450,
+              "tn": 412015,
+              "tp": 37355
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.10168665646760346,
+                "miou": 0.21895226742342397,
+                "nonwater_iou": 0.3843376899347303,
+                "precision": 0.05696052942566769,
+                "recall": 0.4734294006565023,
+                "water_iou": 0.05356684491211768
+              }
+            }
+          },
+          "Paraguay": {
+            "chips": 14,
+            "confusion": {
+              "fn": 12275,
+              "fp": 1518289,
+              "tn": 1691681,
+              "tp": 359958
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.31989442252319505,
+                "miou": 0.3577010591347905,
+                "nonwater_iou": 0.5250007370637553,
+                "precision": 0.19164572071724326,
+                "recall": 0.9670233429061905,
+                "water_iou": 0.1904013812058257
+              }
+            }
+          },
+          "Somalia": {
+            "chips": 5,
+            "confusion": {
+              "fn": 3,
+              "fp": 371954,
+              "tn": 645383,
+              "tp": 42624
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.18645465382049628,
+                "miou": 0.36859751957143844,
+                "nonwater_iou": 0.6343828022096841,
+                "precision": 0.1028129809107092,
+                "recall": 0.9999296220705187,
+                "water_iou": 0.10281223693319279
+              }
+            }
+          },
+          "Spain": {
+            "chips": 6,
+            "confusion": {
+              "fn": 3632,
+              "fp": 459079,
+              "tn": 835840,
+              "tp": 274014
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.5422052577371607,
+                "miou": 0.5078032730371783,
+                "nonwater_iou": 0.6436712920786323,
+                "precision": 0.3737779517741951,
+                "recall": 0.9869185941810795,
+                "water_iou": 0.3719352539957243
+              }
+            }
+          },
+          "Sri-Lanka": {
+            "chips": 9,
+            "confusion": {
+              "fn": 964,
+              "fp": 1940238,
+              "tn": 79828,
+              "tp": 174071
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.152070636828716,
+                "miou": 0.06089556130468736,
+                "nonwater_iou": 0.039498671469498224,
+                "precision": 0.0823299716361232,
+                "recall": 0.9944925300654155,
+                "water_iou": 0.0822924511398765
+              }
+            }
+          },
+          "USA": {
+            "chips": 14,
+            "confusion": {
+              "fn": 3013,
+              "fp": 1218770,
+              "tn": 2330065,
+              "tp": 107576
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.14972980684582113,
+                "miou": 0.36846902629446454,
+                "nonwater_iou": 0.6560148407251661,
+                "precision": 0.0811070414507225,
+                "recall": 0.9727549756304876,
+                "water_iou": 0.08092321186376292
+              }
+            }
+          }
+        },
+        "chips": 89,
+        "confusion": {
+          "fn": 237948,
+          "fp": 10414950,
+          "tn": 7642170,
+          "tp": 1999657
+        },
+        "event_mean_undefined_reason": null,
+        "event_mean_water_iou": 0.17192208758387204,
+        "excluded_events": [],
+        "fp_area_m2": 948406316.329287,
+        "no_water": {
+          "chips": 9,
+          "fp_area_m2": 0.0,
+          "fp_pixels": 0
+        },
+        "per_chip": {
+          "excluded": 12,
+          "included": 77,
+          "iqr": 0.18332609757773227,
+          "median": 0.06820741472144654,
+          "q25": 0.019265103077838647,
+          "q75": 0.20259120065557093,
+          "quantile_method": "linear",
+          "undefined_reason": null
+        },
+        "pooled": {
+          "miou_defined_classes": [
+            "water_iou",
+            "nonwater_iou"
+          ],
+          "undefined": {},
+          "values": {
+            "dice": 0.2729495041431287,
+            "miou": 0.28788061370513274,
+            "nonwater_iou": 0.41771749632195954,
+            "precision": 0.1610729199885264,
+            "recall": 0.8936595154193882,
+            "water_iou": 0.15804373108830588
+          }
+        }
+      },
+      "repeat_chip": "Ghana_103272",
+      "max_area_recompute_error_m2": 2.7529895305633545e-06,
+      "stage2_inputs_identical": true,
+      "all_points_have_correct_valid_label": true,
+      "confusions_recomputed_from_saved_masks": true
+    },
+    "leave_paraguay_out": {
+      "predictions_audited": 76,
+      "components": 7351,
+      "counts": {
+        "train": 1,
+        "val": 75
+      },
+      "val": {
+        "all_invalid_chips": 3,
+        "by_event": {
+          "Ghana": {
+            "chips": 11,
+            "confusion": {
+              "fn": 30687,
+              "fp": 456260,
+              "tn": 1134608,
+              "tp": 230861
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.4867050572960643,
+                "miou": 0.5106615548791538,
+                "nonwater_iou": 0.6997036794928325,
+                "precision": 0.3359830364666485,
+                "recall": 0.882671631975775,
+                "water_iou": 0.3216194302654749
+              }
+            }
+          },
+          "India": {
+            "chips": 14,
+            "confusion": {
+              "fn": 10555,
+              "fp": 2249426,
+              "tn": 265738,
+              "tp": 431243
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.27621941240692055,
+                "miou": 0.13272664158774639,
+                "nonwater_iou": 0.10521281266839265,
+                "precision": 0.16087140933848976,
+                "recall": 0.9761089909868311,
+                "water_iou": 0.1602404705071001
+              }
+            }
+          },
+          "Mekong": {
+            "chips": 6,
+            "confusion": {
+              "fn": 746,
+              "fp": 1077975,
+              "tn": 49213,
+              "tp": 206717
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.2770717519292567,
+                "miou": 0.1022227725546381,
+                "nonwater_iou": 0.043631098982741895,
+                "precision": 0.16090782849118698,
+                "recall": 0.9964041780944072,
+                "water_iou": 0.1608144461265343
+              }
+            }
+          },
+          "Nigeria": {
+            "chips": 4,
+            "confusion": {
+              "fn": 1227,
+              "fp": 448032,
+              "tn": 254276,
+              "tp": 268536
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.5445149751959535,
+                "miou": 0.36776930598890095,
+                "nonwater_iou": 0.3614262261294747,
+                "precision": 0.3747529892487524,
+                "recall": 0.9954515630386672,
+                "water_iou": 0.3741123858483272
+              }
+            }
+          },
+          "Pakistan": {
+            "chips": 6,
+            "confusion": {
+              "fn": 7639,
+              "fp": 628666,
+              "tn": 401799,
+              "tp": 71264
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.18300200428076366,
+                "miou": 0.24388374746963806,
+                "nonwater_iou": 0.3870508157178857,
+                "precision": 0.10181589587530182,
+                "recall": 0.9031849232602056,
+                "water_iou": 0.10071667922139042
+              }
+            }
+          },
+          "Somalia": {
+            "chips": 5,
+            "confusion": {
+              "fn": 3,
+              "fp": 371365,
+              "tn": 645972,
+              "tp": 42624
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.18669516617902132,
+                "miou": 0.368960137152328,
+                "nonwater_iou": 0.6349617630290758,
+                "precision": 0.10295925737157267,
+                "recall": 0.9999296220705187,
+                "water_iou": 0.1029585112755802
+              }
+            }
+          },
+          "Spain": {
+            "chips": 6,
+            "confusion": {
+              "fn": 2392,
+              "fp": 491895,
+              "tn": 803024,
+              "tp": 275254
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.5269052780689034,
+                "miou": 0.4883385369155742,
+                "nonwater_iou": 0.6189911285728711,
+                "precision": 0.3588012237518396,
+                "recall": 0.9913847129078035,
+                "water_iou": 0.35768594525827735
+              }
+            }
+          },
+          "Sri-Lanka": {
+            "chips": 9,
+            "confusion": {
+              "fn": 1348,
+              "fp": 1742416,
+              "tn": 277650,
+              "tp": 173687
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.16611720508163497,
+                "miou": 0.11396829176394932,
+                "nonwater_iou": 0.13735434700660032,
+                "precision": 0.09064596214295369,
+                "recall": 0.9922986831205187,
+                "water_iou": 0.09058223652129833
+              }
+            }
+          },
+          "USA": {
+            "chips": 14,
+            "confusion": {
+              "fn": 2594,
+              "fp": 1403836,
+              "tn": 2144999,
+              "tp": 107995
+            },
+            "scores": {
+              "miou_defined_classes": [
+                "water_iou",
+                "nonwater_iou"
+              ],
+              "undefined": {},
+              "values": {
+                "dice": 0.13312828983863612,
+                "miou": 0.33764641999779943,
+                "nonwater_iou": 0.6039819464221303,
+                "precision": 0.07143324882212364,
+                "recall": 0.976543779218548,
+                "water_iou": 0.07131089357346848
+              }
+            }
+          }
+        },
+        "chips": 75,
+        "confusion": {
+          "fn": 57191,
+          "fp": 8869871,
+          "tn": 5977279,
+          "tp": 1808181
+        },
+        "event_mean_undefined_reason": null,
+        "event_mean_water_iou": 0.19333788873305016,
+        "excluded_events": [],
+        "fp_area_m2": 803577139.1969843,
+        "no_water": {
+          "chips": 6,
+          "fp_area_m2": 0.0,
+          "fp_pixels": 0
+        },
+        "per_chip": {
+          "excluded": 9,
+          "included": 66,
+          "iqr": 0.2522614447461505,
+          "median": 0.08009844890572207,
+          "q25": 0.017477829857060093,
+          "q75": 0.26973927460321057,
+          "quantile_method": "linear",
+          "undefined_reason": null
+        },
+        "pooled": {
+          "miou_defined_classes": [
+            "water_iou",
+            "nonwater_iou"
+          ],
+          "undefined": {},
+          "values": {
+            "dice": 0.28830740314606285,
+            "miou": 0.2847384621757384,
+            "nonwater_iou": 0.4010428236981427,
+            "precision": 0.16933622349844335,
+            "recall": 0.9693406998711249,
+            "water_iou": 0.16843410065333406
+          }
+        }
+      },
+      "repeat_chip": "Ghana_103272",
+      "max_area_recompute_error_m2": 1.8812716007232666e-06,
+      "stage2_inputs_identical": true,
+      "all_points_have_correct_valid_label": true,
+      "confusions_recomputed_from_saved_masks": true
+    }
+  },
+  "originals": {
+    "20261029T134519Z_1894f1a3ae_ec3f3bcc.zip": {
+      "sha256": "e57edb7b0c3a067122624b8059c94ecc5a5d7e8ee05b57a1fa843d90b7346cb8",
+      "size": 2227305
+    },
+    "03_linea_base_asistida_ejecutado_colab.ipynb": {
+      "sha256": "8ef684bdea46f3985a066466a99f6d0bcf549d66f2f9d0c3bd08a7d57686279f",
+      "size": 120839
+    }
+  },
+  "model": {
+    "all_modules_eval": true,
+    "all_parameters_frozen": true,
+    "apply_postprocessing": false,
+    "autocast": false,
+    "checkpoint_path": "base_models/huggingface/models--facebook--sam2.1-hiera-tiny/snapshots/de431c4043854a71d8101e17995dfe596bf101a5/sam2.1_hiera_tiny.pt",
+    "checkpoint_sha256": "7402e0d864fa82708a20fbd15bc84245c2f26dff0eb43a4b5b93452deb34be69",
+    "model": {
+      "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+      "filename": "sam2.1_hiera_tiny.pt",
+      "license": "Apache-2.0",
+      "repo_id": "facebook/sam2.1-hiera-tiny",
+      "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+      "source_repo": "https://github.com/facebookresearch/sam2.git",
+      "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "weights_sha256": null
+    },
+    "parameters": 38962498,
+    "precision": "float32",
+    "state_sha256": "72a85430eb2c93ee9fe3fed9a2ed1e097a8756f15c0becb212586afe7112384d",
+    "trainable_parameters": 0
+  },
+  "notebook": {
+    "code_cells": [
+      {
+        "cell": 2,
+        "execution_count": 1,
+        "output_chars": 19660,
+        "contains_run_id": false
+      },
+      {
+        "cell": 5,
+        "execution_count": 2,
+        "output_chars": 27576,
+        "contains_run_id": true
+      },
+      {
+        "cell": 7,
+        "execution_count": 2,
+        "output_chars": 27576,
+        "contains_run_id": true
+      }
+    ],
+    "python_errors": [],
+    "prepare_and_recover_outputs_present": true
+  },
+  "status": "technical_audit_passed",
+  "limitations": [
+    "No SAM re-execution on PC; freeze/repeat rely on signed-by-hash run records and inspected source, not independent GPU rerun.",
+    "Candidate masks are not retained: selection verified against saved scores and inspected adapter; union implementation covered by synthetic tests.",
+    "Per-chip label/metrics and point validity audited for development rows only; no reserved labels opened."
+  ],
+  "external_review": {
+    "date_local": "2026-10-29",
+    "status": "stage3_closed",
+    "completed_stages": 3,
+    "total_stages": 9,
+    "notebook_sources": "Only EXPECTED_BUNDLE_SHA256 filled with delivered bundle hash; no other cell source changes.",
+    "token_shaped_literals_found": 0,
+    "notebook_errors": 0,
+    "pending": [
+      "Publisher license reply (historical exception retained)",
+      "Human academic review"
+    ],
+    "next_stages_started": false,
+    "auditor_source_sha256": "0b4cc1d3eafaeca9751bbc4e1efebf217b74a5cd74cb6ffe6ed8c4487cd791d2"
+  }
+}
