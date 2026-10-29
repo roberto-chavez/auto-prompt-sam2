@@ -1,0 +1,102 @@
+{
+  "created_at": "2026-10-29T21:52:45.809817+00:00",
+  "kind": "local_cpu_validation_not_a_real_experiment",
+  "python": "3.13.16",
+  "bundle": {
+    "path": "artifacts/auto-prompt-sam2-e2.zip",
+    "sha256": "d12e1ea7f4c8e1a8b79321d37110d086a360dba9b77aef43417f5d93167d842c",
+    "files": 50,
+    "contains_notebooks": false,
+    "contains_weights_or_data": false
+  },
+  "syntax": {
+    "scripts/audit_public_sources.py": "syntax_ok",
+    "scripts/bootstrap_colab.py": "syntax_ok",
+    "scripts/build_e2_notebooks.py": "syntax_ok",
+    "scripts/check_access.py": "syntax_ok",
+    "scripts/export_colab_bundle.py": "syntax_ok",
+    "scripts/export_e2_bundle.py": "syntax_ok",
+    "scripts/export_stage1_evidence.py": "syntax_ok",
+    "scripts/export_stage2_bundle.py": "syntax_ok",
+    "scripts/export_stage3_bundle.py": "syntax_ok",
+    "scripts/export_stage4_bundle.py": "syntax_ok",
+    "scripts/prepare_stage2.py": "syntax_ok",
+    "scripts/review_stage3_evidence.py": "syntax_ok",
+    "scripts/review_stage4_evidence.py": "syntax_ok",
+    "scripts/run_e2.py": "syntax_ok",
+    "scripts/run_local_validation.py": "syntax_ok",
+    "scripts/run_stage3.py": "syntax_ok",
+    "scripts/run_stage4.py": "syntax_ok",
+    "scripts/validate_e2_local.py": "syntax_ok",
+    "scripts/validate_environment.py": "syntax_ok",
+    "scripts/validate_stage3_local.py": "syntax_ok",
+    "scripts/validate_stage4_local.py": "syntax_ok",
+    "src/auto_prompt_sam2/__init__.py": "syntax_ok",
+    "src/auto_prompt_sam2/access.py": "syntax_ok",
+    "src/auto_prompt_sam2/artifacts.py": "syntax_ok",
+    "src/auto_prompt_sam2/baseline.py": "syntax_ok",
+    "src/auto_prompt_sam2/data.py": "syntax_ok",
+    "src/auto_prompt_sam2/dissection.py": "syntax_ok",
+    "src/auto_prompt_sam2/e2_report.py": "syntax_ok",
+    "src/auto_prompt_sam2/features.py": "syntax_ok",
+    "src/auto_prompt_sam2/intervention.py": "syntax_ok",
+    "src/auto_prompt_sam2/metrics.py": "syntax_ok",
+    "src/auto_prompt_sam2/preprocessing.py": "syntax_ok",
+    "src/auto_prompt_sam2/profiling.py": "syntax_ok",
+    "src/auto_prompt_sam2/reference_prompts.py": "syntax_ok",
+    "src/auto_prompt_sam2/runtime.py": "syntax_ok",
+    "src/auto_prompt_sam2/sam_adapter.py": "syntax_ok",
+    "tests/smoke_e2_pipeline.py": "syntax_ok",
+    "tests/test_e2.py": "syntax_ok",
+    "tests/test_stage1.py": "syntax_ok",
+    "tests/test_stage2.py": "syntax_ok",
+    "tests/test_stage3.py": "syntax_ok",
+    "tests/test_stage4.py": "syntax_ok"
+  },
+  "notebooks": {
+    "01_entorno_colab.ipynb": {
+      "code_cells": 2,
+      "all_cells_parse": true,
+      "no_outputs_no_execution_counts": true,
+      "embeds_bundle_sha256": true,
+      "sha256": "0ef0e2d15766bcdfe2f125ab1bc46afe5493abbcfe4580838fe1bc5d3d08110d"
+    },
+    "02_E2_teardown_intervencion.ipynb": {
+      "code_cells": 8,
+      "all_cells_parse": true,
+      "no_outputs_no_execution_counts": true,
+      "embeds_bundle_sha256": true,
+      "sha256": "3fe64ac8ca08ed3893747aa0ce702622ffc7e9f4bed9622f7a44e7a1223d27ca"
+    }
+  },
+  "unit_tests": {
+    "exit_code": 0,
+    "summary": [
+      "Ran 70 tests in 9.549s",
+      "",
+      "OK"
+    ],
+    "nature": "synthetic_and_random_weight_cpu_only"
+  },
+  "pip_check": {
+    "exit_code": 0,
+    "output": "No broken requirements found.",
+    "note": "local environment, not the pinned Colab venv"
+  },
+  "pipeline_smoke": {
+    "exit_code": 0,
+    "last_lines": [
+      "}",
+      "RECOVER recovery_checks_passed_pending_review True True",
+      "SMOKE PASSED (synthetic plumbing only)"
+    ],
+    "nature": "SYNTHETIC plumbing: random SAM weights, synthetic chips, no GPU, no real data"
+  },
+  "not_validated_locally": [
+    "real SAM weights",
+    "CUDA/T4 behaviour and timing",
+    "Google Drive persistence",
+    "Sen1Floods11 data",
+    "any segmentation quality or ablation result"
+  ]
+}
