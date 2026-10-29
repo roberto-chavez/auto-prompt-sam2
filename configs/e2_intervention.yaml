@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "stage": "e2_preliminary_decoder_intervention",
+  "scope_note": "Preliminary E2 experiment. Label-simulated points (stage-3 reference-assisted policy) isolate the decoder effect; this is NOT the automatic DINOv3 -> SAM flow. Conclusions are limited to the subsets below.",
+  "seed": 42,
+  "regime": "official",
+  "model_integrity": {
+    "source": "audited stage-3 and stage-4 Colab evidence (docs/project/evidence/stage3, stage4)",
+    "expected_checkpoint_sha256": "7402e0d864fa82708a20fbd15bc84245c2f26dff0eb43a4b5b93452deb34be69",
+    "expected_state_sha256": "72a85430eb2c93ee9fe3fed9a2ed1e097a8756f15c0becb212586afe7112384d"
+  },
+  "subset": {
+    "train_chips_per_event": 3,
+    "val_chips_per_event": 4,
+    "order": "events_alphabetical_then_lexicographic_id_label_free",
+    "reserved_sets": "forbidden"
+  },
+  "prompts": {
+    "connectivity": 8,
+    "positive_per_component": 1,
+    "negative_per_component": 1,
+    "minimum_distance_px": 8.0,
+    "sampling": "seeded_permutation_greedy_without_replacement",
+    "component_order": "first_pixel_row_major",
+    "negative_pool": "all_valid_label_zero_pixels",
+    "distance_scope": "all_points_within_each_component_call",
+    "shortfall": "use_available_no_relaxation_no_component_drop"
+  },
+  "inference": {
+    "precision": "float32",
+    "autocast": false,
+    "mask_threshold": 0.0,
+    "multimask_output": true,
+    "selection": "highest_predicted_iou_first_index_on_tie",
+    "output_hw": [
+      512,
+      512
+    ],
+    "union": "max_of_selected_logits_gt_threshold_equals_or_of_binary_masks",
+    "component_chunk": 8
+  },
+  "training": {
+    "trainable": "sam_mask_decoder_only",
+    "frozen": [
+      "image_encoder",
+      "sam_prompt_encoder",
+      "memory_attention",
+      "memory_encoder",
+      "obj_ptr_proj",
+      "obj_ptr_tpos_proj"
+    ],
+    "optimizer": "AdamW",
+    "lr": 5e-05,
+    "weight_decay": 0.01,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "accumulation_chips": 4,
+    "max_epochs": 5,
+    "patience": 3,
+    "max_grad_norm": 1.0,
+    "loss": {
+      "bce_weight": 1.0,
+      "dice_weight": 1.0,
+      "dice_eps": 1.0,
+      "reduction": "mean_over_valid_pixels",
+      "supervision": "soft_union_max_of_selected_logits_per_chip"
+    },
+    "selection_metric": "val_pooled_water_iou",
+    "tie": "earlier_epoch",
+    "shuffle": "seeded_permutation_per_epoch",
+    "determinism": "torch.use_deterministic_algorithms(True, warn_only=True); non-deterministic CUDA ops are recorded, not hidden"
+  },
+  "verification": {
+    "parity_chips": 3,
+    "parity_max_disagreement_pixels": 10,
+    "recover_water_iou_atol": 1e-06,
+    "recover_note": "Tolerance fixed before running; the actual difference is reported, never widened afterwards."
+  },
+  "examples": {
+    "rule": "first_val_chip_per_event_in_subset_label_free"
+  },
+  "hypothesis": {
+    "recorded_before_training": true,
+    "statement": "With identical simulated points, identical validation chips and the same evaluator, fine-tuning ONLY the SAM 2.1 mask decoder (BCE + Dice) on the small training subset will raise the pooled water IoU on the validation subset above the frozen decoder (epoch 0).",
+    "mechanism": "The stage-3 reference over-segments on full validation (official: precision 0.161, recall 0.894, IoU 0.158). The decoder can learn to suppress Sentinel-2 false positives, so precision should rise more than recall falls. The magnitude is not predicted.",
+    "risks": "Only a small subset is used (overfitting is possible); the IoU-prediction head receives no gradient from BCE + Dice (selection by predicted IoU may become mismatched); chips without water produce no components and no update.",
+    "refuted_if": "The best-epoch pooled validation water IoU is less than or equal to the frozen-decoder pooled validation water IoU on the same chips.",
+    "no_generalisation": "Any result applies only to these subsets, official regime, one seed; no claim about unseen events, Bolivia or the automatic DINOv3 flow."
+  }
+}
