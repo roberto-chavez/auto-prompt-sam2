@@ -1,0 +1,9 @@
+block,parameters,trainable
+image_encoder,27219136,0
+sam_prompt_encoder,6220,0
+sam_mask_decoder,4215109,0
+memory_attention,5922304,0
+memory_encoder,1384608,0
+obj_ptr_proj,197376,0
+obj_ptr_tpos_proj,16448,0
+residual,1297,0

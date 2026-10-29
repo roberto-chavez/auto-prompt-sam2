@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "run_id": "20261029T162558Z_bfb5852907_c4c91701",
+  "originals": {
+    "04_diseccion_modelos_ejecutado_colab.ipynb": {
+      "path": "docs/project/evidence/stage4/colab_run_20261029T162558Z/04_diseccion_modelos_ejecutado_colab.ipynb",
+      "sha256": "4d83160a04c3692927f2f45e02f6efde29252578b44dc0c0a855e5f263317158",
+      "size": 3414553
+    },
+    "20261029T162558Z_bfb5852907_c4c91701.zip": {
+      "path": "artifacts/stage4-evidence/20261029T162558Z_bfb5852907_c4c91701.zip",
+      "sha256": "dbbe8b7f04a19191aba456bac2d431ef29f988fcfc2e7fd34a1f3fcd1cc5be88",
+      "size": 220371841
+    }
+  },
+  "notes": "Originals preserved byte-for-byte. Large ZIP ignored by Git; no weights or raw rasters. Scientific/CPU audit reports and figures retained in docs. Experimental sources/config unchanged after audit; closure documentation updated afterwards."
+}

@@ -1,0 +1,112 @@
+{
+  "scope": "CPU read-only evidence arrays and notebook; no model execution",
+  "models_executed": false,
+  "reserved_access": [],
+  "arrays": [
+    {
+      "regime": "leave_paraguay_out",
+      "model": "dino",
+      "id": "Ghana_103272",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        512,
+        512
+      ],
+      "mass": 1.0,
+      "mass_outside_central_half_input": 0.7019981145858765
+    },
+    {
+      "regime": "leave_paraguay_out",
+      "model": "dino",
+      "id": "Ghana_1089161",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        512,
+        512
+      ],
+      "mass": 0.9999998807907104,
+      "mass_outside_central_half_input": 0.4823839068412781
+    },
+    {
+      "regime": "leave_paraguay_out",
+      "model": "sam",
+      "id": "Ghana_103272",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        1024,
+        1024
+      ],
+      "mass": 1.0000001192092896,
+      "mass_outside_central_half_input": 0.3818742632865906
+    },
+    {
+      "regime": "leave_paraguay_out",
+      "model": "sam",
+      "id": "Ghana_1089161",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        1024,
+        1024
+      ],
+      "mass": 0.9999998807907104,
+      "mass_outside_central_half_input": 0.3653066158294678
+    },
+    {
+      "regime": "official",
+      "model": "dino",
+      "id": "Ghana_103272",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        512,
+        512
+      ],
+      "mass": 1.0000001192092896,
+      "mass_outside_central_half_input": 0.6795409917831421
+    },
+    {
+      "regime": "official",
+      "model": "dino",
+      "id": "Ghana_1089161",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        512,
+        512
+      ],
+      "mass": 1.0000001192092896,
+      "mass_outside_central_half_input": 0.5591531991958618
+    },
+    {
+      "regime": "official",
+      "model": "sam",
+      "id": "Ghana_103272",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        1024,
+        1024
+      ],
+      "mass": 1.0000001192092896,
+      "mass_outside_central_half_input": 0.38162535429000854
+    },
+    {
+      "regime": "official",
+      "model": "sam",
+      "id": "Ghana_1089161",
+      "raw_shapes_verified": true,
+      "erf_shape": [
+        1024,
+        1024
+      ],
+      "mass": 1.0,
+      "mass_outside_central_half_input": 0.36526668071746826
+    }
+  ],
+  "status": "passed",
+  "notebook_source_changes": [
+    {
+      "cell": 3,
+      "change": "only expected source ZIP SHA256 filled"
+    }
+  ],
+  "embedded_figures_identical": 4,
+  "figures_visually_inspected": 8
+}
