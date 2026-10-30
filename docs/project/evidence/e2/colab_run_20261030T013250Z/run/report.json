@@ -1,0 +1,740 @@
+{
+  "stage": "e2_preliminary_decoder_intervention",
+  "mode": "prepare",
+  "run_id": "20261030T013250Z_2a795a89d5_f9fbd8b0",
+  "created_at": "2026-10-30T01:32:50.736449+00:00",
+  "scope": "Preliminary E2 experiment. Label-simulated points (stage-3 reference-assisted policy) isolate the decoder effect; this is NOT the automatic DINOv3 -> SAM flow. Conclusions are limited to the subsets below.",
+  "regime": "official",
+  "hypothesis": {
+    "recorded_before_training": true,
+    "statement": "With identical simulated points, identical validation chips and the same evaluator, fine-tuning ONLY the SAM 2.1 mask decoder (BCE + Dice) on the small training subset will raise the pooled water IoU on the validation subset above the frozen decoder (epoch 0).",
+    "mechanism": "The stage-3 reference over-segments on full validation (official: precision 0.161, recall 0.894, IoU 0.158). The decoder can learn to suppress Sentinel-2 false positives, so precision should rise more than recall falls. The magnitude is not predicted.",
+    "risks": "Only a small subset is used (overfitting is possible); the IoU-prediction head receives no gradient from BCE + Dice (selection by predicted IoU may become mismatched); chips without water produce no components and no update.",
+    "refuted_if": "The best-epoch pooled validation water IoU is less than or equal to the frozen-decoder pooled validation water IoU on the same chips.",
+    "no_generalisation": "Any result applies only to these subsets, official regime, one seed; no claim about unseen events, Bolivia or the automatic DINOv3 flow."
+  },
+  "identity": {
+    "stage": "e2_preliminary_decoder_intervention",
+    "config_sha256": "3fbb165b22adb915146bb45413df2235c2285b7201e99729c95f9508c531e89a",
+    "source_tree_sha256": "e7edddf8d62b04ff502056182cd1cb1e46bac2cfa7c6f2de9969b74f3b4e974c",
+    "model": {
+      "repo_id": "facebook/sam2.1-hiera-tiny",
+      "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+      "filename": "sam2.1_hiera_tiny.pt",
+      "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+      "source_repo": "https://github.com/facebookresearch/sam2.git",
+      "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "license": "Apache-2.0",
+      "weights_sha256": null
+    },
+    "regime": "official",
+    "manifest_sha256": "2352d7785183fe5713cf9354ffb430b236c1edc888bb7275d2f93fb328f4b43a",
+    "preprocessing_sha256": "a48c5416612393d1d1d96c4cfa0aac29588e8c96581538d6e2c89bbeb9c271fd",
+    "manifest_generation": "20261030T005758625273Z_6ae071da9576",
+    "parameter_generation": "20261030T005758723167Z_d392212a6ef0"
+  },
+  "reserved_access": [],
+  "automatic_prompts": false,
+  "dinov3_used": false,
+  "limitations": [
+    "Preliminary: official regime, small label-free subsets of train/val, one seed. No claim about unseen events, Bolivia or Paraguay-out.",
+    "Prompts are label-simulated (reference-assisted, not deployable). The automatic DINOv3 -> SAM flow is NOT implemented here.",
+    "Chips without water have no components: empty prediction and FP=0 by construction in BOTH arms (label-assisted advantage); they produce no gradient.",
+    "Validation is used both to pick the best epoch and to report the result: the best-epoch number is optimistic. The last-epoch number is also reported.",
+    "The IoU-prediction head receives no gradient from BCE+Dice, so selection by predicted IoU may drift away from true mask quality after tuning.",
+    "No significance test, no repeated seeds. Per-chip deltas are descriptive."
+  ],
+  "closure": "pending_external_review_of_user_notebook_and_json",
+  "tests": {
+    "exit_code": 0,
+    "pip_check": "No broken requirements found.\n"
+  },
+  "environment": {
+    "recorded_at": "2026-10-30T01:33:16.282991+00:00",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.35",
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "cpu_count": 2,
+    "ram_total_bytes": 13605810176,
+    "ram_available_bytes": 9879379968,
+    "disk": {
+      "persistent": {
+        "total_bytes": 127627988992,
+        "free_bytes": 64191483904
+      },
+      "local": {
+        "total_bytes": 127627988992,
+        "free_bytes": 67569983488
+      }
+    },
+    "persistent_root": "/content/drive/MyDrive/auto-prompt-sam2",
+    "cuda_available": true,
+    "torch_cuda_runtime": "12.6",
+    "cudnn": 90501,
+    "nvidia_smi_devices": [
+      {
+        "name": "Tesla T4",
+        "total_mib": 15360,
+        "free_mib": 14808,
+        "driver_version": "580.82.07"
+      }
+    ],
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "total_bytes": 15637086208,
+        "free_bytes": 15527116800,
+        "capability": [
+          7,
+          5
+        ]
+      }
+    ],
+    "packages": {
+      "Jinja2": "3.1.6",
+      "MarkupSafe": "3.0.4",
+      "PyYAML": "6.0.2",
+      "SAM-2": "1.0",
+      "affine": "3.0.1",
+      "antlr4-python3-runtime": "4.9.3",
+      "attrs": "26.1.0",
+      "certifi": "2026.10.23",
+      "charset-normalizer": "3.5.2",
+      "click": "8.5.0",
+      "click-plugins": "1.1.1.2",
+      "cligj": "0.7.2",
+      "filelock": "4.2.4",
+      "fsspec": "2026.9.0",
+      "hf-xet": "1.7.1",
+      "huggingface-hub": "0.34.4",
+      "hydra-core": "1.3.2",
+      "idna": "3.20",
+      "iopath": "0.1.10",
+      "mpmath": "1.3.0",
+      "networkx": "3.7",
+      "numpy": "2.2.6",
+      "nvidia-cublas-cu12": "12.6.4.1",
+      "nvidia-cuda-cupti-cu12": "12.6.80",
+      "nvidia-cuda-nvrtc-cu12": "12.6.77",
+      "nvidia-cuda-runtime-cu12": "12.6.77",
+      "nvidia-cudnn-cu12": "9.5.1.17",
+      "nvidia-cufft-cu12": "11.3.0.4",
+      "nvidia-cufile-cu12": "1.11.1.6",
+      "nvidia-curand-cu12": "10.3.7.77",
+      "nvidia-cusolver-cu12": "11.7.1.2",
+      "nvidia-cusparse-cu12": "12.5.4.2",
+      "nvidia-cusparselt-cu12": "0.6.3",
+      "nvidia-nccl-cu12": "2.26.2",
+      "nvidia-nvjitlink-cu12": "12.6.85",
+      "nvidia-nvtx-cu12": "12.6.77",
+      "omegaconf": "2.3.1",
+      "packaging": "26.3",
+      "pillow": "11.3.0",
+      "pip": "25.2",
+      "portalocker": "4.4.2",
+      "psutil": "7.0.0",
+      "pyparsing": "3.3.3",
+      "rasterio": "1.4.3",
+      "regex": "2026.9.29",
+      "requests": "2.34.2",
+      "safetensors": "0.6.2",
+      "setuptools": "80.9.0",
+      "sympy": "1.14.0",
+      "tokenizers": "0.22.2",
+      "torch": "2.7.1",
+      "torchvision": "0.22.1",
+      "tqdm": "4.67.1",
+      "transformers": "4.56.2",
+      "triton": "3.3.1",
+      "typing_extensions": "4.16.0",
+      "urllib3": "2.8.0",
+      "wheel": "0.45.1"
+    }
+  },
+  "pins": {
+    "verified_pins": 50,
+    "requirements_file": "requirements-colab.txt",
+    "sam_source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  },
+  "subsets": {
+    "train_ids": [
+      "Ghana_103272",
+      "Ghana_1089161",
+      "Ghana_11745",
+      "India_1017769",
+      "India_103447",
+      "India_1072277",
+      "Mekong_1111068",
+      "Mekong_1191208",
+      "Mekong_119477",
+      "Nigeria_143329",
+      "Nigeria_35845",
+      "Nigeria_439488",
+      "Pakistan_1036366",
+      "Pakistan_132143",
+      "Pakistan_211386",
+      "Paraguay_1029042",
+      "Paraguay_1056717",
+      "Paraguay_1076204",
+      "Somalia_1068756",
+      "Somalia_1087508",
+      "Somalia_195014",
+      "Spain_1167260",
+      "Spain_2472849",
+      "Spain_2523247",
+      "Sri-Lanka_1038087",
+      "Sri-Lanka_120804",
+      "Sri-Lanka_135713",
+      "USA_1010394",
+      "USA_1068362",
+      "USA_11422"
+    ],
+    "val_ids": [
+      "Ghana_1033830",
+      "Ghana_124834",
+      "Ghana_132163",
+      "Ghana_142312",
+      "India_1018317",
+      "India_1050276",
+      "India_1068117",
+      "India_118868",
+      "Mekong_1149855",
+      "Mekong_1413877",
+      "Mekong_293769",
+      "Mekong_474783",
+      "Nigeria_1095404",
+      "Nigeria_31096",
+      "Nigeria_820924",
+      "Nigeria_984831",
+      "Pakistan_1027214",
+      "Pakistan_210595",
+      "Pakistan_336228",
+      "Pakistan_43105",
+      "Paraguay_1019808",
+      "Paraguay_153941",
+      "Paraguay_172476",
+      "Paraguay_205585",
+      "Somalia_12849",
+      "Somalia_167787",
+      "Somalia_256539",
+      "Somalia_61368",
+      "Spain_1199913",
+      "Spain_4282030",
+      "Spain_6537196",
+      "Spain_7604243",
+      "Sri-Lanka_101973",
+      "Sri-Lanka_132922",
+      "Sri-Lanka_236030",
+      "Sri-Lanka_236628",
+      "USA_1039203",
+      "USA_1082482",
+      "USA_19225",
+      "USA_225017"
+    ],
+    "val_stats": {
+      "chips": 40,
+      "per_event": {
+        "Ghana": 4,
+        "India": 4,
+        "Mekong": 4,
+        "Nigeria": 4,
+        "Pakistan": 4,
+        "Paraguay": 4,
+        "Somalia": 4,
+        "Spain": 4,
+        "Sri-Lanka": 4,
+        "USA": 4
+      },
+      "components_total": 3893,
+      "components_min": 0,
+      "components_max": 593,
+      "chips_without_components": 7
+    },
+    "train_stats": {
+      "chips": 30,
+      "per_event": {
+        "Ghana": 3,
+        "India": 3,
+        "Mekong": 3,
+        "Nigeria": 3,
+        "Pakistan": 3,
+        "Paraguay": 3,
+        "Somalia": 3,
+        "Spain": 3,
+        "Sri-Lanka": 3,
+        "USA": 3
+      },
+      "components_total": 3842,
+      "components_min": 0,
+      "components_max": 728,
+      "chips_without_components": 4
+    }
+  },
+  "model": {
+    "model": {
+      "repo_id": "facebook/sam2.1-hiera-tiny",
+      "revision": "de431c4043854a71d8101e17995dfe596bf101a5",
+      "filename": "sam2.1_hiera_tiny.pt",
+      "architecture_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+      "source_repo": "https://github.com/facebookresearch/sam2.git",
+      "source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "license": "Apache-2.0",
+      "weights_sha256": null
+    },
+    "checkpoint_sha256": "7402e0d864fa82708a20fbd15bc84245c2f26dff0eb43a4b5b93452deb34be69",
+    "checkpoint_path": "base_models/huggingface/models--facebook--sam2.1-hiera-tiny/snapshots/de431c4043854a71d8101e17995dfe596bf101a5/sam2.1_hiera_tiny.pt",
+    "state_sha256": "72a85430eb2c93ee9fe3fed9a2ed1e097a8756f15c0becb212586afe7112384d",
+    "all_parameters_frozen": true,
+    "all_modules_eval": true,
+    "precision": "float32",
+    "autocast": false,
+    "apply_postprocessing": false,
+    "parameters": 38962498,
+    "trainable_parameters": 0
+  },
+  "parameters_before": {
+    "other": {
+      "parameters": 7522033,
+      "trainable": 0
+    },
+    "image_encoder": {
+      "parameters": 27219136,
+      "trainable": 0
+    },
+    "sam_prompt_encoder": {
+      "parameters": 6220,
+      "trainable": 0
+    },
+    "sam_mask_decoder": {
+      "parameters": 4215109,
+      "trainable": 0
+    }
+  },
+  "parity_with_stage3_predictor": [
+    {
+      "id": "Ghana_1033830",
+      "mask_disagreement_pixels": 0,
+      "selected_indices_identical": true
+    },
+    {
+      "id": "India_1018317",
+      "mask_disagreement_pixels": 1,
+      "selected_indices_identical": true
+    },
+    {
+      "id": "India_1050276",
+      "mask_disagreement_pixels": 0,
+      "selected_indices_identical": true
+    }
+  ],
+  "parameters_after_configure": {
+    "other": {
+      "parameters": 7522033,
+      "trainable": 0
+    },
+    "image_encoder": {
+      "parameters": 27219136,
+      "trainable": 0
+    },
+    "sam_prompt_encoder": {
+      "parameters": 6220,
+      "trainable": 0
+    },
+    "sam_mask_decoder": {
+      "parameters": 4215109,
+      "trainable": 4215109
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_bce": 1.1086803576103053,
+      "train_dice": 0.7543049317139846,
+      "train_loss": 1.8629852848557324,
+      "train_chips_with_gradient": 26,
+      "train_chips_without_gradient": 4,
+      "optimizer_steps": 7,
+      "val_water_iou_pooled": 0.3080519029370676,
+      "val_event_mean_water_iou": 0.245350354741417,
+      "seconds": 161.02723336219788
+    },
+    {
+      "epoch": 2,
+      "train_bce": 0.2933996932921358,
+      "train_dice": 0.6840517566754267,
+      "train_loss": 0.977451435648478,
+      "train_chips_with_gradient": 26,
+      "train_chips_without_gradient": 4,
+      "optimizer_steps": 7,
+      "val_water_iou_pooled": 0.112774314093841,
+      "val_event_mean_water_iou": 0.14375343065433785,
+      "seconds": 161.06664896011353
+    },
+    {
+      "epoch": 3,
+      "train_bce": 0.2517523730359524,
+      "train_dice": 0.6832939776090475,
+      "train_loss": 0.9350463576041735,
+      "train_chips_with_gradient": 26,
+      "train_chips_without_gradient": 4,
+      "optimizer_steps": 7,
+      "val_water_iou_pooled": 0.0956895402617404,
+      "val_event_mean_water_iou": 0.13411751918924567,
+      "seconds": 161.04032349586487
+    },
+    {
+      "epoch": 4,
+      "train_bce": 0.24707183886382084,
+      "train_dice": 0.6293205550083747,
+      "train_loss": 0.876392397743005,
+      "train_chips_with_gradient": 26,
+      "train_chips_without_gradient": 4,
+      "optimizer_steps": 7,
+      "val_water_iou_pooled": 0.14992778300691617,
+      "val_event_mean_water_iou": 0.1763771214397873,
+      "seconds": 161.1534285545349
+    }
+  ],
+  "best_epoch": 1,
+  "gradient_audit_first_step": {
+    "outside_decoder_with_grad_or_requires_grad": [],
+    "decoder_params_with_grad": 115,
+    "decoder_params_without_grad": [
+      "sam_mask_decoder.conv_s0.weight",
+      "sam_mask_decoder.conv_s0.bias",
+      "sam_mask_decoder.conv_s1.weight",
+      "sam_mask_decoder.conv_s1.bias",
+      "sam_mask_decoder.iou_prediction_head.layers.0.weight",
+      "sam_mask_decoder.iou_prediction_head.layers.0.bias",
+      "sam_mask_decoder.iou_prediction_head.layers.1.weight",
+      "sam_mask_decoder.iou_prediction_head.layers.1.bias",
+      "sam_mask_decoder.iou_prediction_head.layers.2.weight",
+      "sam_mask_decoder.iou_prediction_head.layers.2.bias",
+      "sam_mask_decoder.pred_obj_score_head.layers.0.weight",
+      "sam_mask_decoder.pred_obj_score_head.layers.0.bias",
+      "sam_mask_decoder.pred_obj_score_head.layers.1.weight",
+      "sam_mask_decoder.pred_obj_score_head.layers.1.bias",
+      "sam_mask_decoder.pred_obj_score_head.layers.2.weight",
+      "sam_mask_decoder.pred_obj_score_head.layers.2.bias"
+    ],
+    "decoder_params_nonfinite_grad": [],
+    "decoder_params_zero_grad": [
+      "sam_mask_decoder.output_hypernetworks_mlps.0.layers.0.weight",
+      "sam_mask_decoder.output_hypernetworks_mlps.0.layers.0.bias",
+      "sam_mask_decoder.output_hypernetworks_mlps.0.layers.1.weight",
+      "sam_mask_decoder.output_hypernetworks_mlps.0.layers.1.bias",
+      "sam_mask_decoder.output_hypernetworks_mlps.0.layers.2.weight",
+      "sam_mask_decoder.output_hypernetworks_mlps.0.layers.2.bias"
+    ],
+    "ok": true
+  },
+  "epochs_run": 4,
+  "checkpoints": {
+    "best": {
+      "generation": "20261030T013915336249Z_81b60bb0014c",
+      "sha256": "11d21c5b810415b4506671ecc7f9694e0d71f03395cac071db0b56e6b081fe1e",
+      "epoch": 1,
+      "bytes": 16902201
+    },
+    "last": {
+      "generation": "20261030T014721828771Z_e57b2f09960a",
+      "sha256": "eb227defab5c81ca0dc42612a52aee139a37ba91e23b115250daf44a3de89e4c",
+      "bytes": 65309505
+    },
+    "location": "/content/drive/MyDrive/auto-prompt-sam2/e2/runs/20261030T013250Z_2a795a89d5_f9fbd8b0/checkpoints",
+    "roundtrip_equal": true,
+    "note": "Stored in Drive only; never commit to Git."
+  },
+  "freezing": {
+    "frozen_fingerprint_before": "0c26e68ef18f2f98c12b96824e96b715b1c984b5e445a02c425ba6bff36af03c",
+    "frozen_fingerprint_after": "0c26e68ef18f2f98c12b96824e96b715b1c984b5e445a02c425ba6bff36af03c",
+    "frozen_blocks_unchanged": true,
+    "decoder_fingerprint_before": "0cec0b5c0b79da06703b04e351afabe4cc7edc629a4388a88c3c535a65cdfece",
+    "decoder_fingerprint_best": "fba64680a037b6dce7eb55f0d3873e733a224cb425853c0446376abeae937ecb",
+    "decoder_changed": true,
+    "full_state_hash_before_training": "72a85430eb2c93ee9fe3fed9a2ed1e097a8756f15c0becb212586afe7112384d"
+  },
+  "arms": {
+    "frozen_epoch0": {
+      "arm": "frozen_decoder",
+      "chips": 40,
+      "water_iou_pooled": 0.17037849358838072,
+      "event_mean_water_iou": 0.18776266906942046,
+      "precision": 0.17147522573942403,
+      "recall": 0.9638190533871113,
+      "dice": 0.2911511011553198,
+      "miou": 0.32829103317543606,
+      "per_chip_median": 0.0676911329579078,
+      "per_chip_iqr": 0.17907758107500543,
+      "chips_in_individual_iou": 33,
+      "fp_area_m2_total": 401135104.6685248
+    },
+    "tuned_best_epoch": {
+      "arm": "finetuned_decoder_best_epoch_1",
+      "chips": 40,
+      "water_iou_pooled": 0.3080519029370676,
+      "event_mean_water_iou": 0.245350354741417,
+      "precision": 0.39879292642375785,
+      "recall": 0.5751624722411934,
+      "dice": 0.47100868435782317,
+      "miou": 0.5861925254800652,
+      "per_chip_median": 0.17953083929840802,
+      "per_chip_iqr": 0.17791516584052747,
+      "chips_in_individual_iou": 33,
+      "fp_area_m2_total": 72635145.17259763
+    },
+    "tuned_last_epoch_val_pooled_iou": 0.14992778300691617
+  },
+  "paired_deltas_val": {
+    "chips": [
+      {
+        "id": "Ghana_1033830",
+        "event": "Ghana",
+        "iou_frozen": 0.4612256592241111,
+        "iou_tuned": 0.3415700453700002,
+        "delta": -0.11965561385411089
+      },
+      {
+        "id": "India_1018317",
+        "event": "India",
+        "iou_frozen": 0.7552107267955435,
+        "iou_tuned": 0.5500050640888579,
+        "delta": -0.2052056627066856
+      },
+      {
+        "id": "India_1050276",
+        "event": "India",
+        "iou_frozen": 0.19206362271635133,
+        "iou_tuned": 0.2272561449879888,
+        "delta": 0.035192522271637466
+      },
+      {
+        "id": "India_1068117",
+        "event": "India",
+        "iou_frozen": 0.2088022604281404,
+        "iou_tuned": 0.2714189565347448,
+        "delta": 0.06261669610660439
+      },
+      {
+        "id": "India_118868",
+        "event": "India",
+        "iou_frozen": 0.06662341273519325,
+        "iou_tuned": 0.18994933588936053,
+        "delta": 0.12332592315416728
+      },
+      {
+        "id": "Mekong_1149855",
+        "event": "Mekong",
+        "iou_frozen": 0.07844760908139588,
+        "iou_tuned": 0.2238514607688724,
+        "delta": 0.14540385168747655
+      },
+      {
+        "id": "Mekong_1413877",
+        "event": "Mekong",
+        "iou_frozen": 0.009995344525042079,
+        "iou_tuned": 0.15642221280203475,
+        "delta": 0.14642686827699267
+      },
+      {
+        "id": "Mekong_293769",
+        "event": "Mekong",
+        "iou_frozen": 0.042041143699464566,
+        "iou_tuned": 0.09350379069421734,
+        "delta": 0.051462646994752774
+      },
+      {
+        "id": "Mekong_474783",
+        "event": "Mekong",
+        "iou_frozen": 0.024324347072240786,
+        "iou_tuned": 0.10570512279517259,
+        "delta": 0.08138077572293181
+      },
+      {
+        "id": "Nigeria_1095404",
+        "event": "Nigeria",
+        "iou_frozen": 0.18270865954452659,
+        "iou_tuned": 0.3202359129672432,
+        "delta": 0.1375272534227166
+      },
+      {
+        "id": "Nigeria_31096",
+        "event": "Nigeria",
+        "iou_frozen": 0.003838934131229447,
+        "iou_tuned": 0.21077844311377245,
+        "delta": 0.20693950898254299
+      },
+      {
+        "id": "Nigeria_820924",
+        "event": "Nigeria",
+        "iou_frozen": 0.09702169787971289,
+        "iou_tuned": 0.13936781609195403,
+        "delta": 0.04234611821224114
+      },
+      {
+        "id": "Nigeria_984831",
+        "event": "Nigeria",
+        "iou_frozen": 0.919068500680884,
+        "iou_tuned": 0.4006951598521378,
+        "delta": -0.5183733408287461
+      },
+      {
+        "id": "Pakistan_1027214",
+        "event": "Pakistan",
+        "iou_frozen": 0.1500920578072587,
+        "iou_tuned": 0.3986680479502738,
+        "delta": 0.24857599014301507
+      },
+      {
+        "id": "Pakistan_43105",
+        "event": "Pakistan",
+        "iou_frozen": 0.0010194734764428807,
+        "iou_tuned": 0.008418837148118917,
+        "delta": 0.007399363671676036
+      },
+      {
+        "id": "Paraguay_1019808",
+        "event": "Paraguay",
+        "iou_frozen": 0.06820741472144654,
+        "iou_tuned": 0.047958407304083184,
+        "delta": -0.02024900741736335
+      },
+      {
+        "id": "Paraguay_153941",
+        "event": "Paraguay",
+        "iou_frozen": 0.011876036796863219,
+        "iou_tuned": 0.07666487647690655,
+        "delta": 0.06478883968004333
+      },
+      {
+        "id": "Paraguay_172476",
+        "event": "Paraguay",
+        "iou_frozen": 0.015045638753171988,
+        "iou_tuned": 0.18835434049352032,
+        "delta": 0.17330870174034832
+      },
+      {
+        "id": "Somalia_12849",
+        "event": "Somalia",
+        "iou_frozen": 0.1944169999215871,
+        "iou_tuned": 0.155915270312994,
+        "delta": -0.038501729608593105
+      },
+      {
+        "id": "Somalia_167787",
+        "event": "Somalia",
+        "iou_frozen": 0.057707104385739935,
+        "iou_tuned": 0.10481984089845578,
+        "delta": 0.047112736512715844
+      },
+      {
+        "id": "Somalia_256539",
+        "event": "Somalia",
+        "iou_frozen": 0.003745318352059925,
+        "iou_tuned": 0.004118616144975288,
+        "delta": 0.000373297792915363
+      },
+      {
+        "id": "Spain_1199913",
+        "event": "Spain",
+        "iou_frozen": 0.28551144945924717,
+        "iou_tuned": 0.3692202403866718,
+        "delta": 0.08370879092742461
+      },
+      {
+        "id": "Spain_4282030",
+        "event": "Spain",
+        "iou_frozen": 0.4946081520506163,
+        "iou_tuned": 0.5472076489652807,
+        "delta": 0.05259949691466442
+      },
+      {
+        "id": "Spain_6537196",
+        "event": "Spain",
+        "iou_frozen": 0.19716630427158588,
+        "iou_tuned": 0.24800683371298404,
+        "delta": 0.05084052944139816
+      },
+      {
+        "id": "Spain_7604243",
+        "event": "Spain",
+        "iou_frozen": 0.1509958862351653,
+        "iou_tuned": 0.4668230901200928,
+        "delta": 0.3158272038849275
+      },
+      {
+        "id": "Sri-Lanka_101973",
+        "event": "Sri-Lanka",
+        "iou_frozen": 0.011329166283665778,
+        "iou_tuned": 0.07258714938614572,
+        "delta": 0.061257983102479936
+      },
+      {
+        "id": "Sri-Lanka_132922",
+        "event": "Sri-Lanka",
+        "iou_frozen": 0.0676911329579078,
+        "iou_tuned": 0.17953083929840802,
+        "delta": 0.11183970634050022
+      },
+      {
+        "id": "Sri-Lanka_236030",
+        "event": "Sri-Lanka",
+        "iou_frozen": 0.008315816556873292,
+        "iou_tuned": 0.09113735701664652,
+        "delta": 0.08282154045977323
+      },
+      {
+        "id": "Sri-Lanka_236628",
+        "event": "Sri-Lanka",
+        "iou_frozen": 0.012760717568969444,
+        "iou_tuned": 0.09855322236836138,
+        "delta": 0.08579250479939193
+      },
+      {
+        "id": "USA_1039203",
+        "event": "USA",
+        "iou_frozen": 0.04972068763309775,
+        "iou_tuned": 0.10799209647748177,
+        "delta": 0.058271408844384025
+      },
+      {
+        "id": "USA_1082482",
+        "event": "USA",
+        "iou_frozen": 0.024239851656576036,
+        "iou_tuned": 0.08053875755909841,
+        "delta": 0.05629890590252237
+      },
+      {
+        "id": "USA_19225",
+        "event": "USA",
+        "iou_frozen": 0.01298604164134591,
+        "iou_tuned": 0.07986305633364457,
+        "delta": 0.06687701469229866
+      },
+      {
+        "id": "USA_225017",
+        "event": "USA",
+        "iou_frozen": 0.11045258620689655,
+        "iou_tuned": 0.23324330959980358,
+        "delta": 0.12279072339290703
+      }
+    ],
+    "n": 33,
+    "improved": 28,
+    "worsened": 5,
+    "unchanged": 0,
+    "median_delta": 0.06261669610660439,
+    "note": "descriptive only; one seed, small subset, no significance claim"
+  },
+  "hypothesis_check": {
+    "criterion": "The best-epoch pooled validation water IoU is less than or equal to the frozen-decoder pooled validation water IoU on the same chips.",
+    "frozen_val_pooled_iou": 0.17037849358838072,
+    "tuned_best_val_pooled_iou": 0.3080519029370676,
+    "mechanical_outcome": "not_refuted_on_this_subset",
+    "interpretation": "pending: the team must interpret, including precision/recall and failures"
+  },
+  "status": "executed_pending_review",
+  "nondeterminism_warnings": [
+    "Memory Efficient attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/"
+  ]
+}

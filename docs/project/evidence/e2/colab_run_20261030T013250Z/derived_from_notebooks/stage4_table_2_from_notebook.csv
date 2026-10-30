@@ -1,0 +1,9 @@
+block,median_ms,min_ms,max_ms,warmup,repetitions,baseline_allocated_bytes,baseline_reserved_bytes,peak_allocated_bytes,peak_reserved_bytes,incremental_peak_allocated_bytes,scope,batch_size,precision,autocast,synchronization,cache,calls_in_full_path,status
+full_static_path,154.933327000208,135.89020400013396,159.25436299994544,5,20,382429696,2191523840,684419584,2191523840,301989888,preloaded_inputs_and_weights_no_hooks_no_io_no_backward,1,float32,False,cuda_synchronize_before_and_after_each_host_wall_clock_sample,warm_allocator_and_model_caches_no_empty_cache_between_repetitions,,
+image_encoder,129.86286449995532,125.6549179997819,132.17078099978607,5,20,395012608,2191523840,697002496,2191523840,301989888,isolated_module_replay_preloaded_first_call_inputs_no_transfers_no_hooks_no_io,1,float32,False,cuda_synchronize_before_and_after_each_host_wall_clock_sample,warm_allocator_and_model_caches_no_empty_cache_between_repetitions,1,
+sam_prompt_encoder,1.4192554999681306,1.064094999946974,3.3751400001165166,5,20,382430720,2191523840,382443008,2191523840,12288,isolated_module_replay_preloaded_first_call_inputs_no_transfers_no_hooks_no_io,1,float32,False,cuda_synchronize_before_and_after_each_host_wall_clock_sample,warm_allocator_and_model_caches_no_empty_cache_between_repetitions,1,
+sam_mask_decoder,31.265984500123523,28.961903999970673,46.9002019999607,5,20,407598592,2191523840,437043712,2191523840,29445120,isolated_module_replay_preloaded_first_call_inputs_no_transfers_no_hooks_no_io,1,float32,False,cuda_synchronize_before_and_after_each_host_wall_clock_sample,warm_allocator_and_model_caches_no_empty_cache_between_repetitions,1,
+memory_attention,,,,,,,,,,,,,,,,,,not_executed_static_image_path
+memory_encoder,,,,,,,,,,,,,,,,,,not_executed_static_image_path
+obj_ptr_proj,,,,,,,,,,,,,,,,,,not_executed_static_image_path
+obj_ptr_tpos_proj,,,,,,,,,,,,,,,,,,not_executed_static_image_path

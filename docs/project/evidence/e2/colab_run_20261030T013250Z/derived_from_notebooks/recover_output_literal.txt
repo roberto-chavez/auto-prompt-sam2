@@ -1,0 +1,24 @@
+Celda 15 (execution_count=8), salida literal:
+
+E2 recover 20261030T013250Z_2a795a89d5_f9fbd8b0
+val chips ready {'chips': 40, 'per_event': {'Ghana': 4, 'India': 4, 'Mekong': 4, 'Nigeria': 4, 'Pakistan': 4, 'Paraguay': 4, 'Somalia': 4, 'Spain': 4, 'Sri-Lanka': 4, 'USA': 4}, 'components_total': 3893, 'components_min': 0, 'components_max': 593, 'chips_without_components': 7}
+{
+  "frozen_arm_check": {
+    "pooled_iou_now": 0.17037849358838072,
+    "pooled_iou_saved": 0.17037849358838072,
+    "abs_diff": 0.0,
+    "tolerance": 1e-06,
+    "per_chip_confusions_identical": true,
+    "mask_disagreement_pixels": 0,
+    "passed": true
+  },
+  "tuned_arm_check": {
+    "pooled_iou_now": 0.3080519029370676,
+    "pooled_iou_saved": 0.3080519029370676,
+    "abs_diff": 0.0,
+    "tolerance": 1e-06,
+    "per_chip_confusions_identical": true,
+    "mask_disagreement_pixels": 0,
+    "passed": true
+  }
+}

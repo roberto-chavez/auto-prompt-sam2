@@ -1,0 +1,9 @@
+block,executed_calls,counted_flops
+image_encoder,1,290783394816
+sam_prompt_encoder,1,1536
+sam_mask_decoder,1,3655700992
+memory_attention,0,
+memory_encoder,0,
+obj_ptr_proj,0,
+obj_ptr_tpos_proj,0,
+residual,,1612709888

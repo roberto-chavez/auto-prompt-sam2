@@ -1,6 +1,8 @@
 # PASOS_E2 — Cómo ejecutar E2 desde GitHub en tu Colab
 
-**Alcance: solo E2** (teardown del modelo base + intervención preliminar + cuaderno de decisiones). **Estado: preparado, NO ejecutado.** Ninguna métrica ni conclusión existe hasta que ejecutes y revisemos tus salidas.
+> **Actualización 2026-10-30:** estos pasos ya se ejecutaron una vez en Colab (run `20261030T013250Z_2a795a89d5_f9fbd8b0`). Resultados, evidencia y límites: [validacion_e2.md](validacion_e2.md) y [evidencia](evidence/e2/colab_run_20261030T013250Z/README.md). Para reproducir, siga usando esta guía; la acreditación de E2 sigue pendiente.
+
+**Alcance: solo E2** (teardown del modelo base + intervención preliminar + cuaderno de decisiones). **Estado: ejecutado una vez (2026-10-30), pendiente de revisión; no acreditado.** Las métricas solo valen para ese run y sus límites (ver validacion_e2.md).
 
 Todo se hace en **tu** cuenta de Colab y **tu** Drive. No dependes de archivos de tu compañero: la evidencia que hay en `docs/project/evidence/` es antecedente y no acredita tu ejecución.
 
