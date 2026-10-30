@@ -2,7 +2,7 @@
 
 Carpeta de evidencia **entregada por el usuario** (notebooks ejecutados y ZIP final de su Colab/Drive). Nada aquí se volvió a entrenar ni a calcular: los archivos de `run/` son copias byte a byte del ZIP `20261030T013250Z_2a795a89d5_f9fbd8b0-final.zip`, y los de `notebooks/` copias de los `.ipynb` ejecutados. Los notebooks **originales ejecutables** siguen en [`notebooks/`](../../../../../notebooks/) (`E2_01_datos_baseline_teardown.ipynb`, `E2_02_intervencion_decoder.ipynb`) y no fueron modificados.
 
-Estado: **ejecutado, pendiente de revisión y firma del equipo. E2 no está acreditada** (ver [validacion_e2.md](../../../validacion_e2.md)).
+Estado: **ejecutado y documentado; la calificación corresponde al profesor y no se da por acreditado** (ver [validacion_e2.md](../../../validacion_e2.md) y [auditoria_E2.md](../../../auditoria_E2.md)).
 
 ## Procedencia (qué es nativo y qué se derivó)
 
@@ -23,10 +23,10 @@ Excluido deliberadamente: pesos (`.pt`), checkpoints, GeoTIFF originales, caches
 - **No existe:** evidencia de un **reinicio real del runtime** de Colab (no hay boot IDs distintos, ni reconexión, ni `uptime`, ni nuevo `Mounted at` entre `prepare` y `recover`; ambos notebooks muestran un único montaje de Drive y `execution_count` consecutivos 1…9). `recover` corre en un **subproceso Python nuevo dentro de la misma sesión**; eso demuestra que el estado en Drive basta para reproducir las cifras, no que sobreviva a un reinicio del runtime. (Para las etapas 3 y 4 del compañero sí hay boot IDs distintos, pero no acreditan esta ejecución.)
 
 ## Evidencia no incluida (sigue solo en Drive)
-La preparación de datos, la línea base y el teardown (`E2_01`) se ejecutaron con `prepare` y escribieron sus artefactos en Drive; **este repositorio no contiene esos ZIP nativos**. Se localizaron en el Drive conectado (no se descargaron por su tamaño):
+La preparación de datos, la línea base y el teardown (`E2_01`) se **reejecutaron** con `prepare` en el Colab del usuario y escribieron sus artefactos en Drive; **este repositorio no contiene los ZIP nativos de esa reejecución** (sí contiene sus salidas incrustadas, en `derived_from_notebooks/`). Los archivos nativos del teardown **del equipo** (etapa 4, mismas configuración y pines) **sí están en el repositorio**: [`stage4/…/verified_artifacts/`](../../stage4/colab_run_20261029T162558Z/verified_artifacts/) (`sam_parameters.csv`, `sam_official_0_flops.csv`, `sam_official_0_timings.csv`, features/ERF JSON y figuras). Los ZIP originales de las etapas 3 y 4 se localizaron en el Drive conectado (no se descargaron por su tamaño):
 - Etapa 4 (teardown), ZIP: id `1d7D_vA94a0PQztbi779zDvfFy305bUO7` → trae el CSV de parámetros por bloque, arrays de features/ERF y figuras nativas.
 - Etapa 3 (línea base), ZIP: id `1o4GqQ5DYq5Mt9Z5erb9SMbEs7C-cM8pa` → trae predicciones y confusiones nativas.
-Los parámetros por bloque (27 219 136 / 6 220 / 4 215 109 / otros 7 522 033; total 38 962 498) constan en `run/report.json` (`parameters_before`). FLOPs, latencia y memoria constan solo en las tablas incrustadas de `derived_from_notebooks/`.
+Para el análisis de la ejecución propia no hacen falta; son evidencia opcional. Los parámetros por bloque (27 219 136 / 6 220 / 4 215 109 / otros 7 522 033; total 38 962 498) constan en `run/report.json` (`parameters_before`). FLOPs, latencia y memoria constan solo en las tablas incrustadas de `derived_from_notebooks/`.
 
 ## Reproducir
 1. Abrir `notebooks/E2_01_datos_baseline_teardown.ipynb` y luego `E2_02_intervencion_decoder.ipynb` desde GitHub (rama `_E.V_`) en Colab con GPU T4; fijar `PINNED_COMMIT` al commit deseado. Guía: [PASOS_E2.md](../../../PASOS_E2.md).
@@ -36,5 +36,8 @@ Los parámetros por bloque (27 219 136 / 6 220 / 4 215 109 / otros 7 522 033; to
    - Commit usado por los notebooks: `e2/code_commit.txt`.
 3. La semilla es 42; el backward del upsample bilineal en CUDA no es determinista (advertencias en `report.json`, `nondeterminism_warnings`), por lo que una reejecución completa puede diferir levemente; `recover` verifica la repetición exacta de la **evaluación**, no del entrenamiento.
 
+## Archivos de verificación independiente (carpeta superior)
+[`../audit_recomputation.json`](../audit_recomputation.json) (recálculo de métricas desde `per_chip_val.csv` y control cruzado con la etapa 3 propia; script `scripts/audit_e2_recompute.py`) y [`../teardown_architecture_counts.json`](../teardown_architecture_counts.json) (conteo de sub-bloques; script `scripts/teardown_architecture_counts.py`). Resumen y veredicto: [auditoria_E2.md](../../../auditoria_E2.md).
+
 ## Índice y hashes
-Ver [`SHA256SUMS.txt`](SHA256SUMS.txt) (verificable con `sha256sum -c SHA256SUMS.txt` desde esta carpeta). Hashes de los originales del usuario: `E2_01…ejecutado.ipynb` `09e26671…cee`, `E2_02…ejecutado.ipynb` `c5b0733b…ac16ac`, ZIP final `4e67a5fb…eac4`.
+Ver [`SHA256SUMS.txt`](SHA256SUMS.txt) (27 archivos, incluye los dos de arriba) (verificable con `sha256sum -c SHA256SUMS.txt` desde esta carpeta). Hashes de los originales del usuario: `E2_01…ejecutado.ipynb` `09e26671…cee`, `E2_02…ejecutado.ipynb` `c5b0733b…ac16ac`, ZIP final `4e67a5fb…eac4`.

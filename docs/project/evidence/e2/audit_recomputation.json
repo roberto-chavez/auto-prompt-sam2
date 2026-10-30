@@ -1,0 +1,87 @@
+{
+  "chips_in_csv": 40,
+  "history_matches_report": true,
+  "paired": {
+    "improved": 28,
+    "n": 33,
+    "report": {
+      "improved": 28,
+      "n": 33,
+      "worsened": 5
+    },
+    "worsened": 5
+  },
+  "pooled_vs_report": {
+    "frozen": {
+      "max_abs_diff": 5.551115123125783e-17,
+      "recomputed": {
+        "dice": 0.2911511011553197,
+        "iou": 0.17037849358838067,
+        "precision": 0.17147522573942398,
+        "recall": 0.9638190533871113
+      },
+      "report": {
+        "dice": 0.2911511011553198,
+        "iou": 0.17037849358838072,
+        "precision": 0.17147522573942403,
+        "recall": 0.9638190533871113
+      }
+    },
+    "tuned": {
+      "max_abs_diff": 0.0,
+      "recomputed": {
+        "dice": 0.47100868435782317,
+        "iou": 0.3080519029370676,
+        "precision": 0.39879292642375785,
+        "recall": 0.5751624722411934
+      },
+      "report": {
+        "dice": 0.47100868435782317,
+        "iou": 0.3080519029370676,
+        "precision": 0.39879292642375785,
+        "recall": 0.5751624722411934
+      }
+    }
+  },
+  "predictions_check": {
+    "chips": 40,
+    "empty_when_no_components_tuned": true,
+    "issues": []
+  },
+  "run_id": "20261030T013250Z_2a795a89d5_f9fbd8b0",
+  "stage3_crosscheck": {
+    "chips_different": [
+      {
+        "e2_frozen_fp_px": 45136,
+        "e2_frozen_iou": 0.7552107267955435,
+        "id": "India_1018317",
+        "stage3_fp_px": 45135,
+        "stage3_iou": 0.7552145829610151
+      },
+      {
+        "e2_frozen_fp_px": 199978,
+        "e2_frozen_iou": 0.042041143699464566,
+        "id": "Mekong_293769",
+        "stage3_fp_px": 199978,
+        "stage3_iou": 0.04203680822006894
+      },
+      {
+        "e2_frozen_fp_px": 231842,
+        "e2_frozen_iou": 0.024324347072240786,
+        "id": "Mekong_474783",
+        "stage3_fp_px": 231841,
+        "stage3_iou": 0.024324449438391387
+      }
+    ],
+    "chips_identical": 37,
+    "e2_chips_compared": 40,
+    "note": "IoU differences are <= ~4e-6 and FP differ by at most 1 px (consistent with a 1-pixel mask difference between the differentiable E2 path and SAM2ImagePredictor; not verified at pixel level without the labels). The pre-declared stage-3 parity gate allowed <=10 px.",
+    "payloads_read": 90,
+    "skipped_not_opened": 1,
+    "stage3_pooled_precision": 0.1610729199885264,
+    "stage3_pooled_recall": 0.8936595154193882,
+    "stage3_pooled_val_iou_all_val_chips": 0.15804373108830588,
+    "stage3_zip_name": "stage3_user.zip"
+  },
+  "train_val_disjoint": true
+}

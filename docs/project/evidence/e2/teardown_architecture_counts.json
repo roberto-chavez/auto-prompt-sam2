@@ -1,0 +1,110 @@
+{
+  "image_encoder": {
+    "neck_convs_in_out": [
+      [
+        768,
+        256
+      ],
+      [
+        384,
+        256
+      ],
+      [
+        192,
+        256
+      ],
+      [
+        96,
+        256
+      ]
+    ],
+    "neck_fpn": 369664,
+    "patch_embed": 14208,
+    "pos_embed": 10848,
+    "stages": [
+      {
+        "blocks": [
+          0,
+          0
+        ],
+        "blocks_with_query_pooling": [],
+        "dim_out": 96,
+        "global_attention_blocks": [],
+        "n_blocks": 1,
+        "params": 111840,
+        "stage": 0
+      },
+      {
+        "blocks": [
+          1,
+          2
+        ],
+        "blocks_with_query_pooling": [
+          1
+        ],
+        "dim_out": 192,
+        "global_attention_blocks": [],
+        "n_blocks": 2,
+        "params": 852864,
+        "stage": 1
+      },
+      {
+        "blocks": [
+          3,
+          9
+        ],
+        "blocks_with_query_pooling": [
+          3
+        ],
+        "dim_out": 384,
+        "global_attention_blocks": [
+          5,
+          7,
+          9
+        ],
+        "n_blocks": 7,
+        "params": 12273792,
+        "stage": 2
+      },
+      {
+        "blocks": [
+          10,
+          11
+        ],
+        "blocks_with_query_pooling": [
+          10
+        ],
+        "dim_out": 768,
+        "global_attention_blocks": [],
+        "n_blocks": 2,
+        "params": 13585920,
+        "stage": 3
+      }
+    ],
+    "total": 27219136,
+    "trunk": 26849472
+  },
+  "memory_attention": {
+    "layers": 4,
+    "total": 5922304
+  },
+  "memory_encoder": 1384608,
+  "note": "Random-weight instantiation of configs/sam2.1/sam2.1_hiera_t.yaml; counts only.",
+  "sam_mask_decoder": {
+    "conv_s0": 8224,
+    "conv_s1": 16448,
+    "iou_prediction_head": 132612,
+    "iou_token": 256,
+    "mask_tokens": 4,
+    "obj_score_token": 256,
+    "output_hypernetworks_mlps": 559232,
+    "output_upscaling": 73952,
+    "pred_obj_score_head": 131841,
+    "total": 4215109,
+    "transformer": 3291264,
+    "two_way_transformer_depth": 2,
+    "two_way_transformer_heads": 8
+  },
+  "sam_prompt_encoder": 6220,
+  "total": 38962498
+}
