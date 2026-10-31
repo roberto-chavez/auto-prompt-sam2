@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "positive_thresholds": [0.5, 0.7],
+  "negative_threshold": 0.1,
+  "positive_per_component": 3,
+  "negative_per_component": 3,
+  "minimum_distance_px": 16.0,
+  "connectivity": 8,
+  "minimum_component_pixels": 16,
+  "interpolation": "bilinear_pixel_centers_align_corners_false_border_clamp",
+  "positive_rule": "greedy_highest_remaining_probability_with_euclidean_suppression",
+  "negative_pool": "all_input_valid_pixels_probability_le_negative_threshold",
+  "ties": "probability_then_row_then_column",
+  "distance_scope": "all_points_in_each_component_call",
+  "shortfall": "use_available_no_relaxation",
+  "empty": "empty_mask_no_sam_call",
+  "grid": {
+    "points_per_side": 32, "points_per_batch": 64,
+    "pred_iou_thresh": 0.8, "stability_score_thresh": 0.95,
+    "stability_score_offset": 1.0, "box_nms_thresh": 0.7,
+    "crop_n_layers": 0, "min_mask_region_area": 0,
+    "water_thresholds": [0.5, 0.7],
+    "empty_or_no_input_valid": "reject",
+    "mean_probability": "native_mask_intersect_input_valid",
+    "output_clip": "input_valid_only"
+  },
+  "repeat_tolerance": {"probability_atol": 0.000001, "probability_rtol": 0.00001, "mask_disagreement_pixels": 0}
+}

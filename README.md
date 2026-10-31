@@ -8,7 +8,7 @@ El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando
 
 La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
 
-> **Estado actual (2026-10-29):** etapas 1–4 concluidas (4/9), con consulta de licencia de Sen1Floods11 pendiente. Referencia asistida SAM y disección de SAM/DINOv3 ejecutadas y recuperadas en runtimes Colab T4 distintos, con evidencia revisada. La etapa 4 cubre parámetros, FLOPs parciales por bloque, features intermedias, campo receptivo efectivo y latencia/memoria; pesos congelados intactos y hooks eliminados. IoU agua de validación de la etapa 3: 0.158044 official y 0.168434 leave-Paraguay-out. Etapas 5–9 y demo sin iniciar; sin entrenamiento ni evaluación final. Véase el [estado de fase 1](docs/project/estado_actual_fase1.md) y la [interpretación y cierre de etapa 4](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md).
+> **Estado actual (2026-10-30):** etapas 1–5 concluidas (5/9), con consulta de licencia de Sen1Floods11 pendiente. Se revisaron ejecución y recuperación en Colab T4 de la referencia asistida, la disección SAM/DINOv3 y el probe supervisado con prompts automáticos y malla 32×32. Se auditaron 1 640 predicciones de validación de etapa 5; pesos base congelados y regímenes aislados. Etapas 6–9 y demo sin iniciar: falta ajustar el decoder, hacer las ablaciones y evaluar los conjuntos reservados. Véanse el [estado de fase 1](docs/project/estado_actual_fase1.md) y el [cierre de etapa 5](docs/project/evidence/stage5/colab_run_20261029T194653Z/interpretacion_y_cierre.md).
 
 ## Pregunta de investigación y alcance
 
@@ -99,7 +99,7 @@ flowchart TD
 | **Clasificador de agua (*probe*)** | Regresión logística sobre las características de DINOv3 para estimar probabilidades de agua, entrenada únicamente con etiquetas del conjunto de entrenamiento. |
 | **Mask decoder de SAM 2.1** | Único bloque de SAM que se ajustará, usando entropía cruzada binaria (BCE) y pérdida Dice. Los encoders de imagen y de prompts permanecerán congelados. |
 
-Los máximos del mapa de probabilidad producirán puntos positivos y las zonas de baja probabilidad producirán puntos negativos. SAM se ejecutará por componente conectado; se seleccionará la máscara con mayor IoU predicha y se unirán las máscaras para obtener una predicción binaria. También se contempla una variante del generador que use pseudoetiquetas de NDWI en lugar de etiquetas manuales.
+Los máximos del mapa de probabilidad producirán puntos positivos y las zonas de baja probabilidad producirán puntos negativos. SAM se ejecutará por componente conectado; se seleccionará la máscara con mayor IoU predicha y se unirán las máscaras para obtener una predicción binaria. La variante con pseudoetiquetas NDWI quedó aplazada antes de ejecutar la etapa 5. El probe actual usa etiquetas manuales train y calibración manual val; no se considera libre de etiquetas.
 
 La línea base utilizará puntos simulados desde las máscaras reales. Como requiere etiquetas para construir los prompts, servirá como **referencia asistida**, sin representar un sistema desplegable. La alternativa de malla automática generará máscaras sin clase, que se identificarán como agua mediante su probabilidad media estimada por DINOv3 y el clasificador.
 
@@ -138,17 +138,19 @@ El análisis de eficiencia incluirá parámetros, FLOPs, mediana de latencia tra
 
 ```text
 auto-prompt-sam2/
-├── README.md
-└── docs/
-    ├── course/
-    │   └── tarea_final_deep_learning.md
-    ├── project/
-    │   └── draft/
-    │       ├── propuesta_inicial_deep_learning.md
-    │       └── El Costo del Prompt - INF52 PUCP_slides.pdf
-    └── WAIMLAP/
-        ├── Abstract_CostOfThePrompt.md
-        └── Poster_CostOfThePrompt.pptx
+├── configs/                 # Modelos, datos, baseline, profiling, probe y prompts
+├── notebooks/               # 01–05: notebooks fuente, sin salidas
+├── src/auto_prompt_sam2/    # Datos, geometría, modelos, métricas y flujo automático
+├── scripts/                 # Ejecución Colab, validación, auditoría y exportación
+├── tests/                   # Contratos sintéticos CPU, sin modelos
+├── docs/
+│   ├── course/              # Bases del curso
+│   ├── WAIMLAP/             # Resumen y póster del diseño original
+│   └── project/             # Hoja de ruta, estado, decisiones e informes
+│       ├── draft/           # Propuesta inicial
+│       └── evidence/        # Evidencia versionable de etapas 1–5
+├── artifacts/               # Ignorado: datos, ZIP, cachés y artefactos grandes
+└── colab_temp/              # Ignorado: archivos recibidos para revisión
 ```
 
 | Carpeta o documento | Contenido |
@@ -179,17 +181,37 @@ Estas fechas describen el cronograma académico y no acreditan que los entregabl
 
 La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
 
-**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). **Etapa 3 concluida:** [notebook de referencia asistida](notebooks/03_linea_base_asistida.ipynb), [configuración](configs/baseline.yaml) e [instrucciones/validaciones](docs/project/validacion_etapa3.md); ejecución y recuperación Colab revisadas en la [auditoría externa](docs/project/evidence/stage3/colab_run_20261029T134519Z/review.json). **Etapa 4 concluida:** [notebook de disección](notebooks/04_diseccion_modelos.ipynb), [configuración](configs/profiling.yaml) y [validaciones/instrucciones](docs/project/validacion_etapa4.md); ejecución/recuperación T4 y [auditoría externa](docs/project/evidence/stage4/colab_run_20261029T162558Z/review.json) completadas, con [medidas e interpretación](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). Las etapas 5–9 y la fase 2 siguen sin implementar.
+**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). **Etapa 3 concluida:** [notebook de referencia asistida](notebooks/03_linea_base_asistida.ipynb), [configuración](configs/baseline.yaml) e [instrucciones/validaciones](docs/project/validacion_etapa3.md); ejecución y recuperación Colab revisadas en la [auditoría externa](docs/project/evidence/stage3/colab_run_20261029T134519Z/review.json). **Etapa 4 concluida:** [notebook de disección](notebooks/04_diseccion_modelos.ipynb), [configuración](configs/profiling.yaml) y [validaciones/instrucciones](docs/project/validacion_etapa4.md); ejecución/recuperación T4 y [auditoría externa](docs/project/evidence/stage4/colab_run_20261029T162558Z/review.json) completadas, con [medidas e interpretación](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). **Etapa 5 concluida:** [notebook de prompts automáticos](notebooks/05_prompts_automaticos.ipynb), [probe](configs/probe.yaml), [prompts/malla](configs/prompts.yaml) y [protocolo de ejecución](docs/project/validacion_etapa5.md); [auditoría y evidencia](docs/project/evidence/stage5/README.md) con selección y recuperación revisadas. Las etapas 6–9 y la fase 2 siguen sin implementar.
 
 Para llevar los archivos actuales a Colab sin depender de cambios aún no publicados: ejecute `python scripts/export_colab_bundle.py`, suba el ZIP generado a Drive y abra el notebook. Configure el SHA-256 del ZIP y la raíz persistente; siga sus pasos `prepare` y `recover` en runtimes distintos. Esto no descarga datos ni pesos. Los bloqueos de licencia/acceso deben resolverse antes de pasar a etapas dependientes.
 
-La estructura anterior describe la documentación original. Se añaden `configs/`, `notebooks/`, `src/auto_prompt_sam2/`, `scripts/`, `tests/` y evidencias en `docs/project/evidence/stage1/`.
+El resumen WAIMLAP y los materiales de propuesta conservan el diseño original; el avance ejecutado y sus límites se registran en el estado, el cuaderno y los cierres por etapa.
 
 Para repetir la etapa 2, use `python scripts/export_stage2_bundle.py` y el notebook 02, reutilizando el venv y la raíz persistente. El paquete nuevo no reemplaza el ZIP histórico de etapa 1. Los datos reales están en `artifacts/stage2-persistent/` local, ignorados por Git; el notebook permite adquirir/verificar los mismos objetos en Drive y ejecutar la recuperación `--offline`. [Validación de etapa 2](docs/project/validacion_etapa2.md) documenta comandos, estadísticas, límites y la evidencia Colab revisada.
 
 Para la etapa 3, use `python scripts/export_stage3_bundle.py`, suba el ZIP de fuentes a Drive y ejecute el notebook 03 con GPU en Colab. Reutiliza las generaciones y estadísticas de etapa 2, sin reajustarlas. El notebook prepara la línea base de desarrollo para ambos regímenes y su recuperación en runtime nuevo; exporta notebook/JSON/artefactos para revisión. La referencia usa etiquetas para crear puntos y conocer ausencia de agua: **no es desplegable**. No ejecutar SAM en la PC ni abrir conjuntos reservados.
 
 Para reproducir la etapa 4 ya concluida, use `python scripts/export_stage4_bundle.py`, suba el ZIP a Drive y abra el notebook 04 con GPU. Ejecute `prepare` y, tras eliminar/recrear runtime, entorno y `recover`. Conserve notebook con salidas, JSON y ZIP de evidencia para revisar la nueva ejecución; no hace falta repetir la ejecución ya aceptada para mantener el cierre actual. Solo train por régimen; SAM y DINOv3 congelados, features/ERF y profiling sin entrenamiento ni prompts automáticos. Toda ejecución de modelos corresponde exclusivamente a Colab; la PC permite pruebas sintéticas y revisión de artefactos guardados sin ejecutar modelos.
+
+## Etapa 5: resultados de desarrollo y reproducción
+
+Los dos regímenes ajustaron exclusivamente con train su scaler y cuatro probes logísticos sobre DINOv3 congelado. Cada uno seleccionó en su propia validación C=0.1, sin balanceo, y umbral positivo 0.7. SAM y su decoder permanecen congelados. La malla 32×32 usa el probe seleccionado y umbral semántico 0.5.
+
+| Métrica de validación | official puntos | excluido puntos | official malla | excluido malla |
+| --- | ---: | ---: | ---: | ---: |
+| IoU agua acumulada | 0.298615 | 0.316842 | 0.178537 | 0.208799 |
+| Precisión | 0.327153 | 0.354323 | 0.921761 | 0.905603 |
+| Recall | 0.773923 | 0.749701 | 0.181284 | 0.213444 |
+
+La calidad actual es modesta: los puntos recuperan más agua con abundantes falsos positivos; la malla tiene alta precisión y baja cobertura. Son resultados de calibración, con poblaciones distintas entre regímenes. No prueban transferencia geográfica, las hipótesis A1–A3 ni una mejora atribuible al decoder, aún sin ajustar. Test, Bolivia y Paraguay reservado permanecen cerrados.
+
+Para una nueva reproducción de etapa 5: `python scripts/export_stage5_bundle.py`, subir el ZIP de fuentes a Drive y abrir notebook 05 con GPU. Ejecutar `prepare` y luego `recover` en otro runtime; `resume` sirve solo para un prepare interrumpido después de detener el escritor anterior. Todo entrenamiento e inferencia de modelos se ejecuta exclusivamente en Colab. En la PC: `python scripts/validate_stage5_local.py`, que ejecuta pruebas sintéticas CPU sin modelos ni entrenamiento. No hace falta repetir la ejecución ya aceptada para conservar su cierre.
+
+El [índice de evidencia](docs/project/evidence/stage5/README.md) distingue la auditoría aceptada de los intentos históricos fallidos y describe las excepciones de portabilidad. Los 627 payloads de features omitidos del ZIP compacto permanecen en Drive; sus hashes no se recalcularon externamente. El detalle de etapas pendientes está en la [hoja de ruta](docs/project/hoja_de_ruta_fase1.md).
+
+## Qué conservar en Git
+
+Versionar fuentes, configuraciones, notebooks fuente limpios, tests, documentación y evidencia ligera revisada en `docs/project/evidence/`. Los notebooks ejecutados se conservan allí como evidencia, con sus salidas originales. No subir `artifacts/`, `colab_temp/`, entornos virtuales, datos crudos, cachés, tokens ni checkpoints base. El ZIP original de etapa 5 queda en `artifacts/stage5-evidence/`; sus hashes y el índice están versionados. Mantener también las generaciones completas en Drive: Git no sustituye ese archivo experimental.
 
 ## Limitaciones y decisiones por verificar
 

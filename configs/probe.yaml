@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "regimes": ["official", "leave_paraguay_out"],
+  "roles": ["train", "val"],
+  "seed": 42,
+  "features": "last_hidden_state_final_layernorm_patch_tokens_no_cls_no_registers",
+  "grid_hw": [32, 32],
+  "hidden_size": 1024,
+  "targets": {"water_min": 0.5, "nonwater_max": 0.05, "minimum_valid_pixels": 1},
+  "search": {"C": [0.1, 1.0], "class_weight": ["none", "balanced"]},
+  "sampling": "all_unambiguous_train_patches_no_subsampling",
+  "scaler": "train_unambiguous_patches_population_std_zero_to_one",
+  "solver": {"name": "torch_cuda_lbfgs", "max_iter": 150, "tolerance_grad": 0.00001, "tolerance_change": 1e-09, "history_size": 20},
+  "objective": "mean_sample_weighted_BCE_plus_sum_w_squared_over_2_C_N_intercept_unpenalized",
+  "selection": "pooled_validation_segmentation_water_iou_first_candidate_on_exact_tie",
+  "ndwi": {"included": false, "decision": "deferred_before_any_stage5_comparison", "reason": "Separate extension; principal supervised comparison only. No label-free claim."}
+}

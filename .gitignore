@@ -12,3 +12,6 @@ weights/
 *.pt
 *.pth
 *.safetensors
+
+# Adjuntos de Colab y descargas de revisión; evidencia ligera en docs/project/evidence/
+colab_temp/
