@@ -248,3 +248,23 @@ Asistencia IA: Codex auditó fuentes, notebook, bytes y arrays en CPU, interpret
 ## 2026-10-30 — Preparación de archivos para commit
 
 Se actualiza README a 5/9 con métricas val y sus límites, estructura vigente y reproducción de etapa 5. Se añade índice de evidencia distinguiendo cierre aceptado e intentos históricos fallidos. ZIP grande íntegro archivado por traslado dentro del workspace a artifacts/stage5-evidence; colab_temp se ignora. Se conserva validacion_etapa5.md como protocolo previo idéntico al snapshot auditado. Fuentes experimentales, reportes originales y notebooks no se alteran. IA: Codex realizó mantenimiento documental y verificaciones CPU; sin nueva etapa, modelos, entrenamiento ni operaciones remotas.
+
+
+## 2026-10-31 — Etapa 6: protocolo previo y preparación Colab
+
+Responsable de implementación: Codex (IA); ejecución Colab y interpretación científica: usuario/equipo, pendientes. Hipótesis previa: entrenamiento exclusivo del decoder podría mejorar IoU agua val respecto del flujo automático congelado de etapa 5; el sesgo/cobertura de prompts puede impedir mejora. Resultados nulos o negativos se conservarán sin extender el presupuesto ni modificar el régimen excluido mirando official.
+
+Se adopta la recomendación de la guía: selección por IoU predicha, logits a 512, máximo por componente (equivalente a máximo de probabilidades), BCEWithLogits + Dice válida 1/1, suavizado 1. Sin componentes: máscara vacía, sin gradiente y con conteo; sin válidos: no actualización. No hay puntos asistidos ni etiquetas en el generador. El argmax no entrena directamente la cabeza de scores; solo máscaras seleccionadas/máximos ganadores reciben gradiente de segmentación. Se registra esta limitación.
+
+Se fija antes de ambos regímenes: semilla 42, 10 épocas, AdamW 1e-5, WD 0.01, FP32, AMP desactivado, scheduler constante, microbatch 1/acumulación 4 contribuyentes, resto normalizado por su tamaño, clip 1, sin parada temprana ni augmentations. Pesos SAM base idénticos de origen, carga nueva por régimen; preprocesamiento/probe/features propios. DINO permanece inmutable al reutilizar caché verificada, sin instanciarlo. Conv_s0/conv_s1 siguen en el grafo del decoder.
+
+Reanudación al límite de época: last/best/epoch_N con optimizador, scheduler, AMP, RNG y muestreador. Prepare se interrumpe tras época 1 por régimen; resume en otro runtime comprueba estados exactos y replay de un paso train, revierte diagnóstico y continúa. Cambiar config/código/linaje invalida recuperación. Se conservan generaciones anteriores; no se asume atomicidad de Drive. No reducir memoria/batch/precisión silenciosamente si Colab falla.
+
+Resultado local: 75 pruebas CPU sin modelos y pip check correctos; no backward ni entrenamiento en PC. Resultados experimentales: pendientes, sin estimar IoU ni afirmar mejora. [Protocolo, límites y entrega](validacion_etapa6.md). Pendiente de notebook ejecutado, JSON/ZIP de ambos regímenes, gradientes, hashes, recuperación, cobertura y curvas; no cerrar por existencia de código. Licencia histórica y revisión académica humana pendientes. Sin ablaciones adicionales, evaluación final ni demo.
+
+La interpolación bilineal diferenciable de logits se fija en CPU del runtime Colab, con copias autograd GPU→CPU→GPU; decoder y resto del cómputo de modelos siguen en GPU. Esto evita la incompatibilidad conocida de backward bilineal CUDA con determinismo estricto de PyTorch 2.7. Coste de transferencia adicional, sin cambiar resolución ni precisión. No se ejecuta ningún backward en la PC. [Referencia oficial](https://docs.pytorch.org/docs/2.7/generated/torch.use_deterministic_algorithms.html).
+
+
+## 2026-11-01 — Revisión externa y cierre
+
+Etapa 6 concluida tras auditar la evidencia aportada. [Resultados, interpretación y límites](evidence/stage6/colab_review_20261101/interpretacion_y_cierre.md); [auditoría JSON](evidence/stage6/colab_review_20261101/review.json). Best val official 0.484067 (época 10) y excluido 0.505815 (época 8), mejoras +18.5452 y +18.8974 pp. Se conserva la caída posterior del excluido. 1 640 confusiones val recalculadas sin modelos. Recuperación y congelamiento acreditados en Colab. Cobertura train 161/252 y 139/213; sin respaldo asistido. Checkpoints grandes permanecen en Drive con inventarios verificados en Colab, sin inspección local independiente. Contador prepare vacío con salida preservada. Sin pendiente técnico de cierre; licencia y revisión académica humana pendientes. IA: Codex auditó y documentó; usuario ejecutó Colab. Detenerse antes de etapa 7.

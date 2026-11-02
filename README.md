@@ -8,7 +8,7 @@ El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando
 
 La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
 
-> **Estado actual (2026-10-30):** etapas 1–5 concluidas (5/9), con consulta de licencia de Sen1Floods11 pendiente. Se revisaron ejecución y recuperación en Colab T4 de la referencia asistida, la disección SAM/DINOv3 y el probe supervisado con prompts automáticos y malla 32×32. Se auditaron 1 640 predicciones de validación de etapa 5; pesos base congelados y regímenes aislados. Etapas 6–9 y demo sin iniciar: falta ajustar el decoder, hacer las ablaciones y evaluar los conjuntos reservados. Véanse el [estado de fase 1](docs/project/estado_actual_fase1.md) y el [cierre de etapa 5](docs/project/evidence/stage5/colab_run_20261029T194653Z/interpretacion_y_cierre.md).
+> **Estado actual (2026-11-01):** etapas 1–6 concluidas (6/9), con consulta de licencia de Sen1Floods11 pendiente. Se revisaron diez épocas de entrenamiento exclusivo del decoder por régimen en Colab T4 y la recuperación exacta en otro runtime. La mejor IoU agua de validación es 0.484067 (`official`, época 10) y 0.505815 (`leave_paraguay_out`, época 8), mejoras de 18.55 y 18.90 puntos porcentuales frente al flujo automático congelado de etapa 5. Se auditaron 1 640 máscaras de validación de etapa 6. La cobertura parcial de prompts limita el método; los resultados aún no acreditan evaluación final ni transferencia geográfica. Etapas 7–9 y demo sin iniciar. Véanse el [estado de fase 1](docs/project/estado_actual_fase1.md) y el [cierre de etapa 6](docs/project/evidence/stage6/colab_review_20261101/interpretacion_y_cierre.md).
 
 ## Pregunta de investigación y alcance
 
@@ -138,9 +138,9 @@ El análisis de eficiencia incluirá parámetros, FLOPs, mediana de latencia tra
 
 ```text
 auto-prompt-sam2/
-├── configs/                 # Modelos, datos, baseline, profiling, probe y prompts
-├── notebooks/               # 01–05: notebooks fuente, sin salidas
-├── src/auto_prompt_sam2/    # Datos, geometría, modelos, métricas y flujo automático
+├── configs/                 # Modelos, datos, prompts, entrenamiento y dependencias
+├── notebooks/               # 01–06: notebooks fuente, sin salidas
+├── src/auto_prompt_sam2/    # Datos, modelos, métricas, flujo automático y entrenamiento
 ├── scripts/                 # Ejecución Colab, validación, auditoría y exportación
 ├── tests/                   # Contratos sintéticos CPU, sin modelos
 ├── docs/
@@ -148,7 +148,7 @@ auto-prompt-sam2/
 │   ├── WAIMLAP/             # Resumen y póster del diseño original
 │   └── project/             # Hoja de ruta, estado, decisiones e informes
 │       ├── draft/           # Propuesta inicial
-│       └── evidence/        # Evidencia versionable de etapas 1–5
+│       └── evidence/        # Evidencia versionable de etapas 1–6
 ├── artifacts/               # Ignorado: datos, ZIP, cachés y artefactos grandes
 └── colab_temp/              # Ignorado: archivos recibidos para revisión
 ```
@@ -181,7 +181,7 @@ Estas fechas describen el cronograma académico y no acreditan que los entregabl
 
 La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
 
-**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). **Etapa 3 concluida:** [notebook de referencia asistida](notebooks/03_linea_base_asistida.ipynb), [configuración](configs/baseline.yaml) e [instrucciones/validaciones](docs/project/validacion_etapa3.md); ejecución y recuperación Colab revisadas en la [auditoría externa](docs/project/evidence/stage3/colab_run_20261029T134519Z/review.json). **Etapa 4 concluida:** [notebook de disección](notebooks/04_diseccion_modelos.ipynb), [configuración](configs/profiling.yaml) y [validaciones/instrucciones](docs/project/validacion_etapa4.md); ejecución/recuperación T4 y [auditoría externa](docs/project/evidence/stage4/colab_run_20261029T162558Z/review.json) completadas, con [medidas e interpretación](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). **Etapa 5 concluida:** [notebook de prompts automáticos](notebooks/05_prompts_automaticos.ipynb), [probe](configs/probe.yaml), [prompts/malla](configs/prompts.yaml) y [protocolo de ejecución](docs/project/validacion_etapa5.md); [auditoría y evidencia](docs/project/evidence/stage5/README.md) con selección y recuperación revisadas. Las etapas 6–9 y la fase 2 siguen sin implementar.
+**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). **Etapa 3 concluida:** [notebook de referencia asistida](notebooks/03_linea_base_asistida.ipynb), [configuración](configs/baseline.yaml) e [instrucciones/validaciones](docs/project/validacion_etapa3.md); ejecución y recuperación Colab revisadas en la [auditoría externa](docs/project/evidence/stage3/colab_run_20261029T134519Z/review.json). **Etapa 4 concluida:** [notebook de disección](notebooks/04_diseccion_modelos.ipynb), [configuración](configs/profiling.yaml) y [validaciones/instrucciones](docs/project/validacion_etapa4.md); ejecución/recuperación T4 y [auditoría externa](docs/project/evidence/stage4/colab_run_20261029T162558Z/review.json) completadas, con [medidas e interpretación](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). **Etapa 5 concluida:** [notebook de prompts automáticos](notebooks/05_prompts_automaticos.ipynb), [probe](configs/probe.yaml), [prompts/malla](configs/prompts.yaml) y [protocolo de ejecución](docs/project/validacion_etapa5.md); [auditoría y evidencia](docs/project/evidence/stage5/README.md) con selección y recuperación revisadas. **Etapa 6 concluida:** [notebook de entrenamiento](notebooks/06_entrenamiento_decoder.ipynb), [configuración](configs/training.yaml), [informe](docs/project/validacion_etapa6.md) y [evidencia revisada](docs/project/evidence/stage6/README.md). Las etapas 7–9 y la fase 2 siguen sin iniciar.
 
 Para llevar los archivos actuales a Colab sin depender de cambios aún no publicados: ejecute `python scripts/export_colab_bundle.py`, suba el ZIP generado a Drive y abra el notebook. Configure el SHA-256 del ZIP y la raíz persistente; siga sus pasos `prepare` y `recover` en runtimes distintos. Esto no descarga datos ni pesos. Los bloqueos de licencia/acceso deben resolverse antes de pasar a etapas dependientes.
 
@@ -208,6 +208,14 @@ La calidad actual es modesta: los puntos recuperan más agua con abundantes fals
 Para una nueva reproducción de etapa 5: `python scripts/export_stage5_bundle.py`, subir el ZIP de fuentes a Drive y abrir notebook 05 con GPU. Ejecutar `prepare` y luego `recover` en otro runtime; `resume` sirve solo para un prepare interrumpido después de detener el escritor anterior. Todo entrenamiento e inferencia de modelos se ejecuta exclusivamente en Colab. En la PC: `python scripts/validate_stage5_local.py`, que ejecuta pruebas sintéticas CPU sin modelos ni entrenamiento. No hace falta repetir la ejecución ya aceptada para conservar su cierre.
 
 El [índice de evidencia](docs/project/evidence/stage5/README.md) distingue la auditoría aceptada de los intentos históricos fallidos y describe las excepciones de portabilidad. Los 627 payloads de features omitidos del ZIP compacto permanecen en Drive; sus hashes no se recalcularon externamente. El detalle de etapas pendientes está en la [hoja de ruta](docs/project/hoja_de_ruta_fase1.md).
+
+## Etapa 6: entrenamiento del decoder y recuperación
+
+El [notebook 06](notebooks/06_entrenamiento_decoder.ipynb) ajusta exclusivamente el mask decoder desde SAM base, con probe y preprocesamiento propios por régimen. Usa prompts automáticos fijos, BCE + Dice en píxeles válidos y selección de `best` por IoU agua de validación. El [informe](docs/project/validacion_etapa6.md) y el [índice de evidencia](docs/project/evidence/stage6/README.md) describen configuración, resultados, cobertura y limitaciones.
+
+En los notebooks 1–5, la segunda sesión comprueba recuperación de artefactos y puede repetir inferencia o análisis, sin volver a entrenar el probe ni actualizar SAM. En el notebook 6, `prepare` entrena una época por régimen y se interrumpe deliberadamente; `resume` en otro runtime restaura los estados y completa las épocas 2–10. La prueba diagnóstica de un paso se revierte antes de continuar. Estas verificaciones ya están acreditadas; no hace falta repetirlas para conservar el cierre.
+
+Para una nueva reproducción: `python scripts/export_stage6_bundle.py`, subir el ZIP a Drive y seguir el notebook con GPU. La validación local permitida es `python scripts/validate_stage6_local.py`. Los registros históricos mantienen los hashes del paquete ejecutado; una nueva exportación tras editar documentación produce otro hash.
 
 ## Qué conservar en Git
 

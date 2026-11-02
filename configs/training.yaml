@@ -1,0 +1,45 @@
+{
+  "stage": "phase1_stage6",
+  "seed": 42,
+  "regimes": [
+    "official",
+    "leave_paraguay_out"
+  ],
+  "roles": [
+    "train",
+    "val"
+  ],
+  "epochs": 10,
+  "optimizer": "AdamW",
+  "lr": 1e-05,
+  "weight_decay": 0.01,
+  "microbatch_chips": 1,
+  "effective_batch_chips": 4,
+  "accumulation": 4,
+  "tail": "divide_by_actual_contributing_chips",
+  "precision": "float32",
+  "amp": false,
+  "clip_norm": 1.0,
+  "scheduler": "constant_LambdaLR",
+  "early_stopping": false,
+  "selection": "pooled_val_water_iou_strict_improvement_earliest_tie",
+  "loss": {
+    "bce_weight": 1.0,
+    "dice_weight": 1.0,
+    "smooth": 1.0,
+    "reduction": "valid_pixel_mean_bce_and_chip_dice_then_mean_contributing_chips",
+    "union": "max_logits_equivalent_max_probabilities_first_tie",
+    "multimask": "highest_predicted_iou_first_tie"
+  },
+  "empty_components": "empty_prediction_no_update_count_in_metrics",
+  "all_invalid": "no_update_count_in_metrics",
+  "augmentations": [],
+  "resume": "epoch_boundary_replay_uncommitted_epoch",
+  "controlled_interrupt_after_epoch": 1,
+  "recovery_tolerance": {
+    "state": "bitwise",
+    "next_step_atol": 0.0,
+    "next_step_rtol": 0.0
+  },
+  "native_interpolation": "bilinear_cpu_autograd_in_colab"
+}

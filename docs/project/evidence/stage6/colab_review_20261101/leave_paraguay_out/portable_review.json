@@ -1,0 +1,14 @@
+{
+  "status": "portable_consistency_passed_not_stage_closure",
+  "regime": "leave_paraguay_out",
+  "zip_sha256": "02d12c6057d1088ac0ca0e484f58d677cbdf85f75496f156f7ef854180e17296",
+  "best_epoch": 8,
+  "best_iou": 0.5058154025637092,
+  "delta_stage5": 0.18897372371551802,
+  "pending": [
+    "Human review of executed notebook/logs/hardware and coverage",
+    "Recompute validation confusion from exported masks and permitted labels",
+    "Large checkpoint bytes remain on Drive; inventory is not independent payload verification"
+  ],
+  "models_executed": false
+}
