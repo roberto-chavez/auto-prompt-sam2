@@ -1,8 +1,10 @@
 # Etapa 4: disección instrumentada
 
-Fecha: **2026-10-29, America/Lima**. Estado: **Concluida tras revisión Colab prepare/recover**. Cuatro de nueve etapas concluidas. Evidencia en [auditoría](evidence/stage4/colab_run_20261029T162558Z/review.json) e [interpretación con medidas y límites](evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). Las instrucciones siguientes describen cómo reproducir la ejecución ya revisada.
+> **Contexto al 2026-11-03:** antecedente técnico conservado del plan original. La fase 1 está **concluida en dos partes E2**; los conteos y pendientes siguientes describen la revisión de esta etapa en su fecha. Véanse el [estado vigente](estado_actual_fase1.md) y la [hoja de ruta adaptada](hoja_de_ruta_fase1.md).
 
-Se consultaron la [hoja de ruta, etapa 4 y §2.4](hoja_de_ruta_fase1.md#7-etapa-4-disección-instrumentada-de-sam-21-y-dinov3), las [bases del curso, A y política IA](../course/tarea_final_deep_learning.md) y el [resumen WAIMLAP, metodología y evaluación](../WAIMLAP/Abstract_CostOfThePrompt.md). Se conserva la salvedad histórica de licencia de Sen1Floods11; no se declara respuesta nueva del publicador.
+Fecha: **2026-10-29, America/Lima**. Estado: **Concluida tras revisión Colab prepare/recover**. El conteo histórico al cerrar esta etapa fue 4/9; la fase 1 se cerró posteriormente en dos partes E2. Evidencia en [auditoría](evidence/stage4/colab_run_20261029T162558Z/review.json) e [interpretación con medidas y límites](evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). Las instrucciones siguientes describen cómo reproducir la ejecución ya revisada.
+
+Se consultaron la [hoja de ruta, etapa 4 y §2.4](hoja_de_ruta_fase1_original.md#7-etapa-4-disección-instrumentada-de-sam-21-y-dinov3), las [bases del curso, A y política IA](../course/tarea_final_deep_learning.md) y el [resumen WAIMLAP, metodología y evaluación](../WAIMLAP/Abstract_CostOfThePrompt.md). Se conserva la salvedad histórica de licencia de Sen1Floods11; no se declara respuesta nueva del publicador.
 
 ## Entregables y reutilización
 
@@ -71,7 +73,7 @@ python scripts/review_stage4_evidence.py RUTA_RUN.zip RUTA_NOTEBOOK.ipynb --root
 
 El auditor archiva originales, verifica snapshots/generaciones, linaje de etapa 2, roles/IDs, matrices finitas y masa ERF, inventario, recuperación, sumas y medianas; deja explícitamente pendiente la lectura visual/científica. **Codex debe inspeccionar PNG, notebook y tablas reales**, contrastar H4a–c, documentar interpretación y límites y actualizar cuaderno/estado antes de marcar Concluida. No ejecutar las celdas del adjunto como parte de su revisión.
 
-**Revisión Colab completada 2026-10-29:** notebook y ZIP originales del usuario verificados; 49 generaciones, 39 artefactos y fuentes coincidentes. T4 en dos boot IDs, 50 tests/pip check en ambas sesiones, revisión de las ocho figuras/arrays y contraste de H4a–c. Pesos, hooks, sumas y recuperación correctos. [Informe completo](evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). Sin validación técnica pendiente. Mantener salvedad de licencia y comprensión/revisión académica humana. Sin etapas 5–9 ni demo.
+**Revisión Colab completada 2026-10-29:** notebook y ZIP originales del usuario verificados; 49 generaciones, 39 artefactos y fuentes coincidentes. T4 en dos boot IDs, 50 tests/pip check en ambas sesiones, revisión de las ocho figuras/arrays y contraste de H4a–c. Pesos, hooks, sumas y recuperación correctos. [Informe completo](evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). Sin validación técnica pendiente. Mantener salvedad de licencia y comprensión/revisión académica humana. Las antiguas etapas 5–9 quedaron fuera del alcance de cierre posterior; la demo es fase 2 pendiente.
 
 ## Referencias de implementación
 

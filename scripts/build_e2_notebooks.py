@@ -1,4 +1,6 @@
-"""Generate the two E2 Colab notebooks (no outputs, never executed) into notebooks/.
+"""Generate the two E2 reproduction templates (no outputs) into notebooks/.
+
+Project phase 1 closed on 2026-11-03; executed originals remain under docs/project/evidence/.
 
 They clone THIS repository from GitHub inside Colab (branch _E.V_), pin the exact commit in the
 user's Drive (e2/code_commit.txt) and run everything from that checkout. No ZIP bundles and no
@@ -223,12 +225,12 @@ def build():
         md("""
 # E2 · Notebook 1 — Entorno, datos Sen1Floods11, línea base y teardown
 
-**NO EJECUTADO.** Solo E2. Parte 1 de 2: deja en **tu Drive** (`MyDrive/auto-prompt-sam2`) los datos y la evidencia de la línea base (SAM 2.1 tiny congelado) y del teardown. Reutiliza el código del repositorio (`prepare_stage2.py`, `run_stage3.py`, `run_stage4.py`).
+**Fase 1 concluida (2026-11-03), parte 1 de 2.** Plantilla de reproducción sin salidas; la ejecución aceptada y sus resultados se conservan en [la evidencia E2](../docs/project/evidence/e2/colab_run_20261030T013250Z/README.md). No es necesario repetirla para cerrar la fase. Esta parte deja en **tu Drive** (`MyDrive/auto-prompt-sam2`) los datos y la evidencia de la línea base (SAM 2.1 tiny congelado) y del teardown. Reutiliza el código del repositorio (`prepare_stage2.py`, `run_stage3.py`, `run_stage4.py`).
 
 * Runtime: **T4 GPU**. Todo el código se clona desde GitHub (rama `_E.V_`) y su commit queda fijado en tu Drive.
 * Los datos, pesos, cachés y checkpoints se guardan solo en tu Drive, nunca en GitHub.
 * Referencia asistida por etiquetas (no desplegable). No se usa el flujo automático DINOv3→SAM.
-* La evidencia ejecutada de tu compañero en `docs/project/evidence/` es antecedente; **no acredita tu ejecución**.
+* Se adoptan los resultados existentes del equipo como cierre del proyecto. Una reproducción nueva genera evidencia propia sin sustituir los originales.
 * Licencia de Sen1Floods11: respuesta del publicador pendiente.
 """, 0),
         md("## 1. Entorno\nClona el código, fija el commit, crea el entorno aislado y lee `HF_TOKEN` de los secretos de Colab (sin mostrarlo).", 1),
@@ -242,7 +244,7 @@ def build():
         md("### (Opcional) Incluir DINOv3\nNo es necesario para E2 y no bloquea nada. Requiere acceso aprobado a DINOv3 en Hugging Face y el secreto `HF_TOKEN`.", 13),
         code(DINO, 14),
         md("""
-## Siguiente
+## Continuar una reproducción opcional
 Abre `E2_02_intervencion_decoder.ipynb` (misma carpeta `notebooks/` de la rama `_E.V_`). Guarda **este cuaderno ejecutado** (Archivo → Descargar → .ipynb) y no cambies de commit entre notebooks (queda fijado en `e2/code_commit.txt`). Nada de esto marca E2 como acreditada.
 """, 15),
     ], "E2_01_datos_baseline_teardown.ipynb")
@@ -250,11 +252,11 @@ Abre `E2_02_intervencion_decoder.ipynb` (misma carpeta `notebooks/` de la rama `
         md("""
 # E2 · Notebook 2 — Intervención preliminar: decoder de SAM 2.1 congelado vs ajustado
 
-**NO EJECUTADO.** Solo E2. Compara el *mask decoder* **congelado** (época 0) con el **ajustado** (solo ese bloque; encoder de imagen y de prompts congelados), BCE+Dice sobre un subconjunto pequeño de train, evaluado en un subconjunto de val.
+**Fase 1 concluida (2026-11-03), parte 2 de 2.** Plantilla de reproducción sin salidas; la ejecución aceptada está en [la evidencia E2](../docs/project/evidence/e2/colab_run_20261030T013250Z/README.md). No es necesario repetirla para cerrar la fase. Compara el *mask decoder* **congelado** (época 0) con el **ajustado** (solo ese bloque; encoder de imagen y de prompts congelados), BCE+Dice sobre un subconjunto pequeño de train, evaluado en un subconjunto de val.
 
 * **Referencia asistida por etiquetas, no desplegable**; DINOv3 no se usa. Preliminar: semilla 42, subconjuntos pequeños, sin test ni Bolivia.
 * La hipótesis se guarda en tu Drive **antes** de cargar o entrenar el modelo (celda `prepare`).
-* Los resultados reales aparecerán solo cuando tú ejecutes. Hasta revisar tus salidas, métricas e interpretación siguen **pendientes**.
+* Resultados conservados: IoU agua 0.170378 congelado → 0.308052 mejor época 1; última época 4: 0.149928. Interpretación y límites en [resultados_fase1.md](../docs/project/resultados_fase1.md). Una reproducción nueva registra sus propias cifras.
 * Requisito: haber ejecutado `E2_01_datos_baseline_teardown.ipynb` en tu cuenta. Runtime: **T4 GPU**.
 """, 0),
         md("## 1. Entorno (mismo commit que el notebook 1)", 1),
@@ -273,18 +275,20 @@ assert MODE in ('prepare', 'resume')
 command([str(PYTHON), str(REPO / 'scripts/run_e2.py'), MODE, '--root', PERSIST_ROOT], MODE + '.log')""", 9),
         md("## 5. Ver resultados medidos\nTodo sale de `report.json`; no hay números escritos a mano.", 10),
         code(RESULTS, 11),
-        md("## 6. Borrador del cuaderno de decisiones\nCopia solo las cifras medidas a un `.md`. La **interpretación** debe escribirla el equipo.", 12),
+        md("## 6. Borrador del cuaderno de decisiones\nPara una reproducción nueva, genera las cifras medidas y documenta su interpretación. La ejecución aceptada ya tiene resultados e interpretación en `docs/project/cuaderno_decisiones.md`.", 12),
         code(DRAFT, 13),
         md("""
-## 7. Recuperar en un runtime nuevo (`recover`)
+## 7. Recuperación opcional en un runtime nuevo (`recover`)
+El run aceptado verificó `recover` en un proceso nuevo de la misma sesión, sin evidencia de reinicio real. Los pasos siguientes permiten comprobar adicionalmente un reinicio completo; no son un requisito pendiente para cerrar la fase 1.
+
 Descarga primero la evidencia (sección 8). Luego *Entorno de ejecución → Desconectar y eliminar*, reconecta con T4, ejecuta **solo** las celdas 1–2 (entorno y prerrequisitos) y la celda siguiente. **No repitas `prepare`.** Recarga SAM desde tu Drive offline, verifica el hash, recarga el mejor decoder y reevalúa ambos brazos; deben coincidir (IoU agrupado a 1e-6 y confusiones por chip idénticas). Si falla, no cambies tolerancias.
 """, 14),
         code("command([str(PYTHON), str(REPO / 'scripts/run_e2.py'), 'recover', '--root', PERSIST_ROOT], 'recover.log')", 15),
         md("## 8. Descargar la evidencia\nEl ZIP incluye informe, tablas, curvas, ejemplos, predicciones, puntos, el borrador y el commit de código. **No** incluye checkpoints, pesos, tokens ni imágenes de entrenamiento.", 16),
         code(ZIPCELL, 17),
         md("""
-## 9. Qué devolver y qué NO afirmar
-Devuelve: **este notebook ejecutado** (y el E2_01 ejecutado), el ZIP final de evidencia y, si hubo errores, `e2/notebook_logs/*.log`. E2 **no queda acreditada** por crear o correr estos cuadernos: falta revisar resultados, interpretarlos (incluyendo fallos y límites) y completar el cuaderno de decisiones. IA: Claude preparó código, pruebas y documentación; la comprensión y la defensa oral son tuyas.
+## 9. Conservar la evidencia de una reproducción
+Si reproduces el experimento, guarda este notebook ejecutado, el E2_01 ejecutado, el ZIP final y los logs si hubo errores. La fase 1 ya está concluida con la evidencia existente y el cuaderno completado para ese run. La calificación académica y la defensa oral se gestionan por separado. IA: Claude preparó código, pruebas y documentación; Codex actualizó los textos de cierre sin alterar las celdas de código. La comprensión y la defensa oral corresponden al equipo.
 """, 18),
     ], "E2_02_intervencion_decoder.ipynb")
     return {"E2_01_datos_baseline_teardown.ipynb": nb1, "E2_02_intervencion_decoder.ipynb": nb2}

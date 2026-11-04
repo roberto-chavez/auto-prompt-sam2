@@ -1,15 +1,19 @@
 # FACULTAD DE CIENCIAS E INGENIERÍA - INGENIERÍA INFORMÁTICA
+
+> **Propuesta histórica E1.** El alcance inicial siguiente se conserva para trazabilidad. Desde el 2026-11-03 la fase 1 está **concluida en dos partes E2**, con puntos asistidos y ajuste del decoder. El flujo automático y la evaluación geográfica propuestos no son resultados ejecutados. Véanse el [estado vigente](../estado_actual_fase1.md) y los [resultados](../resultados_fase1.md).
 **Curso:** Deep Learning (1INF52) Semestre 2026-2  
 **Docente:** Dr. César A. Beltrán Castañón  
 **Entregable E1:** Propuesta de tema — 7 de octubre de 2026  
 **Integrantes:** 
 
 ## Título
+
 **El costo del prompt: segmentación de agua de inundación en Sentinel-2 sin intervención humana, con prompts generados desde DINOv3**
 
 ---
 
 ## 1. Pregunta de investigación
+
 ¿Cuánta calidad de segmentación se pierde al reemplazar el prompt humano de SAM 2.1 por prompts automáticos (texto, puntos derivados de features de DINOv3, o ningún prompt)? ¿Cómo cambia esa pérdida en eventos de inundación de Bolivia y Paraguay, fuera del dominio de imágenes naturales con el que SAM fue entrenado?
 
 ---
@@ -27,6 +31,7 @@
 ---
 
 ## 3. Dataset
+
 Sen1Floods11 (bucket `gs://sen1floods11`). Se usará solo la parte hand-labeled: 446 chips de 512x512 píxeles a 10 m con etiquetas agua/no-agua e imágenes Sentinel-2 L1C. **Protocolo:** split oficial (252 entrenamiento / 89 validación / 90 prueba) con los 15 chips de Bolivia reservados como conjunto de transferencia; resultados reportados por evento (Bolivia, Paraguay, Colombia y el resto). **Métrica principal:** IoU de la clase agua.
 
 ---
@@ -40,6 +45,7 @@ Sen1Floods11 (bucket `gs://sen1floods11`). Se usará solo la parte hand-labeled:
 | **C. Estrés y honestidad** | Evaluación en los eventos de Bolivia y Paraguay frente al resto. Análisis de fallos: agua turbia, vegetación inundada, sombras de nubes y relieve; conexión con transfer learning y domain adaptation. Se reportará explícitamente lo que no funcione. |
 
 ### Ablaciones de la Fase B
+
 *(Una hipótesis, un cambio, una medición; las hipótesis se contrastarán con el resultado en el cuaderno de decisiones):*
 
 | ID | Cambio | Hipótesis previa | Medición |
@@ -51,6 +57,7 @@ Sen1Floods11 (bucket `gs://sen1floods11`). Se usará solo la parte hand-labeled:
 ---
 
 ## 5. Demo y resultados visuales
+
 * Máscaras de agua superpuestas con los puntos-prompt dibujados, y comparación lado a lado de las cuatro estrategias de prompt.
 * Mapa de features intermedias y de similitud de DINOv3 que explica dónde se generan los puntos.
 * Demo reproducible (Gradio/Hugging Face Space): se sube un chip Sentinel-2 y se obtiene la máscara de agua. Se puede agregar un chip de Perú descargado de Google Earth Engine, mostrado de forma solo cualitativa por no tener etiquetas.
@@ -70,6 +77,7 @@ Sen1Floods11 (bucket `gs://sen1floods11`). Se usará solo la parte hand-labeled:
 ---
 
 ## 7. Cumplimiento del enunciado y cronograma
+
 * Reproducción fiel de la línea base: SAM 2.1 con prompt humano simulado (Fase A).
 * Una intervención de núcleo con ablación controlada: interfaz prompt encoder mask decoder, con A1-A3 (Fase B).
 * Shift de dominio y análisis de fallos honesto: imágenes naturales $\rightarrow$ Sentinel-2, eventos de Bolivia y Paraguay (Fase C).
@@ -85,6 +93,7 @@ Sen1Floods11 (bucket `gs://sen1floods11`). Se usará solo la parte hand-labeled:
 ---
 
 ## 8. Pendientes de verificación (semana 1)
+
 Licencia de Sen1Floods11, ID exacto de la variante de SAM 2.1 y términos de acceso a DINOv3 y SAM en Hugging Face.
 
 > **Nota:** Como el tema *"El costo del prompt en SAM"* admite máximo 2 equipos con artículos distintos, se solicita confirmar disponibilidad del tema con el docente.

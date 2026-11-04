@@ -1,5 +1,7 @@
 # Teardown de SAM 2.1 hiera-tiny (Fase A de E2)
 
+> **Contexto al 2026-11-03:** disección conservada como parte de la fase 1 **concluida** mediante `E2_01` y `E2_02`. Las mediciones y sus límites permanecen sin cambios; véanse el [estado](estado_actual_fase1.md) y los [resultados de cierre](resultados_fase1.md).
+
 Alcance: **solo el modelo base de E2** (SAM 2.1 tiny, `facebook/sam2.1-hiera-tiny@de431c40…`, Apache-2.0). Este documento reúne en un solo lugar lo que el PDF exige para la Fase A —«conteo de parámetros y FLOPs por bloque, visualización de características intermedias, mapa del campo receptivo, y medición de latencia/memoria … entender por qué el modelo tiene la forma que tiene»— y señala de dónde sale cada cifra. DINOv3 se midió en la etapa 4 pero no es el modelo base de E2 y aquí no se usa.
 
 ## 0. Procedencia de cada dato (qué es medido, qué es contado, qué es interpretación)
@@ -42,16 +44,19 @@ Notas: (a) `conv_s0/s1` pertenecen al decoder por parámetros pero se ejecutan d
 | Mask decoder · upscaling, `conv_s0`, `conv_s1`, tokens | 73 952; 8 224; 16 448; 1 536 | 0.26 % | Reescalado de la máscara y proyección de características de alta resolución |
 
 ## 2. Features intermedias (capa, dimensiones, visualización)
+
 - Capas: `image_encoder.trunk.blocks.0`, `.6` y `.11` (primera, intermedia y última). Formas observadas (entrada 1024²): BHWC **[1,256,256,96]**, **[1,64,64,384]**, **[1,32,32,768]**; se transponen explícitamente a BCHW para visualizar. Registradas en `sam_official_{0,1}_features.json` junto con las formas de todos los bloques ejecutados.
 - Visualización: canales fijos 0/1/2 de cada capa (sin PCA ni proyección aprendida), 2 chips de entrenamiento. Figura nativa [`sam_official_0_figure.png`](evidence/stage4/colab_run_20261029T162558Z/verified_artifacts/sam_official_0_figure.png) y la de la reejecución de E2 [`stage4_sam_figure_from_notebook.png`](evidence/e2/colab_run_20261030T013250Z/derived_from_notebooks/stage4_sam_figure_from_notebook.png) (780×1450 px; comprobado que se renderiza y que títulos, rangos min/max y mapas son legibles).
 - Lectura descriptiva: el bloque 0 conserva textura fina y una cuadrícula regular; el 6 muestra estructuras más gruesas; el 11 queda en una malla de 32×32 con bandas horizontales. Cada panel usa su propio min/max de color: **no comparar amplitudes entre paneles ni darles significado de «agua»**.
 
 ## 3. Campo receptivo efectivo (ERF)
+
 - **Método:** gradiente absoluto, `torch.autograd.grad`, del canal 0 en la posición central de `vision_features` [1,256,64,64] (objetivo [0,0,32,32]) respecto a la entrada normalizada; suma en RGB, normalizado a masa 1; sin `backward()` ni optimizador.
 - **Resultado:** la masa del gradiente fuera de la mitad central de la entrada es 38.16 % y 36.53 % en los dos chips (régimen `official`): la sensibilidad no se concentra solo en el centro.
 - **Limitaciones:** es **sensibilidad local** para un chip, un canal y una posición, no un campo receptivo teórico ni una prueba causal; está calculado respecto a la entrada normalizada; el panel logarítmico mejora la legibilidad pero no cambia el array. Con dos chips del mismo evento (Ghana) no es representativo.
 
 ## 4. Latencia y memoria
+
 Hardware Tesla T4 (15 360 MiB, driver 580.82.07), PyTorch 2.7.1, CUDA 12.6; float32, sin autocast ni TF32; batch 1; entrada 1024² con 2 puntos fijos; **5 warmups y 20 repeticiones** con `cuda.synchronize()` antes y después de cada una; mediana de pared. Medido sobre la ruta tensorial precargada (excluye descarga y carga de pesos, TIFF, transformaciones en CPU, transferencias H2D/D2H, hooks, gradientes, figuras y persistencia).
 
 | Medición | Etapa 4 (equipo) | Reejecución en E2 |
@@ -63,9 +68,11 @@ Hardware Tesla T4 (15 360 MiB, driver 580.82.07), PyTorch 2.7.1, CUDA 12.6; floa
 No es el tiempo de un método automático ni incluye E/S. El pico reservado conserva caché del calentamiento y no equivale a la memoria incremental necesaria.
 
 ## 5. Operaciones no cubiertas y convención
+
 Lo cubierto son las operaciones con fórmula registrada en `FlopCounterMode` (matmul, convoluciones, atención fusionada y similares). **Sin fórmula** en SAM, según `sam_official_0_profile.json`/`interpretacion_y_cierre.md`: `max_pool2d`, interpolación bicúbica, `sigmoid`, `relu`, `sqrt` y otras; sesgos, normalizaciones, activaciones y softmax pueden faltar o estar solo parcialmente representados. Algunas son vistas o copias sin aritmética y otras sí cuestan; **no se asigna costo cero real** ni se suman filas jerárquicas como costos exclusivos. La atención fusionada puede contar solo una parte del trabajo.
 
 ## 6. Por qué el modelo tiene esta forma (interpretación)
+
 Cada punto separa lo que dicen los artículos (SAM: Kirillov et al., 2023; SAM 2: Ravi et al., 2025, ver referencias en el [resumen WAIMLAP](../WAIMLAP/Abstract_CostOfThePrompt.md)) de lo que muestran **nuestras** medidas.
 
 1. **El costo está en el encoder, que corre una vez por imagen.** *Artículos:* el encoder pesado se ejecuta una vez por imagen y su costo se amortiza entre prompts, y el decoder liviano permite prompts interactivos. *Medido aquí:* el encoder aporta 98.22 % de los FLOPs contados y el decoder 1.23 %; el replay aislado del decoder es ~31 ms frente a ~130 ms del encoder. La estructura «encoder pesado / decoder ligero» es coherente con esa lógica; nuestras medidas no prueban la motivación de diseño, solo su consecuencia en costo.

@@ -1,214 +1,78 @@
 # auto-prompt-sam2
 
-**El costo del prompt: segmentación automática de agua superficial en Sentinel-2 con prompts derivados de DINOv3 para SAM 2.1.**
+**El costo del prompt: segmentación de agua superficial en Sentinel-2 con SAM 2.1.**
 
-Proyecto de investigación del curso **Deep Learning (1INF52), semestre 2026-2**, de Ingeniería Informática de la **Pontificia Universidad Católica del Perú (PUCP)**, con presentación prevista en **WAIMLAP 2026** (*Workshop on Artificial Intelligence and Machine Learning Applications*).
+Proyecto de **Deep Learning (1INF52), semestre 2026-2**, Ingeniería Informática, **Pontificia Universidad Católica del Perú (PUCP)**, con materiales para WAIMLAP 2026.
 
-El proyecto estudia cuánto cambia la calidad de segmentación de SAM 2.1 cuando se reemplazan los puntos proporcionados por una persona por puntos generados automáticamente a partir de características de DINOv3. El caso de estudio son imágenes satelitales Sentinel-2 de eventos de inundación del dataset Sen1Floods11.
+> **Estado al 3 de noviembre de 2026: fase 1 concluida con alcance simplificado en dos partes.** Se adoptan los resultados del equipo ya incorporados al repositorio y los notebooks `E2_01` y `E2_02`. El plan inicial de nueve etapas queda como antecedente. La fase 2 (demo) sigue pendiente.
 
-La ejecución se organizará en **dos fases principales**: experimentación y entrenamiento en **Google Colab**, seguidos de la construcción de una demo con **Gradio** y su despliegue en **Hugging Face Spaces**. Estas herramientas son decisiones del proyecto para el trabajo pendiente.
+La propuesta original estudiaba prompts automáticos derivados de DINOv3 para SAM 2.1. La fase 1 realizada se concentra en **datos, referencia asistida, disección del modelo y ajuste exclusivo del mask decoder**, con puntos simulados desde las etiquetas. El cierre acepta ese alcance y conserva sus resultados y limitaciones; no supone haber implementado el flujo automático DINOv3→SAM ni evaluado la generalización geográfica.
 
-> **Estado actual (2026-10-29):** etapas 1–4 concluidas (4/9), con consulta de licencia de Sen1Floods11 pendiente. Referencia asistida SAM y disección de SAM/DINOv3 ejecutadas y recuperadas en runtimes Colab T4 distintos, con evidencia revisada. La etapa 4 cubre parámetros, FLOPs parciales por bloque, features intermedias, campo receptivo efectivo y latencia/memoria; pesos congelados intactos y hooks eliminados. IoU agua de validación de la etapa 3: 0.158044 official y 0.168434 leave-Paraguay-out. Etapas 5–9 y demo sin iniciar; sin evaluación final. Aparte de las etapas, el entregable E2 del curso (intervención preliminar del decoder con puntos simulados desde etiquetas) se ejecutó el 2026-10-30 en Colab: IoU de agua en 40 chips de validación 0.170 (decoder congelado) → 0.308 (mejor época de decoder ajustado; 0.150 en la última época), con una semilla y subconjunto pequeño; su calificación corresponde al profesor y **no se da por acreditado**. Véase la [guía de ejecución de E2](docs/project/PASOS_E2.md), la [presentación y requisitos de E2](docs/project/validacion_e2.md), el [teardown de SAM 2.1](docs/project/teardown_sam2.md), la [auditoría contra el PDF](docs/project/auditoria_E2.md) y el [estado de fase 1](docs/project/estado_actual_fase1.md) y la [interpretación y cierre de etapa 4](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md).
+## Fase 1 concluida: dos notebooks
 
-## Pregunta de investigación y alcance
-
-¿Cuánta calidad de segmentación, medida mediante la IoU de agua, se pierde al reemplazar los prompts humanos simulados de SAM 2.1 por prompts automáticos derivados de DINOv3? ¿Cómo cambia esa diferencia en un evento geográfico que no se utilizó para entrenamiento ni calibración?
-
-En este proyecto, un **prompt** es una indicación espacial que guía la máscara de SAM, por ejemplo, puntos positivos dentro del agua y negativos fuera de ella. El **costo del prompt** se refiere a la diferencia de calidad frente a una referencia asistida por etiquetas; la latencia y la memoria se medirán por separado.
-
-Las etiquetas de Sen1Floods11 incluyen agua permanente, como ríos y lagos. Por ello, el alcance es la **segmentación de agua superficial** en escenas de inundación, sin distinguir automáticamente agua permanente de agua causada por una inundación. La contribución prevista es una evaluación controlada de la automatización de prompts y su generalización geográfica.
-
-## Objetivos
-
-**Objetivo general:** cuantificar el costo de sustituir prompts humanos simulados por prompts automáticos en SAM 2.1 para segmentar agua en Sentinel-2, y analizar su comportamiento ante cambios de dominio y de evento geográfico.
-
-Objetivos específicos:
-
-1. Reproducir una línea base con SAM 2.1 congelado y puntos obtenidos de las etiquetas de referencia.
-2. Analizar la arquitectura de SAM 2.1 y DINOv3 mediante parámetros, FLOPs, características intermedias, campo receptivo, latencia y memoria.
-3. Generar puntos positivos y negativos automáticamente a partir de características de DINOv3 y un clasificador de agua.
-4. Intervenir el núcleo de SAM 2.1 ajustando únicamente su *mask decoder*, con ablaciones sobre la fuente y cantidad de prompts y el ajuste del decoder.
-5. Evaluar la generalización en Bolivia y en una prueba que excluya Paraguay del entrenamiento y la calibración, y documentar los fallos.
-6. Entregar una demo reproducible con Gradio en Hugging Face Spaces, un cuaderno de decisiones y los materiales académicos del proyecto.
-
-## Fases de ejecución
-
-### Fase 1. Experimentación y entrenamiento en Google Colab
-
-**Objetivo:** desarrollar y evaluar el método de segmentación automática en notebooks ejecutados en Google Colab, y producir los componentes y resultados reproducibles que sustentarán la demo y el informe.
-
-**Actividades:**
-
-1. Preparar el entorno de Colab, documentar dependencias, hardware y semillas, gestionar el acceso a datos y modelos y preparar las particiones y el preprocesamiento de Sentinel-2.
-2. Reproducir la línea base de SAM 2.1 con prompts simulados desde etiquetas y realizar la disección de SAM 2.1 y DINOv3, incluyendo parámetros, FLOPs, características intermedias, campo receptivo, latencia y memoria.
-3. Extraer características con DINOv3 congelado, entrenar el clasificador de agua y generar puntos positivos y negativos automáticamente.
-4. Ajustar únicamente el mask decoder de SAM 2.1, manteniendo congelados sus encoders de imagen y de prompts, y ejecutar las ablaciones sobre fuente y cantidad de prompts y ajuste del decoder.
-5. Seleccionar configuraciones con validación, realizar la evaluación final y las pruebas geográficas reservadas, y analizar resultados y fallos según el protocolo documentado.
-6. Guardar fuera del almacenamiento temporal de la sesión las configuraciones, versiones de modelos, particiones, parámetros de preprocesamiento, métricas, predicciones y checkpoints. Documentar cómo reanudar el trabajo y reconstruir la inferencia sin depender del estado de una sesión de Colab.
-
-**Entregables:** notebooks reproducibles; entorno y configuraciones documentados; cuaderno de decisiones e hipótesis; resultados de la disección, las ablaciones y la evaluación; análisis de fallos; clasificador de agua entrenado y checkpoint del decoder ajustado. Los artefactos deberán identificar los modelos base utilizados y conservar los umbrales y parámetros necesarios para reproducir el flujo seleccionado.
-
-#### Cobertura de los requisitos académicos A, B y C
-
-Las fases A, B y C exigidas por el curso se cubrirán **dentro de la fase 1 de ejecución**. Son requisitos metodológicos y no añaden fases principales a la organización del proyecto.
-
-| Requisito académico | Trabajo previsto en Google Colab |
-| --- | --- |
-| **A. Disección instrumentada** | Reproducir la línea base asistida y analizar parámetros y FLOPs por bloque, características intermedias, campo receptivo, latencia y memoria. |
-| **B. Intervención en el núcleo** | Automatizar los prompts y ajustar solo el mask decoder, contrastando cada cambio con una hipótesis previa y su ablación controlada. |
-| **C. Estrés y análisis de fallos** | Evaluar la transferencia geográfica y estudiar errores en agua turbia, vegetación inundada, sombras de nubes y relieve. Registrar también lo que no funcione. |
-
-### Fase 2. Construcción y despliegue de la demo funcional
-
-**Objetivo:** convertir el flujo de inferencia seleccionado en la fase 1 en una aplicación con Gradio desplegada en Hugging Face Spaces, que permita probar la segmentación automática de agua sin proporcionar prompts humanos.
-
-**Actividades:**
-
-1. Integrar el preprocesamiento, la extracción de características, el clasificador de agua, la generación de puntos y la segmentación en un flujo reutilizable de inferencia.
-2. Cargar las versiones de SAM 2.1 y DINOv3 documentadas, los pesos del clasificador y el checkpoint del decoder correspondiente a la configuración seleccionada, junto con sus umbrales y parámetros. El despliegue realizará inferencia con esos artefactos; el entrenamiento permanecerá en Colab.
-3. Construir la interfaz con Gradio para cargar un chip Sentinel-2 compatible con el preprocesamiento definido y visualizar la imagen, la máscara de agua y los puntos automáticos. Incorporar comparaciones entre estrategias cuando sus componentes estén disponibles.
-4. Validar la carga de entradas y modelos, la coherencia de las predicciones con la inferencia de Colab y el consumo de recursos; preparar dependencias y acceso a pesos y desplegar la aplicación en Hugging Face Spaces con instrucciones de uso y limitaciones.
-
-**Entregables:** aplicación de Gradio y código de inferencia; dependencias y configuración de despliegue; acceso documentado a los pesos necesarios; demo funcional en Hugging Face Spaces; ejemplos de entrada e instrucciones de uso; comprobaciones de funcionamiento y correspondencia con el flujo evaluado.
-
-**Conexión entre ambas fases:** la fase 1 entregará una configuración seleccionada con validación, sus componentes entrenados y el preprocesamiento y posprocesamiento documentados. La fase 2 reutilizará esos artefactos para servir predicciones sin etiquetas de referencia. Los resultados experimentales y el análisis de fallos de la fase 1 sustentarán el informe y el póster, mientras que la fase 2 aportará la demostración funcional del método.
-
-## Metodología propuesta
-
-El [resumen para WAIMLAP](docs/WAIMLAP/Abstract_CostOfThePrompt.md) detalla el protocolo que se resume aquí. La [propuesta inicial](docs/project/draft/propuesta_inicial_deep_learning.md) y sus diapositivas conservan el planteamiento original.
-
-```mermaid
-flowchart TD
-    A["Chip Sentinel-2 L1C"] --> B["Composición RGB: B4, B3, B2"]
-    B --> C["DINOv3 satelital congelado"]
-    C --> D["Clasificador de agua por parche"]
-    D --> E["Puntos positivos y negativos automáticos"]
-    B --> F["SAM 2.1: encoders congelados"]
-    E --> F
-    F --> G["Mask decoder congelado o ajustado"]
-    G --> H["Selección y unión de máscaras"]
-    H --> I["Evaluación en prueba, Bolivia y Paraguay excluido"]
-```
-
-### Modelos y generación de prompts
-
-| Componente | Función prevista |
-| --- | --- |
-| **SAM 2.1** | Modelo de segmentación principal, con la variante **tiny** como primera opción por las restricciones de cómputo. |
-| **DINOv3 ViT-L/16 satelital** | Extractor congelado de características por parche, con el checkpoint propuesto `facebook/dinov3-vitl16-pretrain-sat493m`. |
-| **Clasificador de agua (*probe*)** | Regresión logística sobre las características de DINOv3 para estimar probabilidades de agua, entrenada únicamente con etiquetas del conjunto de entrenamiento. |
-| **Mask decoder de SAM 2.1** | Único bloque de SAM que se ajustará, usando entropía cruzada binaria (BCE) y pérdida Dice. Los encoders de imagen y de prompts permanecerán congelados. |
-
-Los máximos del mapa de probabilidad producirán puntos positivos y las zonas de baja probabilidad producirán puntos negativos. SAM se ejecutará por componente conectado; se seleccionará la máscara con mayor IoU predicha y se unirán las máscaras para obtener una predicción binaria. También se contempla una variante del generador que use pseudoetiquetas de NDWI en lugar de etiquetas manuales.
-
-La línea base utilizará puntos simulados desde las máscaras reales. Como requiere etiquetas para construir los prompts, servirá como **referencia asistida**, sin representar un sistema desplegable. La alternativa de malla automática generará máscaras sin clase, que se identificarán como agua mediante su probabilidad media estimada por DINOv3 y el clasificador.
-
-La propuesta inicial contemplaba una comparación adicional con SAM 3 mediante texto. El protocolo descrito en el resumen y el póster se concentra en SAM 2.1 y prompts espaciales; SAM 2.1 no recibe prompts de texto.
-
-## Datos y protocolo de evaluación
-
-Se propone utilizar los **446 chips con anotaciones manuales de Sen1Floods11**, en su modalidad Sentinel-2 L1C: imágenes de **512 × 512 píxeles**, **10 m de resolución** y **13 bandas**. Las etiquetas son `1` para agua, `0` para no agua y `-1` para píxeles inválidos.
-
-| Partición | Chips | Uso previsto |
-| --- | ---: | --- |
-| Entrenamiento | 252 | Entrenar el clasificador de agua y ajustar el decoder. |
-| Validación | 89 | Seleccionar umbrales e hiperparámetros. |
-| Prueba | 90 | Evaluación final en eventos presentes en las particiones oficiales. |
-| Bolivia | 15 | Evaluación de transferencia a un evento reservado. |
-
-El protocolo incluye además una ejecución **leave-Paraguay-out**: los 67 chips de Paraguay se excluirán del entrenamiento, la calibración y la selección de modelos para evaluar la generalización a ese evento. Esta ejecución es independiente del uso habitual de las particiones oficiales, donde Paraguay aparece en entrenamiento, validación y prueba.
-
-El preprocesamiento propuesto usa RGB **B4, B3 y B2**, reflectancia dividida entre 10 000, recorte con un límite fijado a partir del entrenamiento y normalización propia de cada modelo. Los píxeles inválidos se excluirán de las pérdidas y métricas.
-
-Los umbrales se seleccionarán con validación. Prueba y Bolivia se evaluarán una vez al final. Como las particiones por chip pueden contener zonas vecinas de un mismo evento, la evidencia de transferencia geográfica se apoyará en Bolivia y en la ejecución que excluye Paraguay.
-
-### Ablaciones y métricas
-
-| Ablación | Comparación | Hipótesis previa |
+| Parte | Notebook | Trabajo realizado |
 | --- | --- | --- |
-| **A1. Fuente del prompt** | Puntos simulados desde etiquetas, puntos de DINOv3, caja del chip completo y malla automática con clasificación de máscaras. | Los puntos de DINOv3 quedarán por debajo de la referencia asistida y por encima de la malla. |
-| **A2. Cantidad de puntos** | Variar la cantidad de puntos por componente y analizar puntos positivos y negativos. | La IoU aumentará hasta saturarse; los negativos ayudarán a reducir falsos positivos. |
-| **A3. Ajuste del decoder** | Mask decoder congelado frente a ajustado con prompts automáticos. | El ajuste beneficiará más a los eventos vistos que a Bolivia. |
+| 1. Datos, línea base y disección | [E2_01_datos_baseline_teardown.ipynb](notebooks/E2_01_datos_baseline_teardown.ipynb) | Entorno Colab, Sen1Floods11, splits y preprocesamiento, SAM 2.1 tiny congelado, parámetros, FLOPs parciales, features, campo receptivo efectivo, latencia y memoria. |
+| 2. Intervención del decoder | [E2_02_intervencion_decoder.ipynb](notebooks/E2_02_intervencion_decoder.ipynb) | Hipótesis previa y comparación controlada de decoder congelado frente a ajustado, BCE+Dice, auditoría de gradientes, métricas, curvas, ejemplos y recuperación. |
 
-La métrica principal será la **IoU de la clase agua**, agregada sobre píxeles válidos y reportada también por evento y por chip. Se complementará con precisión, recall, Dice/F1 y mIoU de las dos clases. Los chips sin agua se excluirán de la IoU individual, pero se conservarán en las métricas agregadas y se reportará su área de falsos positivos.
+Los notebooks ejecutables se mantienen sin salidas; las [copias ejecutadas y resultados originales](docs/project/evidence/e2/colab_run_20261030T013250Z/README.md) están separados como evidencia. Los notebooks `01`–`04` y sus validaciones se conservan como antecedentes reutilizados por el flujo de dos partes.
 
-El análisis de eficiencia incluirá parámetros, FLOPs, mediana de latencia tras calentamiento y memoria GPU máxima, documentando hardware, precisión y condiciones de medición. Las hipótesis de las ablaciones son expectativas por contrastar, no resultados obtenidos.
+## Resultados conservados
 
-## Organización del repositorio
+Run `20261030T013250Z_2a795a89d5_f9fbd8b0`, régimen `official`, Tesla T4 en Colab, semilla 42, **30 chips de entrenamiento y 40 de validación**. Fuente: [report.json](docs/project/evidence/e2/colab_run_20261030T013250Z/run/report.json).
 
-```text
-auto-prompt-sam2/
-├── README.md
-└── docs/
-    ├── course/
-    │   └── tarea_final_deep_learning.md
-    ├── project/
-    │   └── draft/
-    │       ├── propuesta_inicial_deep_learning.md
-    │       └── El Costo del Prompt - INF52 PUCP_slides.pdf
-    └── WAIMLAP/
-        ├── Abstract_CostOfThePrompt.md
-        └── Poster_CostOfThePrompt.pptx
-```
+| Configuración | IoU agua agrupado | Precisión | Recall | Dice |
+| --- | ---: | ---: | ---: | ---: |
+| Decoder congelado, época 0 | 0.170378 | 0.171475 | 0.963819 | 0.291151 |
+| Decoder ajustado, mejor época (1) | **0.308052** | 0.398793 | 0.575162 | 0.471009 |
+| Decoder ajustado, última época (4) | 0.149928 | — | — | — |
 
-| Carpeta o documento | Contenido |
+La mejor época aumenta la IoU en **0.137673** (13.77 puntos porcentuales): reduce falsos positivos y también pierde agua real. Las épocas 2–4 empeoran respecto del decoder congelado. Se conservan ambos resultados; la causa de la degradación no fue demostrada. Solo se configuraron como entrenables los **4 215 109 parámetros del decoder**, de 38 962 498 en SAM 2.1 tiny; los bloques congelados mantuvieron sus huellas.
+
+La referencia asistida sobre validación completa del antecedente `03` obtuvo IoU **0.158044** (`official`, 89 chips) y **0.168434** (`leave_paraguay_out`, 75 chips). Son poblaciones distintas de los 40 chips de E2. El segundo régimen en preparación, baseline y disección no constituye una evaluación en Paraguay reservado.
+
+El [informe de resultados](docs/project/resultados_fase1.md) reúne configuración, interpretación, artefactos y límites. La [validación de E2](docs/project/validacion_e2.md), el [teardown de SAM](docs/project/teardown_sam2.md) y la [auditoría](docs/project/auditoria_E2.md) conservan el detalle técnico.
+
+## Alcance y límites del cierre
+
+- Los prompts proceden de las etiquetas: **la referencia es asistida y requiere etiquetas para generar sus puntos**. Los chips sin agua reciben una predicción vacía por construcción.
+- DINOv3 se instrumentó en la disección anterior, pero no se utilizó para generar prompts ni en el entrenamiento de E2. No hay probe de agua entrenado ni pipeline automático terminado.
+- Una semilla, subconjuntos pequeños y mejor época seleccionada y reportada en la misma validación; no se afirma significancia estadística ni rendimiento final en test, Bolivia o Paraguay reservado.
+- FLOPs y campo receptivo tienen cobertura y límites metodológicos declarados. `recover` de E2 reprodujo la evaluación en un proceso nuevo de la misma sesión; no hay evidencia de reinicio real del runtime de E2.
+- La consulta de licencia de Sen1Floods11 sigue pendiente según el [registro de accesos y licencias](docs/project/accesos_y_licencias.md). El cierre de seguimiento no modifica ese estado.
+
+**Concluir la fase 1 del proyecto no equivale a una calificación académica de E2 ni al cumplimiento de todos los entregables finales del curso.** Las [bases del curso](docs/course/tarea_final_deep_learning.md) se conservan como referencia de requisitos.
+
+## Organización y documentación
+
+| Recurso | Uso |
 | --- | --- |
-| [`docs/`](docs/) | Documentación académica y de investigación del proyecto. |
-| [`docs/course/`](docs/course/) | Documentos del curso Deep Learning. |
-| [Bases de la tarea final](docs/course/tarea_final_deep_learning.md) | Objetivos, fases obligatorias, criterios de evaluación, entregables y política de uso de IA. |
-| [`docs/project/`](docs/project/) | Documentación propia del proyecto. |
-| [`docs/project/draft/`](docs/project/draft/) | Propuesta inicial y materiales de su presentación. |
-| [Propuesta inicial](docs/project/draft/propuesta_inicial_deep_learning.md) | Pregunta de investigación, modelos, datos, hipótesis, riesgos y plan inicial. |
-| [Diapositivas de la propuesta](docs/project/draft/El%20Costo%20del%20Prompt%20-%20INF52%20PUCP_slides.pdf) | Presentación del entregable E1. |
-| [`docs/WAIMLAP/`](docs/WAIMLAP/) | Materiales para el evento de presentación del proyecto. |
-| [Resumen para WAIMLAP](docs/WAIMLAP/Abstract_CostOfThePrompt.md) | Diseño metodológico detallado, evaluación prevista, limitaciones y referencias bibliográficas. |
-| [Póster para WAIMLAP](docs/WAIMLAP/Poster_CostOfThePrompt.pptx) | Presentación visual del diseño de investigación y de la evaluación prevista. |
+| [Estado y contexto de fase 1](docs/project/estado_actual_fase1.md) | Fuente vigente para continuar: fase concluida, evidencia y límites. |
+| [Hoja de ruta adaptada](docs/project/hoja_de_ruta_fase1.md) | Correspondencia entre las dos partes ejecutadas y las nueve etapas iniciales. |
+| [Guía de reproducción](docs/project/PASOS_E2.md) | Ejecución opcional en Colab; no es un requisito adicional de cierre. |
+| [Cuaderno de decisiones](docs/project/cuaderno_decisiones.md) | Hipótesis, decisiones, resultados y uso de IA; incluye la decisión de cierre. |
+| [Índice del proyecto](docs/project/README.md) | Documentos vigentes, antecedentes y evidencia preservada. |
+| [Materiales WAIMLAP](docs/WAIMLAP/README.md) | Resumen actualizado y estado del póster original. |
+| [Propuesta inicial](docs/project/draft/propuesta_inicial_deep_learning.md) | Antecedente del alcance original con DINOv3. |
+| [Plan original de nueve etapas](docs/project/hoja_de_ruta_fase1_original.md) | Archivo histórico; las antiguas etapas 5–9 no son tareas activas de fase 1. |
 
-## Entregables y reproducibilidad
+El código está en `src/auto_prompt_sam2/`, los orquestadores en `scripts/`, las configuraciones en `configs/` y las pruebas en `tests/`. Las dependencias se fijan en [requirements-colab.txt](requirements-colab.txt) y [requirements-stage2.txt](requirements-stage2.txt). Se usan RGB B4/B3/B2 de Sen1Floods11 (446 chips manuales); las etiquetas describen agua superficial, incluida agua permanente, y los píxeles inválidos se excluyen de pérdidas y métricas.
 
-El curso exige una línea base reproducida, una intervención de núcleo con ablación controlada, evaluación bajo cambio de dominio, análisis de fallos, una demo y un cuaderno de decisiones. Cada ablación deberá registrar la hipótesis antes de ejecutarse, el cambio realizado y el resultado observado. El cuaderno también deberá indicar dónde se utilizó asistencia de IA.
+## Reproducción y conservación
 
-| Hito | Fecha consignada en los documentos |
-| --- | --- |
-| E1: propuesta de tema | 7 de octubre de 2026 |
-| E2: disección del modelo, intervención preliminar y cuaderno de decisiones | 21 de octubre de 2026 |
-| E3: entrega de trabajo e informe final de 4–8 páginas | 11 de noviembre de 2026 |
-| E4: presentación del póster en WAIMLAP | 18–20 de noviembre de 2026 |
+Seguir [PASOS_E2.md](docs/project/PASOS_E2.md) para reproducir voluntariamente las dos partes en Google Colab con T4 y Drive. El código del run conservado corresponde al commit `f399047464b89a3ed18972f8dc7f1b1364d83a44`; cada nueva ejecución debe registrar su propio commit y resultados. Todo entrenamiento y trabajo que requiera o se beneficie de GPU se realiza exclusivamente en Colab, por instrucción vigente del proyecto.
 
-Estas fechas describen el cronograma académico y no acreditan que los entregables se hayan completado. Las bases del curso repiten la identificación E3 para el trabajo y el informe, y mencionan revisión con retroalimentación del workshop aunque consignan una fecha anterior al evento; ese punto requiere confirmación con el docente.
+Las métricas, predicciones, puntos y notebooks ejecutados están versionados como evidencia. Los datos originales, pesos y checkpoints permanecen en Drive; ubicación y hashes de los checkpoints `best` y `last` constan en el [índice del run](docs/project/evidence/e2/colab_run_20261030T013250Z/README.md). Esta actualización documental no reentrena ni sustituye resultados.
 
-La entrega final reunirá los notebooks y resultados reproducibles de Google Colab, la demo con Gradio desplegada en Hugging Face Spaces, el cuaderno de decisiones, el informe de 4–8 páginas y el póster para WAIMLAP. Se contempla, opcionalmente, un chip de Perú para análisis cualitativo sin etiquetas.
+## Fase 2 y entregas posteriores
 
-**Etapa 1 concluida con salvedad de licencia, por decisión del usuario:** [notebook de Colab](notebooks/01_entorno_colab.ipynb), [configuración](configs/environment.yaml), [dependencias fijadas](requirements-colab.txt), [validación y pasos de ejecución](docs/project/validacion_etapa1.md), [accesos y licencias](docs/project/accesos_y_licencias.md) y [cuaderno de decisiones](docs/project/cuaderno_decisiones.md). **Etapa 2 concluida:** [notebook de datos](notebooks/02_datos_y_splits.ipynb), [informe y revisión Colab](docs/project/validacion_etapa2.md), [manifiestos y evidencia](docs/project/evidence/stage2/). **Etapa 3 concluida:** [notebook de referencia asistida](notebooks/03_linea_base_asistida.ipynb), [configuración](configs/baseline.yaml) e [instrucciones/validaciones](docs/project/validacion_etapa3.md); ejecución y recuperación Colab revisadas en la [auditoría externa](docs/project/evidence/stage3/colab_run_20261029T134519Z/review.json). **Etapa 4 concluida:** [notebook de disección](notebooks/04_diseccion_modelos.ipynb), [configuración](configs/profiling.yaml) y [validaciones/instrucciones](docs/project/validacion_etapa4.md); ejecución/recuperación T4 y [auditoría externa](docs/project/evidence/stage4/colab_run_20261029T162558Z/review.json) completadas, con [medidas e interpretación](docs/project/evidence/stage4/colab_run_20261029T162558Z/interpretacion_y_cierre.md). Las etapas 5–9 y la fase 2 siguen sin implementar.
+**Pendiente:** construir la demo con Gradio y preparar su despliegue en Hugging Face Spaces. La fase 1 aporta una comparación asistida y un decoder ajustado; la demo deberá definir cómo proporcionar los prompts y acceder a los checkpoints. La inferencia automática sin etiquetas requiere implementar un generador de prompts y validarlo como trabajo adicional.
 
-Para llevar los archivos actuales a Colab sin depender de cambios aún no publicados: ejecute `python scripts/export_colab_bundle.py`, suba el ZIP generado a Drive y abra el notebook. Configure el SHA-256 del ZIP y la raíz persistente; siga sus pasos `prepare` y `recover` en runtimes distintos. Esto no descarga datos ni pesos. Los bloqueos de licencia/acceso deben resolverse antes de pasar a etapas dependientes.
+El informe final, el póster actualizado, la demo y la defensa oral se gestionan por separado. Los requisitos académicos de estrés y análisis de fallos siguen siendo referencia para esas entregas; cerrar la fase 1 reducida no los acredita. Las fechas consignadas en las bases son E1: 7 de octubre; E2: 21 de octubre; trabajo e informe final: 11 de noviembre; póster WAIMLAP: 18–20 de noviembre de 2026.
 
-La estructura anterior describe la documentación original. Se añaden `configs/`, `notebooks/`, `src/auto_prompt_sam2/`, `scripts/`, `tests/` y evidencias en `docs/project/evidence/stage1/`.
+## Equipo
 
-Para repetir la etapa 2, use `python scripts/export_stage2_bundle.py` y el notebook 02, reutilizando el venv y la raíz persistente. El paquete nuevo no reemplaza el ZIP histórico de etapa 1. Los datos reales están en `artifacts/stage2-persistent/` local, ignorados por Git; el notebook permite adquirir/verificar los mismos objetos en Drive y ejecutar la recuperación `--offline`. [Validación de etapa 2](docs/project/validacion_etapa2.md) documenta comandos, estadísticas, límites y la evidencia Colab revisada.
+- **Eliezer Guido Villarreal Quispe**
+- **Roberto Abel Chavez Javier**
 
-Para la etapa 3, use `python scripts/export_stage3_bundle.py`, suba el ZIP de fuentes a Drive y ejecute el notebook 03 con GPU en Colab. Reutiliza las generaciones y estadísticas de etapa 2, sin reajustarlas. El notebook prepara la línea base de desarrollo para ambos regímenes y su recuperación en runtime nuevo; exporta notebook/JSON/artefactos para revisión. La referencia usa etiquetas para crear puntos y conocer ausencia de agua: **no es desplegable**. No ejecutar SAM en la PC ni abrir conjuntos reservados.
-
-Para reproducir la etapa 4 ya concluida, use `python scripts/export_stage4_bundle.py`, suba el ZIP a Drive y abra el notebook 04 con GPU. Ejecute `prepare` y, tras eliminar/recrear runtime, entorno y `recover`. Conserve notebook con salidas, JSON y ZIP de evidencia para revisar la nueva ejecución; no hace falta repetir la ejecución ya aceptada para mantener el cierre actual. Solo train por régimen; SAM y DINOv3 congelados, features/ERF y profiling sin entrenamiento ni prompts automáticos. Toda ejecución de modelos corresponde exclusivamente a Colab; la PC permite pruebas sintéticas y revisión de artefactos guardados sin ejecutar modelos.
-
-## Limitaciones y decisiones por verificar
-
-- Las etiquetas incluyen agua permanente y no permiten atribuir toda el agua segmentada a una inundación.
-- La composición RGB descarta bandas NIR/SWIR que podrían aportar información para identificar agua.
-- Existe una diferencia de resolución entre el preentrenamiento satelital de DINOv3 y Sentinel-2, además del cambio de imágenes naturales a satelitales para SAM.
-- Nubes, sombras, agua turbia y vegetación inundada requieren un análisis específico de errores.
-- Bolivia aporta solo 15 chips; el plan contempla una semilla y no promete significancia estadística ni mejoras de calidad.
-- La ejecución en Colab deberá contemplar interrupciones de sesión y disponibilidad de recursos, con almacenamiento persistente y checkpoints que permitan reanudar el trabajo. El hardware de Hugging Face Spaces se definirá según las necesidades de memoria y latencia medidas para la demo.
-- Se deben verificar las licencias de datos y modelos, los términos de acceso a los pesos y los recursos de cómputo antes de ejecutar los experimentos.
-
-## Equipo y contexto académico
-
-- **Integrantes:** Eliezer Guido Villarreal Quispe y Roberto Abel Chavez Javier.
-- **Equipo:** Grupo 8, según las diapositivas de la propuesta.
-- **Institución:** Pontificia Universidad Católica del Perú, Facultad de Ciencias e Ingeniería, Ingeniería Informática.
-- **Curso:** Deep Learning (1INF52), semestre 2026-2.
-- **Docente:** Dr. César A. Beltrán Castañón.
-- **Evento previsto:** WAIMLAP 2026, Lima, Perú.
-
-Las referencias bibliográficas completas y los antecedentes se encuentran en el [resumen para WAIMLAP](docs/WAIMLAP/Abstract_CostOfThePrompt.md).
-
+Los datos institucionales y de contacto aún incompletos en los materiales académicos deben completarse antes de su entrega.

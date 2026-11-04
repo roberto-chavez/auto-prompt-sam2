@@ -1,5 +1,7 @@
 # Accesos y licencias — fase 1, etapa 1
 
+> **Seguimiento al 2026-11-03:** fase 1 **concluida con alcance reducido**, sin cambiar el estado de licencia registrado. Los datos y pesos de SAM ya se utilizaron en las ejecuciones archivadas; las restricciones y valores nulos que aparecen en la revisión inicial siguiente describen ese momento histórico. No hay respuesta nueva documentada del publicador. El acceso autenticado posterior de SAM/DINOv3 está registrado al final. Véase el [estado vigente](estado_actual_fase1.md).
+
 Consulta: **2026-10-28 (America/Lima)**. **Estado actual:** HEAD autenticado de SAM/DINOv3 autorizado y verificado mediante los informes Colab; solo permanece pendiente la licencia de Sen1Floods11. La tabla inicial conserva el resultado anónimo histórico. Evidencia ejecutada: [public_sources.json](evidence/stage1/public_sources.json), regenerable mediante `python scripts/audit_public_sources.py`. Solo consultas de metadatos, documentación y HEAD; no se adquirieron imágenes, etiquetas, splits ni pesos. Las revisiones se fijan en [environment.yaml](../../configs/environment.yaml).
 
 | Recurso | Identidad confirmada | Acceso comprobado | Licencia y resolución pendiente |

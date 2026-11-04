@@ -1,92 +1,76 @@
 **Workshop on Artificial Intelligence and Machine Learning Applications**
 
-# The Cost of the Prompt: Automatic DINOv3-Derived Prompts for SAM 2.1 Water Segmentation in Sentinel-2 Imagery
+# The Cost of the Prompt: Reference-Assisted SAM 2.1 Water Segmentation and Decoder Fine-Tuning in Sentinel-2 Imagery
 
 **[VILLARREAL QUISPE, ELIEZER GUIDO]¹, [CHAVEZ JAVIER, ROBERTO ABEL]¹**
 
 ¹[Department / group – confirm], Pontificia Universidad Católica del Perú, Lima, Peru
+
 Corresponding author: [corresponding author e-mail]
 
-*Status: research design for a project that has just started. No experiments have been run and no results are reported.*
+*Updated 3 November 2026 (America/Lima). Project phase 1 is complete under a reduced, two-notebook scope. This document reports the existing E2 experiment; it does not certify academic grading or completion of the later demo and final submissions.*
 
----
+## 1. INTRODUCTION AND SCOPE
 
-## 1. INTRODUCTION
+The project studies surface-water segmentation in Sentinel-2 chips from Sen1Floods11 (Bonafilia et al., 2020), using SAM 2.1 with spatial prompts. The original proposal asked how water IoU changes when label-simulated prompts are replaced by automatic DINOv3-derived prompts, including evaluation on unseen geographic events. That automatic pipeline and geographic evaluation were not implemented in the completed phase.
 
-Mapping surface water from satellites supports water monitoring (Pekel et al., 2016) and flood assessment, including the growing share of the population exposed to floods (Tellman et al., 2021). Sentinel-2 provides optical imagery for this purpose (Drusch et al., 2012), and Sen1Floods11 offers hand-labeled 512×512-pixel chips at 10 m resolution paired with Sentinel-1 and Sentinel-2 data (Bonafilia et al., 2020). Promptable models such as SAM (Kirillov et al., 2023) and SAM 2 (Ravi et al., 2025) return a mask conditioned on a prompt; SAM 2 accepts positive or negative clicks, boxes and masks, so a person normally supplies the prompt. In remote sensing, zero-shot SAM performed poorly on permafrost landforms; ground-truth box prompts worked well but cannot be automated, whereas fine-tuning the mask decoder improved accuracy (Li et al., 2024). SAM's automatic mask generator combined with a CLIP variant has been applied to water bodies in Landsat 8 and aerial images, with failures reported for low water levels and shadows (Ozdemir et al., 2024). Prompt generation from self-supervised feature matching already exists for natural-image benchmarks (Liu et al., 2024; Zhang et al., 2024).
+**Question addressed by the completed experiment.** With identical label-simulated points, validation chips and evaluation rules, does fine-tuning only the SAM 2.1 mask decoder improve pooled water IoU over the frozen decoder?
 
-Transfer to Sentinel-2 is difficult: SAM 2 is trained on general-domain images and video (Ravi et al., 2025), whereas the satellite DINOv3 checkpoint we plan to use was pretrained on 0.6 m RGB imagery (official model card), more than an order of magnitude finer than the 10 m chips.
+**Scope accepted at closure.** Phase 1 was simplified from an initial nine-stage plan into two notebooks: data/baseline/teardown and preliminary decoder intervention. It concludes an assisted experiment, not the original automatic prompting study. Labels include permanent water, so the task is surface-water segmentation rather than flood-only detection. The original title and automatic-prompt motivation remain project background; the current title reflects the measured experiment.
 
-**Research question.** How much water-segmentation quality, measured as water IoU, is lost when the simulated human prompts that define a reference-assisted baseline for SAM 2.1 are replaced by prompts generated automatically from DINOv3 features, and how does that loss change on a geographic event never used for training or calibration?
-
-**Scope.** We do not claim a new prompting method; the contribution is a controlled measurement of the cost of the prompt for Sentinel-2 water under event-level shift. Sen1Floods11 labels mark surface water, including permanent water, so the task is surface-water segmentation, not flood-only detection.
-
----
-
-## 2. METHODOLOGY
+## 2. EXECUTED METHOD
 
 ```mermaid
 flowchart LR
-    A["Sentinel-2 L1C chip<br/>512×512 px, 13 bands"]
-    B["RGB composite (B4, B3, B2)<br/>clip + normalise"]
-    C["DINOv3 ViT-L/16 satellite (frozen)<br/>→ patch features"]
-    D["Water probe →<br/>patch probability map"]
-    E["Prompt generator:<br/>+ peaks, − lows"]
-    F["<b>SAM 2.1 (frozen encoder)<br/>mask decoder fine-tuned<br/>= core intervention</b>"]
-    G["Mask selection +<br/>union → binary mask"]
-    H["Evaluation: test · Bolivia ·<br/>leave-Paraguay-out"]
-    R["Reference-assisted baseline:<br/>prompts simulated from labels"]
-    K["Grid (no prompt) branch: class-agnostic<br/>masks scored by mean probability"]
-
-    A --> B --> C --> D --> E --> F --> G --> H
-    R -.-> F
-    K -.-> G
-
-    classDef core stroke:#b5451b,stroke-width:3px;
-    class F core;
+    A[Sentinel-2 RGB B4/B3/B2] --> B[SAM 2.1 tiny frozen image encoder]
+    L[Reference labels] --> P[Simulated positive and negative points]
+    P --> Q[Frozen prompt encoder]
+    B --> D[Frozen vs fine-tuned mask decoder]
+    Q --> D
+    D --> M[Predicted-IoU mask selection and union]
+    M --> V[Validation on the same 40 chips]
+    L --> V
 ```
 
-**Data and splits (fact).** We use the 446 hand-labeled chips (Sentinel-2 L1C, 13 bands, top-of-atmosphere reflectance ×10,000; labels 1 = water, 0 = not water, −1 = invalid). The official files assign 252/89/90 chips to train/validation/test from ten events and keep 15 Bolivia chips apart; Paraguay contributes 39/14/14 chips to the three splits (counts read from the official split files).
+**Part 1 — `E2_01_datos_baseline_teardown.ipynb`.** Prepares Sen1Floods11 data, splits and training-derived preprocessing, runs the frozen SAM 2.1 tiny reference-assisted baseline and instruments the model. The dataset preparation covers 446 manually labelled chips, with official train/validation/test counts of 252/89/90 and 15 Bolivia chips kept apart. The preliminary intervention uses only development subsets; reserved test and geographic evaluation were not run.
 
-**Decision.** Thresholds and hyperparameters are chosen on validation chips only; test and Bolivia are evaluated once at the end. Because chip-level splits may place neighboring chips of one event in both train and test, in-distribution scores are treated as optimistic; event-level evidence comes from Bolivia and from a leave-Paraguay-out run that excludes all 67 Paraguay chips from training, calibration and model selection.
+**Part 2 — `E2_02_intervencion_decoder.ipynb`.** Compares the frozen decoder (epoch 0) with a decoder fine-tuned using BCE+Dice on valid pixels. The image and prompt encoders remain frozen. Only the 4,215,109 mask-decoder parameters are configured as trainable, out of 38,962,498 total parameters. Frozen-block fingerprints and a gradient audit check the intervention boundary. The IoU-prediction and object-presence heads receive no gradient under this loss, as documented in the run.
 
-**Preprocessing (decision).** RGB = B4, B3, B2 reflectance divided by 10,000, clipped at a fixed upper value chosen once on training chips, rescaled to [0, 1], then normalized with each model's own statistics (satellite statistics for DINOv3 from its model card; ImageNet statistics for SAM 2.1, as in its official code) and resized to the model input (1024 px for SAM 2.1). Invalid pixels are excluded from losses and metrics.
+The run uses the `official` regime, seed 42, 30 training chips (three per event) and 40 validation chips (four per event), selected by ID. Prompts use one positive and one negative point per water component, simulated from labels. Mask selection uses predicted IoU, and component masks are united. RGB preprocessing and prompt policy reuse the baseline contracts. Invalid label pixels are excluded from losses and metrics.
 
-**Baseline (decision).** Frozen SAM 2.1 (Apache-2.0 checkpoints; tiny variant, 38.9 M parameters, as first choice) prompted with points sampled from each chip's ground-truth mask (positive inside water, negative outside). Because labels create these prompts, this is a reference-assisted upper reference, not a deployable system.
+Training ran in Google Colab on a Tesla T4, float32, with Python 3.12.13, torch 2.7.1 and CUDA 12.6. AdamW used lr 5e-5, four-chip accumulation, at most five epochs and patience three. The hypothesis and refutation criterion were recorded before training: best-epoch validation water IoU must exceed the frozen arm on the same chips. The exact experimental code commit is `f399047464b89a3ed18972f8dc7f1b1364d83a44`.
 
-**Automatic prompts (decision).** A frozen DINOv3 ViT-L/16 satellite model (gated weights) extracts patch features. A logistic-regression probe predicts per-patch water probability; targets come from training-split labels only (water if ≥50% of valid pixels are water, not water if ≤5%, other patches ignored; thresholds tuned on validation). A label-free variant replaces them with NDWI (green/NIR) pseudo-labels. Probability peaks above a threshold become positive points (at most k+ per connected component, minimum spacing d) and low-probability locations become k− negative points. SAM 2.1 is called once per component with multimask output, the mask with the highest predicted IoU is kept, and the union over components is the binary prediction.
+DINOv3 was instrumented in an earlier teardown, but it was not used in this decoder experiment. No water probe or automatic prompt generator was trained.
 
-**Automatic mask grid, no prompt (decision).** Grid prompting (SAM 2's automatic mask generator, 32×32 points per side by default) yields class-agnostic masks, so it cannot output "water" by itself. We keep masks passing the predicted-IoU and stability filters, accept a mask as water if its mean DINOv3 probability exceeds a validation-tuned threshold, and take the union.
+## 3. OBSERVED RESULTS
 
-**Core intervention.** Beyond changing inputs, we unfreeze only the SAM 2.1 mask decoder (image and prompt encoders frozen) and fine-tune it on training chips with automatic prompts, using binary cross-entropy plus Dice loss.
+Run `20261030T013250Z_2a795a89d5_f9fbd8b0`; values preserved from [report.json](../project/evidence/e2/colab_run_20261030T013250Z/run/report.json) and [history.csv](../project/evidence/e2/colab_run_20261030T013250Z/run/history.csv).
 
-**Ablations.** Each has a hypothesis stated beforehand, one change, and all else fixed (chips, seed, checkpoint, thresholds).
+| Arm, same 40 validation chips | Pooled water IoU | Precision | Recall | Dice |
+| --- | ---: | ---: | ---: | ---: |
+| Frozen decoder, epoch 0 | 0.170378 | 0.171475 | 0.963819 | 0.291151 |
+| Fine-tuned decoder, best epoch (1) | **0.308052** | 0.398793 | 0.575162 | 0.471009 |
+| Fine-tuned decoder, last epoch (4) | 0.149928 | — | — | — |
 
-- **A1 prompt source** (ground-truth-simulated, DINOv3 points, whole-chip box, grid + scoring). *H1: DINOv3 points fall below the reference-assisted baseline and above the grid, because they carry spatial information but inherit probe errors.*
-- **A2 number of points k** per component. *H2: IoU rises then saturates; extra negatives reduce false positives on wet vegetation and shadows.*
-- **A3 mask decoder frozen vs fine-tuned.** *H3: fine-tuning helps events seen in training more than Bolivia.*
+Best-epoch IoU increases by 0.137673 (13.77 percentage points). Among 33 chips with defined individual IoU in both arms, 28 improve and five worsen. Seven water-free chips receive empty predictions by construction. Precision rises and recall falls: false-positive area decreases from approximately 401.1 to 72.6 million m², while real water is also lost. The result meets the experiment's pre-recorded criterion on this subset, without establishing generalization.
 
----
+Validation IoU across fine-tuning epochs is 0.308052, 0.112774, 0.095690 and 0.149928. Training loss decreases throughout, but epochs 2–4 perform below the frozen arm. Training stops after epoch 4 under patience three. Overfitting and mismatch in predicted-IoU selection are possible explanations, not experimentally identified causes. Both the best and last results are retained.
 
-## 3. PLANNED EVALUATION
+The full-validation baseline antecedent reports water IoU 0.158044 on 89 `official` chips and 0.168434 on 75 `leave_paraguay_out` validation chips. These are different populations from the 40-chip intervention comparison and are not held-out geographic scores.
 
-Two shifts are kept separate: natural→satellite shift is the gap between frozen and decoder-fine-tuned models on test chips; geographic shift is the gap between test chips (events seen in training) and Bolivia or leave-Paraguay-out chips.
+**Teardown.** SAM has 38,962,498 parameters and 296.05 counted GFLOPs, with explicitly partial operation coverage. The `E2_01` outputs report 152.6/154.9 ms latency for the official/excluded preprocessing regimes and peak allocated GPU memory of 684,419,584 B, with batch 1, float32, five warm-ups and 20 synchronized repetitions on T4. Features and gradient-based effective receptive fields describe local sensitivity on two training chips; they do not establish causal importance or water semantics. See [teardown_sam2.md](../project/teardown_sam2.md) for measurement scope.
 
-**Metrics.** Primary: water IoU, pooled over valid pixels per set and averaged over events, plus per-chip median and interquartile range. Complementary: precision, recall and Dice/F1 for water (to separate over- from under-segmentation) and two-class mIoU for comparison with the literature. Chips without water have undefined IoU: they are excluded from per-chip IoU, kept in pooled scores and summarized by false-positive area.
+## 4. CONCLUSIONS AND LIMITATIONS
 
-**Teardown (Phase A).** Parameters and FLOPs per block (image encoder, prompt encoder, mask decoder, DINOv3) with PyTorch's FLOP counter at fixed input size; median latency over repeated runs after warm-up (batch size 1, synchronized GPU, fixed precision and hardware reported); peak GPU memory; intermediate-feature and receptive-field visualizations.
+The completed phase provides a reproducible assisted baseline, model teardown and controlled preliminary decoder intervention. The best epoch reduces false positives sufficiently to raise pooled IoU, but recall drops and later epochs deteriorate. This experiment does not yet measure the cost of replacing assisted prompts with automatic ones.
 
-**Risks.** Gated weights (early access requests), cloud and shadow contamination (L1C has no quality mask; failure analysis by category), permanent water in the labels, the resolution gap, and a 15-chip Bolivia set (per-chip reporting, no significance claims with one seed). A single consumer-grade GPU is expected to suffice; this is an assumption to verify.
+Conclusions are limited by one seed, small subsets, and selecting and reporting the best epoch on the same validation set. Label-derived prompts, including empty predictions for water-free chips, prevent treating this as a deployable automatic system. No final test, Bolivia or reserved-Paraguay evaluation, full A1–A3 matrix, or statistical significance claim is available. FLOPs and receptive-field measurements have documented methodological limits.
 
----
+Recovery reproduced both evaluation arms with zero mask disagreement in a fresh Python process within the same Colab session; a full runtime restart was not evidenced for E2. Checkpoint identities and Drive locations are documented, with no weights committed to Git. The dataset licensing inquiry remains unresolved in the project record. Original outputs, including earlier template status text, are preserved as evidence.
 
-## 4. CONCLUSIONS
+**Project status.** Phase 1 is closed by the user's scope decision on 3 November 2026. The demo, final report, updated presentation poster and oral defense remain separate subsequent work. Automatic prompts and geographic stress testing require additional implementation and evaluation if that scope is resumed. Institutional and contact placeholders above still require completion before submission.
 
-Expected contributions, without promising gains: (i) a reproducible protocol with an assisted upper reference and fully automatic variants; (ii) a teardown of SAM 2.1 and DINOv3 on Sentinel-2 RGB; (iii) an honest failure analysis under event-level shift.
-
-Limitations: no results yet; surface water rather than flood-only water; an RGB composite discards NIR/SWIR; small held-out sets; one seed.
-
-**For discussion:** is a label-free prompt generator (NDWI) enough, and which water surfaces break prompting?
+Evidence and interpretation: [phase-1 results](../project/resultados_fase1.md), [decision log](../project/cuaderno_decisiones.md), [E2 audit](../project/auditoria_E2.md). The [WAIMLAP material index](README.md) identifies the original poster as a historical design artifact pending revision for presentation. The bibliography below is retained from the original proposal for background; it is not an additional experimental result or a new literature review.
 
 ---
 

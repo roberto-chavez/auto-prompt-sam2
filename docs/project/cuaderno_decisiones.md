@@ -1,5 +1,24 @@
 # Cuaderno de decisiones
 
+**Contexto vigente (2026-11-03): fase 1 concluida con alcance reducido en dos partes.** Las entradas fechadas anteriores se conservan como historial; sus conteos de nueve etapas y órdenes de detenerse no son instrucciones activas. Referencias: [estado actual](estado_actual_fase1.md), [hoja de ruta adaptada](hoja_de_ruta_fase1.md), [resultados](resultados_fase1.md).
+
+## 2026-11-03 — Cierre de fase 1 y adaptación del alcance
+
+**Decisión del usuario:** conservar los resultados de la versión terminada del compañero ya subida al repositorio y dar por concluida la fase 1 usando `E2_01_datos_baseline_teardown.ipynb` y `E2_02_intervencion_decoder.ipynb`.
+
+**Justificación:** los dos notebooks reúnen el trabajo realizado de datos, referencia asistida, disección e intervención del decoder. Se sustituye el criterio inicial de completar nueve etapas por el cierre de este alcance reducido, sin atribuir resultados a tareas no ejecutadas. La parte 2 del experimento no es la fase 2 del proyecto; esta última corresponde a la demo.
+
+**Resultados conservados:** run `20261030T013250Z_2a795a89d5_f9fbd8b0`, 30 chips de train / 40 de val, semilla 42, `official`: IoU agua 0.17037849358838072 congelado → 0.3080519029370676 mejor época 1; última época 4: 0.14992778300691617. Se conserva la degradación posterior y el intercambio entre precisión y recall, además de las salidas, checkpoints documentados y auditorías existentes.
+
+**Cambio frente al plan:** las antiguas etapas 5–9 dejan de ser pendientes activos de fase 1. No hay probe de agua ni prompts automáticos DINOv3, matriz A1–A3 completa ni evaluación final de reservados. El ajuste E2 utiliza puntos simulados desde etiquetas. Esas diferencias se registran como límites del alcance cerrado y posibles ampliaciones.
+
+**Continuidad:** fase 2, informe, póster actualizado y defensa oral se gestionan por separado. La consulta de licencia de Sen1Floods11 sigue pendiente; el cierre no altera términos de terceros ni certifica una calificación. No se pide repetir los experimentos. La publicación previa comunicada por el usuario sustituye el antiguo pendiente del bundle; esta actualización documental es local hasta su publicación.
+
+**Uso de IA en esta revisión:** Codex revisó documentos, fuentes de notebooks y artefactos de resultados; adaptó README, contexto, hoja de ruta, guías y resumen WAIMLAP, y actualizó solo textos de las plantillas de notebooks y de su generador. No reentrenó, no ejecutó modelos ni cambió configuraciones, código de las celdas o evidencia original. Se preserva el registro previo de asistencia de Claude y Codex.
+
+## Registro histórico de decisiones (hasta el 2026-10-30)
+
+
 ## 2026-10-28 — Fase 1, etapa 1: entorno y persistencia
 
 **Responsable de implementación:** asistente Codex, por solicitud del equipo. Revisión y comprensión por los integrantes: pendiente. Fuentes de alcance: README, bases del curso (incluida política de IA), resumen WAIMLAP y hoja de ruta, secciones 1–4. No se encontraron instrucciones `AGENTS.md` en el repositorio ni sus ancestros. Se preservó el PDF E1 no rastreado que ya estaba presente.

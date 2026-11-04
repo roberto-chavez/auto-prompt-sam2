@@ -1,11 +1,15 @@
 # Auditoría final de E2 contra el enunciado (antes de publicar)
 
+> **Auditoría histórica del 2026-10-30; contexto actualizado el 2026-11-03.** La fase 1 se da por **concluida en dos partes** con los resultados existentes, por instrucción del usuario. Este texto conserva los hallazgos y pendientes de su fecha; el antiguo pendiente de publicar el bundle queda superado por la versión que el usuario informa ya subida al repositorio. La licencia, los límites científicos y la evaluación académica conservan seguimiento separado. Véase el [estado actual](estado_actual_fase1.md).
+
 Fecha: 30 de octubre de 2026 (America/Lima). Alcance: **solo** «E2 · Teardown del modelo base + intervención preliminar + cuaderno de decisiones (GitHub)» del PDF *Tarea Final DL 2026-2* (leído completo; §2 Fases A/B, §3 alcance, §6 entregables, §7 política de IA, §8 formato, §4 licencias). No se exige a E2 la demo, el informe, la Fase C, múltiples semillas ni todas las ablaciones. No se publicó nada; todo se hizo sobre el commit local de cierre.
 
 ## 0. Qué se inspeccionó (no solo documentos)
+
 Contenido real del bundle importado en un clon limpio (`_E.V_` en `bd374c6` → cierre), ambos notebooks originales y ejecutados (diff celda a celda de sus fuentes: idénticas; los originales no tienen salidas), `intervention.py`, `run_e2.py`, `e2_intervention.yaml`, `sam_adapter.py`, `preprocessing.py`, `report.json`, `history.csv`, `per_chip_val.csv`, `predictions_val.npz`, `points_val.json`, `curves.png`, los 10 ejemplos, la figura incrustada de `E2_01`, la evidencia **nativa** de la etapa 4 del equipo en el repositorio, y el ZIP de la etapa 3 **del propio usuario** bajado de su Drive (`20261030T005913Z_9411883ce3_bf1a453a.zip`, 2 183 296 B, SHA-256 `1f2ee57b…a929fcdf`, `zip -t` sin errores).
 
 ### Recálculos independientes ([`audit_e2_recompute.py`](../../scripts/audit_e2_recompute.py) → [`audit_recomputation.json`](evidence/e2/audit_recomputation.json))
+
 - IoU, precisión, recall y Dice **agrupados de ambos brazos** reconstruidos desde `per_chip_val.csv` coinciden con `report.json` (diferencia máxima 5.6e-17). Las cifras que el usuario indicó (0.17037849358838072; 0.3080519029370676 época 1; 0.14992778300691617 última; precisión, recall y Dice) coinciden con los archivos.
 - `predictions_val.npz`: los 7 chips sin componentes tienen predicción vacía en ambos brazos; en los demás, los píxeles predichos ≥ TP+FP. `history.csv` = `report.json`; train y validación disjuntos (30/40); 28 mejoran y 5 empeoran como se reportó.
 - **Control cruzado con la etapa 3 del propio usuario:** el IoU agrupado de validación completa (89 chips) recalculado desde las confusiones del ZIP es 0.15804373108830588 (igual al impreso por `E2_01`). El brazo congelado de E2 reproduce la línea base **idéntica en 37 de los 40 chips**; en 3 chips (India_1018317, Mekong_293769, Mekong_474783) difiere ≤ ~4e-6 en IoU y ≤ 1 px en FP, compatible con la tolerancia de paridad ≤ 10 px fijada de antemano (no se cambió ninguna tolerancia).
@@ -38,6 +42,7 @@ Estados: **Cumple** = evidencia verificable en el repositorio; **Parcial** = med
 | §4/§8 «verificar y respetar la licencia y los términos de uso de modelos y datos»; «citado» | SAM 2.1 tiny Apache-2.0 verificado (modelo y fuentes fijados); referencias de Sen1Floods11, SAM y SAM 2 en el resumen WAIMLAP; DINOv3 no se usó | **Parcial** | **Sen1Floods11: respuesta del publicador pendiente**; los PNG de ejemplo son derivados del dataset | Ver 1.C |
 
 ### 1.B Recomendaciones o decisiones del propio proyecto (el PDF no las exige)
+
 | Punto | Estado | Comentario |
 | --- | --- | --- |
 | `recover` en un **reinicio completo del runtime** | **Parcial**: existe `recover` en un subproceso nuevo **de la misma sesión** (diferencia 0.0, 0 px de desacuerdo, `passed = true`); no hay evidencia de reinicio real (un único montaje de Drive, celdas 1…9 consecutivas, sin boot ID) | Es decisión de la hoja de ruta del proyecto (etapa 1), no requisito del profesor. No se presenta como reinicio real |
@@ -45,16 +50,19 @@ Estados: **Cumple** = evidencia verificable en el repositorio; **Parcial** = med
 | Carpeta de evidencia con hashes, JSON, tablas | **Cumple** | [`SHA256SUMS.txt`](evidence/e2/colab_run_20261030T013250Z/SHA256SUMS.txt) verifica 27 archivos |
 | ZIP nativos de la **reejecución propia** de teardown (150 699 693 B, `20261030T011345Z_8315d17272_bc78f77e.zip`) | Solo en Drive | No necesarios: los nativos del equipo (etapa 4) están en el repositorio y la reejecución se reproduce en FLOPs |
 
-### 1.C Pendientes administrativos (no académicos)
-1. **Publicación en GitHub:** el push desde esta sesión dio 403; los commits están solo en `e2_cierre.bundle` (ChatGPT publica desde el equipo del usuario). No debe decirse «publicado» hasta hacerlo.
+### 1.C Pendientes administrativos registrados el 2026-10-30
+
+1. **Publicación en GitHub (histórico, superado):** el push de aquella sesión dio 403 y se entregó `e2_cierre.bundle`. El 2026-11-03 el usuario comunica que la versión terminada ya fue subida al repositorio; no se mantiene como bloqueo vigente.
 2. **Licencia de Sen1Floods11:** consulta enviada, sin respuesta. No se asume permiso. Mientras tanto, la carpeta de evidencia contiene 10 PNG de ejemplo y `curves.png` derivados del dataset; el usuario decide si los publica ahora o los retira.
 3. **Fecha:** el PDF fija E2 el 21 de octubre de 2026; ya pasó.
 4. **Defensa oral individual:** cada integrante debe poder explicar el código y las decisiones (§7); no se inventa comprensión ni firma de nadie.
 
 ### 1.D Mejoras opcionales
+
 `recover` tras reinicio real; más chips/semillas (el PDF no lo exige); ablaciones que separen las hipótesis de la degradación (lr, selección sin IoU predicho, validación separada); más chips para ERF; descargar los ZIP nativos propios; recalcular IoU desde etiquetas con los GeoTIFF locales para cerrar la comprobación de §0.
 
 ## 2. Hallazgos y correcciones hechas en esta auditoría
+
 | # | Hallazgo | Corrección |
 | --- | --- | --- |
 | 1 | **Faltaba** una explicación por bloque y del «por qué de la forma» del modelo (solo había hipótesis H4a–H4c repartidas) | Nuevo [teardown_sam2.md](teardown_sam2.md) + `scripts/teardown_architecture_counts.py` y su JSON |
@@ -66,7 +74,9 @@ Estados: **Cumple** = evidencia verificable en el repositorio; **Parcial** = med
 | 7 | Faltaba contexto de que el brazo congelado de E2 (40 chips: 0.1704) no es la línea base de validación completa (89 chips: 0.1580) | Aclarado aquí y en el cuaderno por el control cruzado |
 
 ## 3. Alcance de las conclusiones (lo que NO se afirma)
+
 No es un sistema automático terminado; no valida el flujo DINOv3→SAM (los puntos salen de las etiquetas y DINOv3 no se usó); no prueba generalización geográfica (sin test, Bolivia ni reservados); no garantiza mejora ni significancia estadística (una semilla, 40 chips, mejor época elegida y reportada en la misma validación). Resultado mecánico: criterio previo de refutación no cumplido en este subconjunto (0.3081 > 0.1704). El ajuste reduce falsas detecciones (precisión 0.171 → 0.399) y pierde agua real (recall 0.964 → 0.575).
 
-## 4. Veredicto
+## 4. Veredicto de la auditoría del 2026-10-30
+
 **Lista para presentar con limitaciones declaradas**, una vez publicadas las correcciones de este commit. Antes de las correcciones el veredicto era «necesita correcciones documentales» (hallazgos 1–3); **no se requiere ejecución adicional** para los requisitos explícitos de E2 del PDF. Bloqueos concretos: (a) publicación en GitHub pendiente (403 de la app de Claude; vía bundle); (b) licencia de Sen1Floods11 sin respuesta; (c) FLOPs y ERF son parciales por método y así están declarados; (d) la comprensión del estudiante, que el PDF evalúa en la defensa oral, no puede certificarse aquí. Esto no garantiza aceptación ni calificación.

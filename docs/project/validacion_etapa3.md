@@ -1,5 +1,7 @@
 # Etapa 3: referencia asistida y evaluador común
 
+> **Contexto al 2026-11-03:** antecedente técnico conservado del plan original. La fase 1 está **concluida en dos partes E2**; los conteos y pendientes siguientes describen la revisión de esta etapa en su fecha. Véanse el [estado vigente](estado_actual_fase1.md) y la [hoja de ruta adaptada](hoja_de_ruta_fase1.md).
+
 **Fecha:** 2026-10-29 (America/Lima). **Estado: Concluida.** Implementación, pruebas CPU y ejecución/recuperación GPU en Colab revisadas con los archivos del usuario. Véase la auditoría al final de este documento. Se conservan el cierre de etapas 1–2 y la consulta de licencia pendiente.
 
 ## Entregables y alcance

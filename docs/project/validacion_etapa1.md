@@ -1,5 +1,7 @@
 # Validación de la etapa 1
 
+> **Contexto al 2026-11-03:** antecedente técnico conservado del plan original. La fase 1 está **concluida en dos partes E2**; los conteos y pendientes siguientes describen la revisión de esta etapa en su fecha. Véanse el [estado vigente](estado_actual_fase1.md) y la [hoja de ruta adaptada](hoja_de_ruta_fase1.md).
+
 **Fecha:** 2026-10-28, America/Lima. **Resultado actual:** etapa 1 concluida por instrucción expresa del usuario, con salvedad de licencia de Sen1Floods11 sin aclarar. Entorno, recuperación, CUDA, recursos y accesos SAM/DINOv3 verificados. Consulta al publicador enviada y archivada; se revisará/reabrirá la etapa al recibir respuesta. Este cierre no acredita permiso sobre el dataset. El historial de validación se conserva abajo.
 
 ## Entregables
