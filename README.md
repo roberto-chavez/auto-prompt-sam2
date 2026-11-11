@@ -17,14 +17,15 @@ Proyecto de **Deep Learning (1INF52), semestre 2026-2**, Ingeniería Informátic
 
 La propuesta original estudiaba prompts automáticos derivados de DINOv3 para SAM 2.1. La fase 1 realizada se concentra en **datos, referencia asistida, disección del modelo y ajuste exclusivo del mask decoder**, con puntos simulados desde las etiquetas. El cierre acepta ese alcance y conserva sus resultados y limitaciones; no supone haber implementado el flujo automático DINOv3→SAM ni evaluado la generalización geográfica.
 
-## E3 — punto de entrada (2026-11-11)
+## E3 — punto de entrada (actualizado 2026-11-11)
 
-- **Informe (4 págs., LaTeX editable + PDF):** [`reports/e3/informe_E3.tex`](reports/e3/informe_E3.tex), [`informe_E3.pdf`](reports/e3/informe_E3.pdf). Revisión con retroalimentación del workshop: pendiente de confirmación.
-- **Estado verificado y límites:** [`docs/project/e3_estado.md`](docs/project/e3_estado.md).
-- **Resultados consolidados (validación):** [`docs/project/evidence/e3/consolidated_results.md`](docs/project/evidence/e3/consolidated_results.md); regenerar con `python scripts/e3_collect_results.py`.
-- **Notebooks:** `notebooks/05_prompts_automaticos.ipynb`, `06_entrenamiento_decoder.ipynb`, `07_ablaciones_y_seleccion.ipynb` (la etapa 7 está preparada, **no ejecutada**).
-- **Demo:** interfaz con pruebas locales; carga de pesos e inferencia real **no verificadas** en E3.
-- **Pendiente:** matriz pareada A1–A3 y transferencia geográfica; licencia de Sen1Floods11 sin aclarar.
+- **Informe (5 págs., LaTeX + PDF):** [`reports/e3/informe_E3.tex`](reports/e3/informe_E3.tex), [`informe_E3.pdf`](reports/e3/informe_E3.pdf); variante IEEEtran sin compilar: `informe_E3_IEEEtran.tex`. Retroalimentación del workshop: pendiente de confirmación.
+- **Estado, límites y compuerta de etapa 8:** [`docs/project/e3_estado.md`](docs/project/e3_estado.md).
+- **Resultados consolidados (validación, A1–A3 incluidos):** [`consolidated_results.md`](docs/project/evidence/e3/consolidated_results.md); regenerar con `python scripts/e3_collect_results.py`.
+- **Notebook etapa 7 ejecutado:** [`notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb`](notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb); métricas extraídas en `docs/project/evidence/e3/stage7_metrics_from_notebook.json`.
+- **Demo:** pruebas locales de interfaz; verificación con pesos reales en Colab: `notebooks/E3_demo_verificacion_colab.ipynb` (preparada, no ejecutada). Solo puntos manuales.
+- **Etapa 8:** bloqueada (`python scripts/check_stage8_gate.py <revision_stage7_*.json>`); conjuntos reservados cerrados.
+- **Pendiente:** totales reales de puntos (`scripts/e3_point_budget.py`), revisión humana y recover offline de la etapa 7, etapa 8, licencia de Sen1Floods11.
 
 ## Probar la demo
 

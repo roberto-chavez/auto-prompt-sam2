@@ -1,0 +1,27 @@
+{
+ "pair": {
+  "both_computational_locks_verified": true,
+  "external_review": "pending",
+  "stage8_authorized": false,
+  "reserved_access": []
+ },
+ "regimes": {
+  "official": {
+   "failures": [],
+   "offline_recovery_present": false,
+   "pending": [
+    "Human review of executed notebook, logs, hardware, failures and interpretation",
+    "User-run offline recover on a different Colab runtime"
+   ]
+  },
+  "leave_paraguay_out": {
+   "failures": [],
+   "offline_recovery_present": false,
+   "pending": [
+    "Human review of executed notebook, logs, hardware, failures and interpretation",
+    "User-run offline recover on a different Colab runtime"
+   ]
+  }
+ },
+ "_nota": "Transcripci\u00f3n parcial de los campos le\u00eddos en Drive (MyDrive/auto-prompt-sam2/stage7/revision_stage7_1794435476494193372.json); no es el archivo original."
+}

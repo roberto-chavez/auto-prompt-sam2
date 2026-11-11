@@ -66,6 +66,9 @@ def main():
         "frozen": {k: e2["frozen_epoch0"][m] for k, m in (("water_iou", "water_iou_pooled"), ("precision", "precision"), ("recall", "recall"), ("dice", "dice"))},
         "tuned_best_epoch1": {k: e2["tuned_best_epoch"][m] for k, m in (("water_iou", "water_iou_pooled"), ("precision", "precision"), ("recall", "recall"), ("dice", "dice"))},
         "source": "e2/colab_run_20261030T013250Z/run/report.json (40 val chips, single seed)"}
+    s7 = json.load(open(EV / "e3/stage7_metrics_from_notebook.json"))
+    out["stage7_executed_notebook"] = {"source": s7["source"], "notebook_sha256": s7["notebook_sha256"], "selected": s7["selected"],
+        "rows": {r: {k: {m: v[m] for m in ("water_iou", "precision", "recall", "dice")} for k, v in rows.items()} for r, rows in s7["rows"].items()}}
     out["caveat"] = ("stage3 uses label-derived components with 1+/1- per component; stage5 uses probe-derived components with up to 3+/3-. "
                      "Budgets and component sources differ, so stage3 vs stage5 is descriptive, NOT the controlled cost-of-the-prompt contrast "
                      "(stage 7 A1 with a matched 3+/3- assisted reference is prepared but not executed). stage6 changes the decoder as well as the prompts. "
@@ -79,6 +82,10 @@ def main():
                    "stage5_sam_grid_dinov3_scored_frozen_decoder": "Etapa 5: malla SAM 32×32 puntuada con DINOv3, decoder congelado",
                    "stage6_decoder_trained_on_automatic_points_best_epoch": f"Etapa 6: decoder entrenado con puntos automáticos, mejor época {v.get('epoch')}"}[k]
             lines.append(f"| {r} | {lab} | {v['water_iou']:.6f} | {v['precision']:.6f} | {v['recall']:.6f} | {v['dice']:.6f} |")
+    lines += ["", "| Régimen | Fila etapa 7 (validación) | IoU agua | Precisión | Recall | Dice |", "| --- | --- | ---: | ---: | ---: | ---: |"]
+    for r, rows in out["stage7_executed_notebook"]["rows"].items():
+        for k in sorted(rows, key=lambda x: (x[:2] != "a1", x)):
+            v = rows[k]; lines.append(f"| {r} | {k} | {v['water_iou']:.6f} | {v['precision']:.6f} | {v['recall']:.6f} | {v['dice']:.6f} |")
     Path(a.out).with_suffix(".md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))
 

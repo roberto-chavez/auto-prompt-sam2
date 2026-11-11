@@ -368,3 +368,12 @@ Cada régimen publicará selection/evaluation_lock con hashes y el registro conj
 - **Resultados:** `docs/project/evidence/e3/consolidated_results.md`. Contraste etapa 3 vs 5 descriptivo (presupuestos distintos); etapa 6 cambia el decoder.
 - **Fallos/pendientes:** comparación pareada A1–A3 no ejecutada (requiere Colab GPU); transferencia (reservados) no evaluada; demo con pesos reales no verificada (sin acceso a Hugging Face ni GPU en el entorno); Sen1Floods11 sin licencia verificada; retroalimentación del workshop pendiente de confirmación.
 - **IA:** Claude integró ramas, escribió el script de consolidación y el informe (`reports/e3/`); las etapas 5–6 fueron ejecutadas en Colab por el equipo y auditadas por Codex.
+
+### E3 — actualización con la etapa 7 ejecutada (2026-11-11)
+
+- **Hipótesis previas (WAIMLAP, 2026-11-01):** H1 puntos DINOv3 < referencia asistida y > malla; H2 más positivos mejoran hasta saturar, más negativos reducen FP; H3 el ajuste mejora más lo visto que Bolivia.
+- **Resultado:** H1 refutada en su primera mitad (automático .2986/.3168 > asistido igualado .1540/.1515), cumplida en la segunda (malla .1785/.2088). H2 parcial (rendimientos decrecientes en k+; k− sube precisión y baja recall; IoU no monótono en official). H3 no evaluable (etapa 8 cerrada).
+- **Configuración:** semilla 42, 13 filas × validación (89/75 chips), sin entrenar ni recalibrar; fuente: notebook ejecutado (commit ebde34e).
+- **Fallos/incidencias:** intento previo con `Prior implementation changed: configs/baseline.yaml`; dos hashes de evidence.zip por régimen en la salida (el segundo coincide con la auditoría); auditoría «consistencia portátil aprobada, no cierre»; recover offline y revisión humana pendientes.
+- **Presupuesto:** igualdad solo nominal por componente; totales reales de A1 sin verificar (script `scripts/e3_point_budget.py`).
+- **IA:** Claude leyó las salidas, extrajo y verificó cifras, actualizó informe/documentación y preparó compuerta de etapa 8 y notebook de demo; no ejecutó modelos.
