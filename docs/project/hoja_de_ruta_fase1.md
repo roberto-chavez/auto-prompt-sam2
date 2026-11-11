@@ -40,6 +40,6 @@ La aceptación corresponde al seguimiento del proyecto. La evaluación académic
 
 ## Reproducción y continuidad
 
-La [guía PASOS_E2](PASOS_E2.md) permite reproducir los experimentos si se necesita. No hace falta repetirlos para mantener este cierre. Todo entrenamiento y toda tarea que requiera o se beneficie de GPU se ejecuta exclusivamente en Google Colab; la PC se reserva para documentación, desarrollo y verificaciones ligeras de CPU.
+La [guía PASOS_E2](PASOS_E2.md) permite reproducir los experimentos si se necesita. No hace falta repetirlos para mantener este cierre. Todo entrenamiento se ejecuta exclusivamente en Google Colab; la PC se reserva para documentación, desarrollo y verificaciones sin modelos. La inferencia de fase 2 se prepara también para Hugging Face Spaces con GPU.
 
-La fase 2 pendiente contempla Gradio y Hugging Face Spaces. Debe partir de los componentes realmente disponibles y definir la fuente de prompts: el flujo cerrado requiere etiquetas. Automatizar los prompts, completar A1–A3 y probar transferencia geográfica son posibles ampliaciones con alcance y validación propios; no se reactivan por las instrucciones archivadas del plan original.
+La [fase 2](fase2_demo.md), actualizada al 11 de noviembre, cuenta con implementación Gradio y configuración para Spaces: usa puntos manuales y admite preparación local de imágenes. La inferencia GPU, integración del decoder ajustado y despliegue siguen pendientes; el experimento E2 cerrado utilizó puntos simulados desde etiquetas. Automatizar los prompts, completar A1–A3 y probar transferencia geográfica son posibles ampliaciones con alcance y validación propios; no se reactivan por las instrucciones archivadas del plan original.

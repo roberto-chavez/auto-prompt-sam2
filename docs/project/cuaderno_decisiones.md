@@ -1,6 +1,22 @@
 # Cuaderno de decisiones
 
-**Contexto vigente (2026-11-03): fase 1 concluida con alcance reducido en dos partes.** Las entradas fechadas anteriores se conservan como historial; sus conteos de nueve etapas y órdenes de detenerse no son instrucciones activas. Referencias: [estado actual](estado_actual_fase1.md), [hoja de ruta adaptada](hoja_de_ruta_fase1.md), [resultados](resultados_fase1.md).
+**Contexto vigente (2026-11-11): fase 1 concluida con alcance reducido en dos partes; fase 2 implementada con validación local sin modelos e inferencia/despliegue pendientes.** Las entradas fechadas anteriores se conservan como historial; sus conteos de nueve etapas y órdenes de detenerse no son instrucciones activas. Referencias: [estado actual](estado_actual_fase1.md), [hoja de ruta adaptada](hoja_de_ruta_fase1.md), [resultados](resultados_fase1.md).
+
+## 2026-11-11 — Fase 2: demo manual y preparación para Spaces
+
+**Alcance autorizado:** desarrollar todo lo independiente de los archivos faltantes de Colab, preservar la fase 1 y no ejecutar modelos ni entrenamiento en la PC. Se implementan módulos separados `demo_*`, `app.py`, configuración JSON, pruebas en `tests/demo/`, dependencias propias y Docker para Spaces. Las entradas y evidencias previas permanecen sin cambios.
+
+**Decisiones:** puntos humanos positivos y negativos en una llamada por región; no se implementa un generador automático ni se usan etiquetas. Se conserva SAM 2.1 tiny, la revisión de código/pesos, el preprocesamiento fijo de train comprobado por hash, FP32 y la selección por score predicho. El backend usa instancias separadas para base y ajustado, carga diferida, bloqueo entre sesiones y verificación de SHA/tamaño/época/configuración antes de cargar el `best` exclusivamente en `sam_mask_decoder`. Se distingue la máscara de visualización, que excluye nodata, de una evaluación experimental.
+
+**Disponibilidad:** el preprocesamiento y los resultados E2 ya están presentes. Falta confirmar y recibir el archivo sin extensión `best/.../payload`; su ruta, tamaño y hash constan en [la guía de fase 2](fase2_demo.md). El ZIP final de Colab no contiene checkpoints. SAM base puede recuperarse de Drive o del repo público fijado. El decoder es opcional: si falta, se informa su ausencia y solo puede funcionar el brazo congelado en GPU remota.
+
+**Validación y límites:** modo local `preview` sin importación de torch/SAM, pruebas con arrays/recorders sintéticos y revisión de carga, clics positivos/negativos, deshacer y borrar en navegador. No se ejecutó inferencia real, no se entrenó ni se midieron métricas nuevas; no se construyó el contenedor ni se publicó un Space. Quedan integración de pesos, pruebas GPU, aceptación remota y publicación. Los prompts humanos no reproducen las métricas asistidas de E2. Detalles en [validacion_fase2.md](validacion_fase2.md).
+
+**Uso de IA:** Codex revisó documentación y notebooks ejecutados, implementó la demo, pruebas y configuración de despliegue, y redactó las instrucciones. Se preservan las cifras y sus limitaciones; el equipo debe revisar el código y realizar la validación remota pendiente. No se afirma completar la evaluación geográfica ni las entregas de informe, póster o defensa.
+
+**Ampliación de entrada solicitada:** se habilita detección de formato por extensión y carga de PNG/JPEG RGB, gris y con transparencia de distintos tamaños, conservando proporciones sobre un lienzo 512². Se verifica el PNG RGBA adjuntado por el usuario y se documenta que una captura S1Hand es radar Sentinel-1, fuera del dominio Sentinel-2 del ajuste; aceptar el archivo no acredita rendimiento de segmentación. Los GeoTIFF del protocolo original mantienen sus restricciones y preprocesamiento.
+
+**Preparación documental para GitHub:** se unifican README, guía, contexto, hoja de ruta e índice; se añade inicio rápido multiplataforma y se explican los puntos manuales, el modo `preview`, Sentinel-1 exploratorio y los requisitos independientes de SAM base y del decoder ajustado. La guía de publicación lista 22 archivos de esta entrega, comandos de revisión/commit/push y exclusiones de datos, pesos, temporales y materiales del curso ajenos al cambio. Se verifican 129 enlaces relativos y las exclusiones de Git. Codex asistió esta revisión documental; no creó commits ni publicó cambios.
 
 ## 2026-11-03 — Cierre de fase 1 y adaptación del alcance
 

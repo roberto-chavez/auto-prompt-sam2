@@ -1,11 +1,14 @@
 # Documentación del proyecto
 
-**Estado al 2026-11-03: fase 1 concluida en dos partes (`E2_01` y `E2_02`).** Se conservan los resultados del equipo y la evidencia ya versionada. La fase 2 (demo) queda pendiente.
+**Estado al 2026-11-11: fase 1 concluida en dos partes (`E2_01` y `E2_02`).** Se conservan los resultados del equipo y la evidencia ya versionada. Fase 2: demo implementada con validación local sin modelos; integración de pesos, inferencia remota y despliegue pendientes.
 
 ## Documentos vigentes
 
 | Documento | Contenido |
 | --- | --- |
+| [Fase 2: demo Gradio](fase2_demo.md) | Uso, configuración, archivos exactos de Colab, Spaces y pendientes de validación remota. |
+| [Validación local de fase 2](validacion_fase2.md) | 17 pruebas sin modelos, revisión de interfaz y límites de lo verificado. |
+| [Publicación en GitHub](publicacion_github.md) | Archivos del cambio, comprobaciones y comandos para que el equipo revise y publique. |
 | [Estado y contexto](estado_actual_fase1.md) | Punto de partida para continuar el proyecto; decisión de cierre, alcance y pendientes separados. |
 | [Hoja de ruta adaptada](hoja_de_ruta_fase1.md) | Dos partes concluidas y correspondencia con el plan inicial. |
 | [Resultados de fase 1](resultados_fase1.md) | Configuración, métricas, degradación posterior, interpretación y artefactos. |

@@ -1,0 +1,5 @@
+# Preview and CPU contract tests only. No torch, SAM or model weights.
+gradio==6.31.0
+numpy==2.2.6
+pillow==11.3.0
+rasterio==1.4.3

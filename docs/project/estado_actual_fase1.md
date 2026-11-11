@@ -4,6 +4,8 @@
 
 **Estado general: CONCLUIDA con alcance simplificado en dos partes.**
 
+**Continuación (2026-11-11):** el cierre y las cifras de este documento se conservan. La demo de fase 2 ya tiene implementación y verificaciones locales sin modelos; la integración de pesos, inferencia remota y publicación siguen pendientes. Su estado vigente está en [fase2_demo.md](fase2_demo.md); las menciones a demo pendiente que siguen describen el cierre del 3 de noviembre.
+
 **Decisión:** por instrucción del usuario, se adoptan los resultados del equipo ya incorporados al repositorio y los notebooks `E2_01` y `E2_02` como cierre de la fase 1. No se requieren nuevas ejecuciones para este cierre de seguimiento.
 
 Este documento es el contexto vigente para continuar el proyecto. Sustituye el estado anterior de «4 de 9 etapas concluidas». Las nueve etapas eran el plan inicial, no el criterio de cierre actual; se conservan la [hoja de ruta original](hoja_de_ruta_fase1_original.md) y el [historial](historial_fase1.md). El alcance realizado y su correspondencia con aquel plan figuran en la [hoja de ruta adaptada](hoja_de_ruta_fase1.md).
