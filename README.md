@@ -19,7 +19,7 @@ La propuesta original estudiaba prompts automáticos derivados de DINOv3 para SA
 
 ## E3 — punto de entrada (actualizado 2026-11-11)
 
-- **Informe (5 págs., LaTeX + PDF):** [`reports/e3/informe_E3.tex`](reports/e3/informe_E3.tex), [`informe_E3.pdf`](reports/e3/informe_E3.pdf); variante IEEEtran sin compilar: `informe_E3_IEEEtran.tex`. Retroalimentación del workshop: pendiente de confirmación.
+- **Informe (IEEE, 4 págs.):** [`reports/e3/informe_E3.pdf`](reports/e3/informe_E3.pdf); fuente IEEEtran (conference): [`informe_E3_IEEEtran.tex`](reports/e3/informe_E3_IEEEtran.tex) con `fig_iou.pdf` y `fig_curvas.pdf`. Compilar: `pdflatex` dos veces. Retroalimentación del workshop: pendiente de confirmación.
 - **Estado, límites y compuerta de etapa 8:** [`docs/project/e3_estado.md`](docs/project/e3_estado.md).
 - **Resultados consolidados (validación, A1–A3 incluidos):** [`consolidated_results.md`](docs/project/evidence/e3/consolidated_results.md); regenerar con `python scripts/e3_collect_results.py`.
 - **Notebook etapa 7 ejecutado:** [`notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb`](notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb); métricas extraídas en `docs/project/evidence/e3/stage7_metrics_from_notebook.json`.
