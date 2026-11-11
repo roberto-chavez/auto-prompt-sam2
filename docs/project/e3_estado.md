@@ -24,11 +24,16 @@ El presupuesto es nominal **por componente**, y los componentes difieren (etique
 ## Auditoría de la etapa 7 (Drive: `MyDrive/auto-prompt-sam2/stage7/revision_stage7_1794435476494193372.json`)
 Terminó. Ambos regímenes: `portable_consistency_passed_not_stage_closure`, 13 filas, `failures: []`, 1 157 (official) y 975 (excluido) máscaras de validación auditadas, `models_executed:false`, `reserved_access:[]`; ZIP verificados `ed582c1f…` (official, 1 230 generaciones) y `06f6dc83…` (excluido, 1 020). Pendientes declarados: revisión humana y **recover offline en otro runtime de Colab** (`offline_recovery_present:false`). Copia de los campos leídos: `evidence/e3/revision_stage7_*.json` (transcripción). Hallazgo: la salida del notebook muestra un intento previo fallido (`ValueError: Prior implementation changed: configs/baseline.yaml`) y dos hashes de evidence.zip por régimen; el segundo coincide con la auditoría.
 
+## Fase C según el PDF
+§2: «Se evalúa el modelo en un dominio de distribución distinta a la de su preentrenamiento… reportar explícitamente lo que no funcionó». El cambio natural→Sentinel-2 ya está medido (etapas 3–7) y sus fallos reportados. La transferencia geográfica con reservados (Bolivia/Paraguay) es del **protocolo del equipo**, no una exigencia literal del PDF.
+**Para consultar con el profesor:** §6 pide informe «IEEE/LNCS» (fila E3), §8 pide «resumen extendido (4–8 pág.) según la plantilla de WAIMLAP»; no hay archivo de plantilla WAIMLAP disponible. El informe actual usa IEEEtran.
+
 ## Etapa 8 (transferencia geográfica)
+Actualización E3: `src/auto_prompt_sam2/evaluation.py` (compuerta, protocolo congelable, métricas por conjunto/evento, bootstrap pareado, contraste visto vs reservado) y `configs/stage8_protocol.json` (borrador; hash `52d6310c…cff3d`, congelar registrándolo ANTES de abrir). Probado con datos sintéticos (`tests/test_evaluation.py`, 4 pruebas). Falta conectar los predictores de la etapa 7 a los chips reservados (GPU). Compuerta real: CERRADA (`python scripts/run_stage8_local_test.py <revision_stage7_*.json>`).
 Condiciones que faltan (`scripts/check_stage8_gate.py`, devuelve «BLOQUEADA»): revisión externa/humana, `stage8_authorized=true` y recover offline en otro runtime. `reserved_access` sigue vacío. `notebooks/08_evaluacion_final_geografica.ipynb` solo aplica la compuerta; el evaluador de la etapa 8 **no está implementado** (se escribe tras la autorización).
 
 ## Demo
-Verificada solo en pruebas locales de interfaz (17 pruebas). Máscara con pesos reales **no verificada** (sin GPU ni Hugging Face aquí). Procedimiento: `notebooks/E3_demo_verificacion_colab.ipynb` (preparado, no ejecutado). Solo puntos manuales; el flujo automático **no está integrado**.
+Verificada solo en pruebas locales de interfaz (17 pruebas); ver `fase2_demo.md`, sección E3. Máscara con pesos reales **no verificada** (sin GPU ni Hugging Face aquí). Procedimiento: `notebooks/E3_demo_verificacion_colab.ipynb` (preparado, no ejecutado). Solo puntos manuales; el flujo automático **no está integrado**.
 
 ## Limitaciones
 Una semilla, sin IC; selección de época/umbral en la misma validación; sin reservados; Sen1Floods11 sin licencia verificada.

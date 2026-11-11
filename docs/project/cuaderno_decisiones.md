@@ -377,3 +377,10 @@ Cada régimen publicará selection/evaluation_lock con hashes y el registro conj
 - **Fallos/incidencias:** intento previo con `Prior implementation changed: configs/baseline.yaml`; dos hashes de evidence.zip por régimen en la salida (el segundo coincide con la auditoría); auditoría «consistencia portátil aprobada, no cierre»; recover offline y revisión humana pendientes.
 - **Presupuesto:** igualdad solo nominal por componente; totales reales de A1 sin verificar (script `scripts/e3_point_budget.py`).
 - **IA:** Claude leyó las salidas, extrajo y verificó cifras, actualizó informe/documentación y preparó compuerta de etapa 8 y notebook de demo; no ejecutó modelos.
+
+### E3 — evaluador de la etapa 8, licencia y demo (2026-11-11, tarde)
+
+- **Decisión:** implementar el evaluador de la etapa 8 con compuerta y protocolo congelable (`configs/stage8_protocol.json`, hash `52d6310c4c47264506bdb13126f7b32a0f36a8f6b84f0ad37a9da2204e9cff3d` del borrador) y probarlo solo con datos sintéticos; **no** abrir reservados mientras la revisión humana y el recover offline estén pendientes. Hipótesis previa H3 sin cambios: el ajuste mejora más lo visto que Bolivia/Paraguay.
+- **Licencia Sen1Floods11:** sigue pendiente (catálogos `proprietary`; sin respuesta del publicador); mensaje de seguimiento en `accesos_y_licencias.md`. No se publican visualizaciones de chips.
+- **Demo:** sin ejecución con pesos reales (sin GPU/HF aquí); notebook de Colab listo; conexión del flujo automático descrita, no implementada.
+- **IA:** Claude escribió evaluador, pruebas y documentación; no ejecutó modelos ni abrió datos reservados.

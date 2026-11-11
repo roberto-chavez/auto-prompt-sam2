@@ -40,3 +40,25 @@ En ambas comprobaciones body_downloaded=false y no se siguieron redirecciones. Q
 Se revisó el correo saliente aportado por el usuario, dirigido a support@floodbase.com el 2026-10-28 a las 18:05:23 -05:00. [Registro](evidence/stage1/licensing_request_sent.md). Solicita licencia o permiso para los usos previstos de S2Hand y LabelHand. No contiene una respuesta ni una autorización del publicador.
 
 Por instrucción expresa del usuario, la etapa 1 se cierra con salvedad y se reabrirá al recibir respuesta. La licencia conserva su estado pendiente; no se alteran los informes técnicos ni se declara que el silencio conceda derechos. La instrucción cambia el estado de seguimiento, no los términos de terceros ni la evidencia de autorización.
+
+## Revisión de Sen1Floods11 — 2026-11-11 (E3)
+
+**Conclusión: sigue PENDIENTE; no hay autorización explícita del publicador.** Lo encontrado:
+
+- Los catálogos oficiales del bucket (`…/sen1floods11/v1.1/catalog/…/collection.json`) declaran `proprietary` (consulta del 2026-10-28, ver `evidence/stage1/public_sources.json`).
+- El artículo (Bonafilia et al., CVPR Workshops 2020, [página CVF](https://openaccess.thecvf.com/content_CVPRW_2020/html/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.html)) remite a `github.com/cloudtostreet/Sen1Floods11` y no indica licencia.
+- El registro AWS «Cloud to Street – Microsoft Flood and Clouds Dataset» ([registry.opendata.aws/c2smsfloods](https://registry.opendata.aws/c2smsfloods/)) declara CC-BY-4.0 y lo gestiona Radiant Earth, pero **no menciona Sen1Floods11**: es otro conjunto; no se extrapola.
+- No pude abrir el README de GitHub del publicador desde este entorno (sitio fuera de la lista permitida); la consulta anterior lo fijó en el commit `b9e460d…`.
+- Consulta ya enviada el 2026-10-28 a support@floodbase.com ([registro](evidence/stage1/licensing_request_sent.md)); no hay respuesta archivada.
+
+**Consecuencia práctica:** no redistribuir datos ni ejemplos derivados (máscaras o visualizaciones de chips) en GitHub ni en la demo pública; los resultados agregados y el código se mantienen. Las visualizaciones del smoke test de la demo se guardan solo localmente.
+
+### Mensaje de seguimiento para el publicador (enviar tú)
+**Para:** support@floodbase.com (y, si existe, el contacto del repositorio `cloudtostreet/Sen1Floods11`)  
+**Asunto:** Licensing of Sen1Floods11 (v1.1, S2Hand/LabelHand) for a university course project
+
+> Hello,
+> I am a student at PUCP (Lima, Peru) working on a Deep Learning course project that segments surface water in Sentinel-2 chips from Sen1Floods11 v1.1 (HandLabeled S2Hand and LabelHand) with a pretrained model. The bucket catalogs list the license as "proprietary" and I could not find explicit terms in the paper or the repository. On 2026-10-28 I wrote to this address without receiving a reply.
+> Could you please confirm (1) the license or terms that apply to the data, (2) whether non-commercial academic use in a course project and a workshop poster/extended abstract is permitted, (3) whether we may publish derived outputs (predicted masks, figures showing individual chips, aggregated metrics) in a public GitHub repository, and (4) how the dataset should be cited and acknowledged?
+> We will not redistribute the original data. Thank you,
+> Eliezer Villarreal, PUCP — villarreal.eliezer@pucp.edu.pe

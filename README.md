@@ -24,7 +24,8 @@ La propuesta original estudiaba prompts automáticos derivados de DINOv3 para SA
 - **Resultados consolidados (validación, A1–A3 incluidos):** [`consolidated_results.md`](docs/project/evidence/e3/consolidated_results.md); regenerar con `python scripts/e3_collect_results.py`.
 - **Notebook etapa 7 ejecutado:** [`notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb`](notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb); métricas extraídas en `docs/project/evidence/e3/stage7_metrics_from_notebook.json`.
 - **Demo:** pruebas locales de interfaz; verificación con pesos reales en Colab: `notebooks/E3_demo_verificacion_colab.ipynb` (preparada, no ejecutada). Solo puntos manuales.
-- **Etapa 8:** bloqueada (`python scripts/check_stage8_gate.py <revision_stage7_*.json>`); conjuntos reservados cerrados.
+- **Licencias:** Sen1Floods11 pendiente; mensaje al publicador en [`accesos_y_licencias.md`](docs/project/accesos_y_licencias.md).
+- **Etapa 8:** evaluador y protocolo listos y probados con datos sintéticos (`src/auto_prompt_sam2/evaluation.py`, `configs/stage8_protocol.json`); compuerta bloqueada (`python scripts/check_stage8_gate.py <revision_stage7_*.json>`); conjuntos reservados cerrados.
 - **Pendiente:** totales reales de puntos (`scripts/e3_point_budget.py`), revisión humana y recover offline de la etapa 7, etapa 8, licencia de Sen1Floods11.
 
 ## Probar la demo
