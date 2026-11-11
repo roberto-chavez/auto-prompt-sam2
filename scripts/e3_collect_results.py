@@ -71,7 +71,7 @@ def main():
         "rows": {r: {k: {m: v[m] for m in ("water_iou", "precision", "recall", "dice")} for k, v in rows.items()} for r, rows in s7["rows"].items()}}
     out["caveat"] = ("stage3 uses label-derived components with 1+/1- per component; stage5 uses probe-derived components with up to 3+/3-. "
                      "Budgets and component sources differ, so stage3 vs stage5 is descriptive, NOT the controlled cost-of-the-prompt contrast "
-                     "(stage 7 A1 with a matched 3+/3- assisted reference is prepared but not executed). stage6 changes the decoder as well as the prompts. "
+                     "(stage 7 A1 uses the same nominal cap of 3+/3- per component; realized totals may differ). Stage 6 changes the decoder relative to stage 5. "
                      "All numbers are validation numbers; best epoch/threshold were selected on the same validation.")
     Path(a.out).with_suffix(".json").write_text(json.dumps(out, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     lines = ["| Régimen | Fila (validación) | IoU agua | Precisión | Recall | Dice |", "| --- | --- | ---: | ---: | ---: | ---: |"]

@@ -50,4 +50,3 @@ La cobertura de entrenamiento fue 161/252 chips contribuyentes en `official` y 1
 Revisión portátil posterior: `python scripts/review_stage6_evidence.py <evidence.zip> --output <review.json>`. No ejecuta código del adjunto ni deserializa checkpoints. Verifica fuentes, inventario, métricas agregadas y best; no sustituye revisión humana ni recálculo desde máscaras/etiquetas permitidas.
 
 La interpolación bilineal diferenciable de logits se fija en CPU del runtime Colab, con copias autograd GPU→CPU→GPU; decoder y resto del cómputo de modelos siguen en GPU. Esto evita la incompatibilidad conocida de backward bilineal CUDA con determinismo estricto de PyTorch 2.7. Coste de transferencia adicional, sin cambiar resolución ni precisión. No se ejecuta ningún backward en la PC. [Referencia oficial](https://docs.pytorch.org/docs/2.7/generated/torch.use_deterministic_algorithms.html).
-

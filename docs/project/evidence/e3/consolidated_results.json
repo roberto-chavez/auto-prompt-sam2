@@ -1,5 +1,5 @@
 {
-  "caveat": "stage3 uses label-derived components with 1+/1- per component; stage5 uses probe-derived components with up to 3+/3-. Budgets and component sources differ, so stage3 vs stage5 is descriptive, NOT the controlled cost-of-the-prompt contrast (stage 7 A1 with a matched 3+/3- assisted reference is prepared but not executed). stage6 changes the decoder as well as the prompts. All numbers are validation numbers; best epoch/threshold were selected on the same validation.",
+  "caveat": "stage3 uses label-derived components with 1+/1- per component; stage5 uses probe-derived components with up to 3+/3-. Budgets and component sources differ, so stage3 vs stage5 is descriptive, NOT the controlled cost-of-the-prompt contrast (stage 7 A1 uses the same nominal cap of 3+/3- per component; realized totals may differ). Stage 6 changes the decoder relative to stage 5. All numbers are validation numbers; best epoch/threshold were selected on the same validation.",
   "e2_assisted_40_chip_subset_official": {
     "frozen": {
       "dice": 0.2911511011553198,

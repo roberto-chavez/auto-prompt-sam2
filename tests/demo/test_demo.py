@@ -1,6 +1,7 @@
 """CPU-only demo contracts: synthetic arrays and recorders, never neural models."""
+import builtins
 import copy
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 import json
 import os
 import sys
@@ -26,6 +27,19 @@ from auto_prompt_sam2.demo_images import (AUTO_LAYOUT, DISPLAY_LAYOUT, RGB_LAYOU
                                          draw_points, load_image, validate_points)
 from auto_prompt_sam2.demo_backend import best_decoder_state, predict_manual, DemoBackend
 from auto_prompt_sam2.demo_ui import DemoController, build_demo
+
+
+@contextmanager
+def forbid_model_imports():
+    original_import = builtins.__import__
+
+    def checked_import(name, *args, **kwargs):
+        if name.partition(".")[0] in {"torch", "sam2"}:
+            raise AssertionError(f"Unexpected model import: {name}")
+        return original_import(name, *args, **kwargs)
+
+    with patch("builtins.__import__", new=checked_import):
+        yield
 
 
 def synthetic_image():
@@ -83,13 +97,12 @@ class DemoContracts(unittest.TestCase):
                 load_demo_config(environ=env)
 
     def test_runtime_guard_rejects_pc_before_torch_import(self):
-        for mode in ("preview", "inference"):
-            with self.subTest(mode=mode), self.assertRaises(RuntimeError):
-                require_remote_runtime(dict(self.config, mode=mode), environ={}, platform="win32")
-        with self.assertRaises(RuntimeError):
-            require_remote_runtime(dict(self.config, mode="inference"), environ={}, platform="linux")
-        self.assertNotIn("torch", sys.modules)
-        self.assertNotIn("sam2", sys.modules)
+        with forbid_model_imports():
+            for mode in ("preview", "inference"):
+                with self.subTest(mode=mode), self.assertRaises(RuntimeError):
+                    require_remote_runtime(dict(self.config, mode=mode), environ={}, platform="win32")
+            with self.assertRaises(RuntimeError):
+                require_remote_runtime(dict(self.config, mode="inference"), environ={}, platform="linux")
 
     def test_geotiff_band_order_radiometry_and_nodata(self):
         raw = np.full((13, 512, 512), 100, np.int16)
@@ -246,21 +259,20 @@ class DemoContracts(unittest.TestCase):
             self.assertEqual(loader.call_count, 1 if decoder is None else 2)
 
     def test_gradio_build_and_local_http_without_models(self):
-        from fastapi.testclient import TestClient
-        import gradio as gr
-        from fastapi import FastAPI
-        demo = build_demo(self.config)
-        try:
-            app = gr.mount_gradio_app(FastAPI(), demo, path="/")
-            with TestClient(app) as client:
-                self.assertEqual(client.get("/").status_code, 200)
-                config = client.get("/config").json()
-                self.assertTrue(any(c["type"] == "image" for c in config["components"]))
-                self.assertTrue(any(d["targets"][0][1] == "select" for d in config["dependencies"]))
-            self.assertNotIn("torch", sys.modules)
-            self.assertNotIn("sam2", sys.modules)
-        finally:
-            demo.close()
+        with forbid_model_imports():
+            from fastapi.testclient import TestClient
+            import gradio as gr
+            from fastapi import FastAPI
+            demo = build_demo(self.config)
+            try:
+                app = gr.mount_gradio_app(FastAPI(), demo, path="/")
+                with TestClient(app) as client:
+                    self.assertEqual(client.get("/").status_code, 200)
+                    config = client.get("/config").json()
+                    self.assertTrue(any(c["type"] == "image" for c in config["components"]))
+                    self.assertTrue(any(d["targets"][0][1] == "select" for d in config["dependencies"]))
+            finally:
+                demo.close()
 
 
 if __name__ == "__main__":
