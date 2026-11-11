@@ -1,0 +1,125 @@
+{
+  "caveat": "stage3 uses label-derived components with 1+/1- per component; stage5 uses probe-derived components with up to 3+/3-. Budgets and component sources differ, so stage3 vs stage5 is descriptive, NOT the controlled cost-of-the-prompt contrast (stage 7 A1 with a matched 3+/3- assisted reference is prepared but not executed). stage6 changes the decoder as well as the prompts. All numbers are validation numbers; best epoch/threshold were selected on the same validation.",
+  "e2_assisted_40_chip_subset_official": {
+    "frozen": {
+      "dice": 0.2911511011553198,
+      "precision": 0.17147522573942403,
+      "recall": 0.9638190533871113,
+      "water_iou": 0.17037849358838072
+    },
+    "source": "e2/colab_run_20261030T013250Z/run/report.json (40 val chips, single seed)",
+    "tuned_best_epoch1": {
+      "dice": 0.47100868435782317,
+      "precision": 0.39879292642375785,
+      "recall": 0.5751624722411934,
+      "water_iou": 0.3080519029370676
+    }
+  },
+  "note": "Validation-only results copied from stored evidence. Rows are NOT all comparable: see 'caveat'.",
+  "regimes": {
+    "leave_paraguay_out": {
+      "stage3_assisted_label_points_1pos_1neg_frozen_decoder": {
+        "chips": 75,
+        "dice": 0.28830740314606285,
+        "precision": 0.16933622349844335,
+        "recall": 0.9693406998711249,
+        "source": "docs/project/evidence/stage3/colab_run_20261029T134519Z/20261029T134519Z_1894f1a3ae_ec3f3bcc.zip",
+        "water_iou": 0.16843410065333406
+      },
+      "stage5_dinov3_probe_points_frozen_decoder": {
+        "chips": 75,
+        "chips_with_zero_components": 24,
+        "dice": 0.48121453617009563,
+        "negative_points": 1593,
+        "positive_points": 966,
+        "precision": 0.35432269676768124,
+        "recall": 0.749701400042458,
+        "selected": {
+          "candidate": {
+            "C": 0.1,
+            "class_weight": "none"
+          },
+          "positive_threshold": 0.7
+        },
+        "source": "stage5/colab_run_20261029T194653Z/leave_paraguay_out_selection.json",
+        "water_iou": 0.31684167884819114
+      },
+      "stage5_sam_grid_dinov3_scored_frozen_decoder": {
+        "dice": 0.3454649338163935,
+        "precision": 0.9056032570993165,
+        "recall": 0.21344428886034528,
+        "source": "stage5/colab_run_20261029T194653Z/leave_paraguay_out_grid_selection.json",
+        "threshold": 0.5,
+        "water_iou": 0.20879879845233612
+      },
+      "stage6_decoder_trained_on_automatic_points_best_epoch": {
+        "dice": 0.6718159499531468,
+        "epoch": 8,
+        "epochs_ran": 10,
+        "last_epoch": {
+          "dice": 0.6610099415371716,
+          "epoch": 10,
+          "precision": 0.7156843940769378,
+          "recall": 0.6140962767748203,
+          "water_iou": 0.4936630689372082
+        },
+        "precision": 0.7375142448042518,
+        "recall": 0.6168651614798549,
+        "source": "stage6/colab_review_20261101/leave_paraguay_out/curves.json",
+        "water_iou": 0.5058154025637092
+      }
+    },
+    "official": {
+      "stage3_assisted_label_points_1pos_1neg_frozen_decoder": {
+        "chips": 89,
+        "dice": 0.2729495041431287,
+        "precision": 0.1610729199885264,
+        "recall": 0.8936595154193882,
+        "source": "docs/project/evidence/stage3/colab_run_20261029T134519Z/20261029T134519Z_1894f1a3ae_ec3f3bcc.zip",
+        "water_iou": 0.15804373108830588
+      },
+      "stage5_dinov3_probe_points_frozen_decoder": {
+        "chips": 89,
+        "chips_with_zero_components": 28,
+        "dice": 0.45989743927494964,
+        "negative_points": 2055,
+        "positive_points": 1204,
+        "precision": 0.32715268295226385,
+        "recall": 0.7739225645276981,
+        "selected": {
+          "candidate": {
+            "C": 0.1,
+            "class_weight": "none"
+          },
+          "positive_threshold": 0.7
+        },
+        "source": "stage5/colab_run_20261029T194653Z/official_selection.json",
+        "water_iou": 0.29861481371632737
+      },
+      "stage5_sam_grid_dinov3_scored_frozen_decoder": {
+        "dice": 0.3029804181085254,
+        "precision": 0.9217607078825558,
+        "recall": 0.1812840067840392,
+        "source": "stage5/colab_run_20261029T194653Z/official_grid_selection.json",
+        "threshold": 0.5,
+        "water_iou": 0.17853678374814483
+      },
+      "stage6_decoder_trained_on_automatic_points_best_epoch": {
+        "dice": 0.6523517968843286,
+        "epoch": 10,
+        "epochs_ran": 10,
+        "last_epoch": {
+          "dice": 0.6523517968843286,
+          "epoch": 10,
+          "precision": 0.688069818952091,
+          "recall": 0.6201590539885279,
+          "water_iou": 0.4840668324093302
+        },
+        "precision": 0.688069818952091,
+        "recall": 0.6201590539885279,
+        "source": "stage6/colab_review_20261101/official/curves.json",
+        "water_iou": 0.4840668324093302
+      }
+    }
+  }
+}

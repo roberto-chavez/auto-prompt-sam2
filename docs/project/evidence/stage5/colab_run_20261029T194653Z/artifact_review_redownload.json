@@ -1,0 +1,10 @@
+{
+  "reviewed_at": "2026-10-31T03:08:24.159249+00:00",
+  "status": "failed",
+  "scope": "CPU_arrays_hashes_no_models_no_training",
+  "models_executed": false,
+  "human_review_required": true,
+  "evidence_sha256": "504f2b9da5cdef97bb933be59a89c7b8af03f00b8bee939217244700ae115cef",
+  "notebook_sha256": "95ee653ecb0361c777ddfa5398efbac89b1e66b46f987077f236f54efa23a321",
+  "regimes": {}
+}

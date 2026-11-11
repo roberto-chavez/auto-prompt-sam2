@@ -60,3 +60,16 @@ Estos límites no son tareas activas de fase 1. Retomar el probe automático, la
 **2026-11-03:** se reemplaza la planificación activa de nueve etapas por dos partes ya ejecutadas; se cierra la fase 1 por instrucción del usuario y se preserva la evidencia existente. La versión terminada del compañero se toma como base de cierre del equipo. No se modifica código experimental, configuraciones, salidas, predicciones ni métricas. La publicación previa comunicada por el usuario sustituye el antiguo pendiente de subir el bundle; los cambios documentales de esta revisión permanecen en el árbol local hasta su publicación.
 
 Las entradas anteriores permanecen en el [historial](historial_fase1.md) y el [cuaderno](cuaderno_decisiones.md). Sus conteos y órdenes de detenerse describen decisiones de aquellas fechas. Para continuar, usar este estado y la hoja de ruta adaptada; no iniciar automáticamente las antiguas etapas 5–9 ni repetir entrenamiento. Registrar cualquier nuevo alcance por separado y mantener todo entrenamiento y trabajo con GPU en Google Colab.
+
+## Adenda E3 (2026-11-11): etapas 5–7 de la rama `roberto`
+
+Integradas en `e3-integracion` sin pérdida de trabajo. Estado real verificado en la evidencia (detalle en [`e3_estado.md`](e3_estado.md)):
+
+| Etapa | Estado | Evidencia |
+| --- | --- | --- |
+| 5. Prompts automáticos DINOv3 (sonda + puntos + malla) | **Ejecutada en validación** (Colab T4, 2026-10-29) | `evidence/stage5/` |
+| 6. Decoder entrenado con prompts automáticos | **Ejecutada en validación** (Colab, 2026-11-01) | `evidence/stage6/` |
+| 7. Matriz de ablaciones A1–A3 | **Solo preparada** (`matrix_preview.json`), no ejecutada | `evidence/stage7/` |
+| 8–9. Conjuntos reservados / transferencia | **No iniciadas** | — |
+
+La frase «Estos límites no son tareas activas de fase 1» queda desactualizada: con E3 en curso, la comparación controlada y la transferencia son trabajo abierto (ver `e3_estado.md`).

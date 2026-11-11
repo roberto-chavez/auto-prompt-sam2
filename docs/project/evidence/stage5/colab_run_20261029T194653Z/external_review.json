@@ -1,0 +1,14 @@
+{
+  "review_date_local": "2026-10-30",
+  "status": "pending_intact_evidence_zip",
+  "run_id": "20261029T194653Z_8073c068fa_ed6583db",
+  "received_zip_sha256": "771d16564040e6ef8c6d81924966886690c9e22fae8742e4cbc27b18fe42fd77",
+  "expected_recover_zip_sha256": "504f2b9da5cdef97bb933be59a89c7b8af03f00b8bee939217244700ae115cef",
+  "verified_zip_entries": 4489,
+  "unreadable_zip_entries": 1067,
+  "notebook_sha256": "95ee653ecb0361c777ddfa5398efbac89b1e66b46f987077f236f54efa23a321",
+  "notebook_note": "Prepare/summary cells have null execution counts but preserved outputs. Only source change observed: filled bundle SHA. Originals preserved; audit trial accepted nonempty outputs, then failed archive integrity.",
+  "computation_reports": "prepare/recover report success, different T4 boot IDs and exact first-val masks; not yet independently accepted",
+  "models_executed_locally": false,
+  "next_step": "Download the completed evidence ZIP again from Drive. No training or recover rerun required for downloading. If remote ZIP also fails integrity, re-export artifacts only."
+}

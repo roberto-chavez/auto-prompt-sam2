@@ -1,0 +1,495 @@
+{
+  "date": "2026-11-01",
+  "models_executed_locally": false,
+  "regimes": {
+    "official": {
+      "zip_sha256": "9c8a1ac685ad0a9374d5a72d1214f7f8fa8b741f7f8580d2c6cc512113ffdd68",
+      "validation_masks_recomputed": 890,
+      "source_files_verified": 64,
+      "coverage": {
+        "train": 162,
+        "val": 61
+      },
+      "total": {
+        "train": 252,
+        "val": 89
+      },
+      "progress": {
+        "epoch": 10,
+        "steps": 410,
+        "best_epoch": 10,
+        "best_iou": 0.4840668324093302,
+        "gradient_checks": [
+          {
+            "decoder_finite_nonzero": true,
+            "frozen_no_grad": true,
+            "id": "Spain_7856615",
+            "norm": 6.853157043457031
+          }
+        ],
+        "invalid_loss_checks": [
+          {
+            "equal": true,
+            "id": "Ghana_141910"
+          }
+        ],
+        "recovery": {
+          "current_boot_id": "d64509fb-d52a-4372-a067-97df906f2b25",
+          "different_runtime": true,
+          "next_epoch": 2,
+          "next_step_replay_bitwise_equal": true,
+          "previous_boot_id": "323cb76a-f894-4b8d-bb74-d43771680860",
+          "state_bitwise_equal": true
+        }
+      },
+      "baseline": 0.29861481371632737,
+      "delta": 0.18545201869300282,
+      "environment": {
+        "boot_id": "d64509fb-d52a-4372-a067-97df906f2b25",
+        "inventory": {
+          "cpu_count": 2,
+          "cuda_available": true,
+          "cudnn": 90501,
+          "disk": {
+            "local": {
+              "free_bytes": 107531829248,
+              "total_bytes": 120942624768
+            },
+            "persistent": {
+              "free_bytes": 102155235328,
+              "total_bytes": 120942624768
+            }
+          },
+          "gpus": [
+            {
+              "capability": [
+                7,
+                5
+              ],
+              "free_bytes": 15527116800,
+              "index": 0,
+              "name": "Tesla T4",
+              "total_bytes": 15637086208
+            }
+          ],
+          "nvidia_smi_devices": [
+            {
+              "driver_version": "580.82.07",
+              "free_mib": 14808,
+              "name": "Tesla T4",
+              "total_mib": 15360
+            }
+          ],
+          "packages": {
+            "Jinja2": "3.1.6",
+            "MarkupSafe": "3.0.4",
+            "PyYAML": "6.0.2",
+            "SAM-2": "1.0",
+            "affine": "3.0.1",
+            "antlr4-python3-runtime": "4.9.3",
+            "attrs": "26.1.0",
+            "certifi": "2026.10.23",
+            "charset-normalizer": "3.5.2",
+            "click": "8.5.0",
+            "click-plugins": "1.1.1.2",
+            "cligj": "0.7.2",
+            "filelock": "4.2.4",
+            "fsspec": "2026.9.0",
+            "hf-xet": "1.7.1",
+            "huggingface-hub": "0.34.4",
+            "hydra-core": "1.3.2",
+            "idna": "3.20",
+            "iopath": "0.1.10",
+            "mpmath": "1.3.0",
+            "networkx": "3.7",
+            "numpy": "2.2.6",
+            "nvidia-cublas-cu12": "12.6.4.1",
+            "nvidia-cuda-cupti-cu12": "12.6.80",
+            "nvidia-cuda-nvrtc-cu12": "12.6.77",
+            "nvidia-cuda-runtime-cu12": "12.6.77",
+            "nvidia-cudnn-cu12": "9.5.1.17",
+            "nvidia-cufft-cu12": "11.3.0.4",
+            "nvidia-cufile-cu12": "1.11.1.6",
+            "nvidia-curand-cu12": "10.3.7.77",
+            "nvidia-cusolver-cu12": "11.7.1.2",
+            "nvidia-cusparse-cu12": "12.5.4.2",
+            "nvidia-cusparselt-cu12": "0.6.3",
+            "nvidia-nccl-cu12": "2.26.2",
+            "nvidia-nvjitlink-cu12": "12.6.85",
+            "nvidia-nvtx-cu12": "12.6.77",
+            "omegaconf": "2.3.1",
+            "packaging": "26.3",
+            "pillow": "11.3.0",
+            "pip": "25.2",
+            "portalocker": "4.4.2",
+            "psutil": "7.0.0",
+            "pyparsing": "3.3.3",
+            "rasterio": "1.4.3",
+            "regex": "2026.9.29",
+            "requests": "2.34.2",
+            "safetensors": "0.6.2",
+            "setuptools": "80.9.0",
+            "sympy": "1.14.0",
+            "tokenizers": "0.22.2",
+            "torch": "2.7.1",
+            "torchvision": "0.22.1",
+            "tqdm": "4.67.1",
+            "transformers": "4.56.2",
+            "triton": "3.3.1",
+            "typing_extensions": "4.16.0",
+            "urllib3": "2.8.0",
+            "wheel": "0.45.1"
+          },
+          "persistent_root": "/content/drive/MyDrive/auto-prompt-sam2",
+          "platform": "Linux-6.6.159+-x86_64-with-glibc2.35",
+          "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+          "ram_available_bytes": 9796595712,
+          "ram_total_bytes": 13605818368,
+          "recorded_at": "2026-11-01T22:39:07.909515+00:00",
+          "torch_cuda_runtime": "12.6"
+        }
+      },
+      "curves": [
+        {
+          "epoch": 1,
+          "iou": 0.3532127303623637,
+          "train_loss": {
+            "bce": 0.41906435295913413,
+            "dice": 0.5701577933678715,
+            "loss": 0.9892221492084657
+          }
+        },
+        {
+          "epoch": 2,
+          "iou": 0.40013167676627237,
+          "train_loss": {
+            "bce": 0.27858750537953986,
+            "dice": 0.5350567609627054,
+            "loss": 0.8136442648883192
+          }
+        },
+        {
+          "epoch": 3,
+          "iou": 0.4257920025430726,
+          "train_loss": {
+            "bce": 0.2586841087897076,
+            "dice": 0.5072066139730608,
+            "loss": 0.765890721902714
+          }
+        },
+        {
+          "epoch": 4,
+          "iou": 0.4440398348177353,
+          "train_loss": {
+            "bce": 0.23662547912880322,
+            "dice": 0.49102562221681106,
+            "loss": 0.7276511046549549
+          }
+        },
+        {
+          "epoch": 5,
+          "iou": 0.46696970312736247,
+          "train_loss": {
+            "bce": 0.22163813504048674,
+            "dice": 0.4770080247280761,
+            "loss": 0.6986461582576265
+          }
+        },
+        {
+          "epoch": 6,
+          "iou": 0.47189466453610845,
+          "train_loss": {
+            "bce": 0.21503889923678798,
+            "dice": 0.46355845246996197,
+            "loss": 0.6785973491413253
+          }
+        },
+        {
+          "epoch": 7,
+          "iou": 0.450844161402176,
+          "train_loss": {
+            "bce": 0.19491156414692595,
+            "dice": 0.4516978645176621,
+            "loss": 0.646609428599014
+          }
+        },
+        {
+          "epoch": 8,
+          "iou": 0.47082880111492575,
+          "train_loss": {
+            "bce": 0.19158918967325364,
+            "dice": 0.44517892413998245,
+            "loss": 0.6367681131970068
+          }
+        },
+        {
+          "epoch": 9,
+          "iou": 0.47646154130044743,
+          "train_loss": {
+            "bce": 0.1832125576269965,
+            "dice": 0.43504888633763567,
+            "loss": 0.6182614435436007
+          }
+        },
+        {
+          "epoch": 10,
+          "iou": 0.4840668324093302,
+          "train_loss": {
+            "bce": 0.1756291682443817,
+            "dice": 0.42879090583102303,
+            "loss": 0.6044200751409861
+          }
+        }
+      ]
+    },
+    "leave_paraguay_out": {
+      "zip_sha256": "02d12c6057d1088ac0ca0e484f58d677cbdf85f75496f156f7ef854180e17296",
+      "validation_masks_recomputed": 750,
+      "source_files_verified": 64,
+      "coverage": {
+        "train": 139,
+        "val": 51
+      },
+      "total": {
+        "train": 213,
+        "val": 75
+      },
+      "progress": {
+        "epoch": 10,
+        "steps": 350,
+        "best_epoch": 8,
+        "best_iou": 0.5058154025637092,
+        "gradient_checks": [
+          {
+            "decoder_finite_nonzero": true,
+            "frozen_no_grad": true,
+            "id": "Mekong_1282475",
+            "norm": 12.499471664428711
+          }
+        ],
+        "invalid_loss_checks": [
+          {
+            "equal": true,
+            "id": "India_91379"
+          }
+        ],
+        "recovery": {
+          "current_boot_id": "d64509fb-d52a-4372-a067-97df906f2b25",
+          "different_runtime": true,
+          "next_epoch": 2,
+          "next_step_replay_bitwise_equal": true,
+          "previous_boot_id": "323cb76a-f894-4b8d-bb74-d43771680860",
+          "state_bitwise_equal": true
+        }
+      },
+      "baseline": 0.31684167884819114,
+      "delta": 0.18897372371551802,
+      "environment": {
+        "boot_id": "d64509fb-d52a-4372-a067-97df906f2b25",
+        "inventory": {
+          "cpu_count": 2,
+          "cuda_available": true,
+          "cudnn": 90501,
+          "disk": {
+            "local": {
+              "free_bytes": 104860540928,
+              "total_bytes": 120942624768
+            },
+            "persistent": {
+              "free_bytes": 99617513472,
+              "total_bytes": 120942624768
+            }
+          },
+          "gpus": [
+            {
+              "capability": [
+                7,
+                5
+              ],
+              "free_bytes": 15300624384,
+              "index": 0,
+              "name": "Tesla T4",
+              "total_bytes": 15637086208
+            }
+          ],
+          "nvidia_smi_devices": [
+            {
+              "driver_version": "580.82.07",
+              "free_mib": 14592,
+              "name": "Tesla T4",
+              "total_mib": 15360
+            }
+          ],
+          "packages": {
+            "Jinja2": "3.1.6",
+            "MarkupSafe": "3.0.4",
+            "PyYAML": "6.0.2",
+            "SAM-2": "1.0",
+            "affine": "3.0.1",
+            "antlr4-python3-runtime": "4.9.3",
+            "attrs": "26.1.0",
+            "certifi": "2026.10.23",
+            "charset-normalizer": "3.5.2",
+            "click": "8.5.0",
+            "click-plugins": "1.1.1.2",
+            "cligj": "0.7.2",
+            "filelock": "4.2.4",
+            "fsspec": "2026.9.0",
+            "hf-xet": "1.7.1",
+            "huggingface-hub": "0.34.4",
+            "hydra-core": "1.3.2",
+            "idna": "3.20",
+            "iopath": "0.1.10",
+            "mpmath": "1.3.0",
+            "networkx": "3.7",
+            "numpy": "2.2.6",
+            "nvidia-cublas-cu12": "12.6.4.1",
+            "nvidia-cuda-cupti-cu12": "12.6.80",
+            "nvidia-cuda-nvrtc-cu12": "12.6.77",
+            "nvidia-cuda-runtime-cu12": "12.6.77",
+            "nvidia-cudnn-cu12": "9.5.1.17",
+            "nvidia-cufft-cu12": "11.3.0.4",
+            "nvidia-cufile-cu12": "1.11.1.6",
+            "nvidia-curand-cu12": "10.3.7.77",
+            "nvidia-cusolver-cu12": "11.7.1.2",
+            "nvidia-cusparse-cu12": "12.5.4.2",
+            "nvidia-cusparselt-cu12": "0.6.3",
+            "nvidia-nccl-cu12": "2.26.2",
+            "nvidia-nvjitlink-cu12": "12.6.85",
+            "nvidia-nvtx-cu12": "12.6.77",
+            "omegaconf": "2.3.1",
+            "packaging": "26.3",
+            "pillow": "11.3.0",
+            "pip": "25.2",
+            "portalocker": "4.4.2",
+            "psutil": "7.0.0",
+            "pyparsing": "3.3.3",
+            "rasterio": "1.4.3",
+            "regex": "2026.9.29",
+            "requests": "2.34.2",
+            "safetensors": "0.6.2",
+            "setuptools": "80.9.0",
+            "sympy": "1.14.0",
+            "tokenizers": "0.22.2",
+            "torch": "2.7.1",
+            "torchvision": "0.22.1",
+            "tqdm": "4.67.1",
+            "transformers": "4.56.2",
+            "triton": "3.3.1",
+            "typing_extensions": "4.16.0",
+            "urllib3": "2.8.0",
+            "wheel": "0.45.1"
+          },
+          "persistent_root": "/content/drive/MyDrive/auto-prompt-sam2",
+          "platform": "Linux-6.6.159+-x86_64-with-glibc2.35",
+          "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+          "ram_available_bytes": 7429292032,
+          "ram_total_bytes": 13605818368,
+          "recorded_at": "2026-11-01T23:14:49.105747+00:00",
+          "torch_cuda_runtime": "12.6"
+        }
+      },
+      "curves": [
+        {
+          "epoch": 1,
+          "iou": 0.33872137232964367,
+          "train_loss": {
+            "bce": 0.5141754120189643,
+            "dice": 0.5838357724731774,
+            "loss": 1.0980111786144242
+          }
+        },
+        {
+          "epoch": 2,
+          "iou": 0.3692763298617492,
+          "train_loss": {
+            "bce": 0.33662648303115994,
+            "dice": 0.5576107493407435,
+            "loss": 0.8942372306323737
+          }
+        },
+        {
+          "epoch": 3,
+          "iou": 0.4247042102144902,
+          "train_loss": {
+            "bce": 0.28654638525741777,
+            "dice": 0.5285454469619038,
+            "loss": 0.8150918351874935
+          }
+        },
+        {
+          "epoch": 4,
+          "iou": 0.45769763305082256,
+          "train_loss": {
+            "bce": 0.2643175603438289,
+            "dice": 0.5057854532337874,
+            "loss": 0.7701030111998963
+          }
+        },
+        {
+          "epoch": 5,
+          "iou": 0.46569395870668506,
+          "train_loss": {
+            "bce": 0.2506186690159718,
+            "dice": 0.4923363366572977,
+            "loss": 0.7429550017813127
+          }
+        },
+        {
+          "epoch": 6,
+          "iou": 0.47740874419927815,
+          "train_loss": {
+            "bce": 0.22967551484630316,
+            "dice": 0.47876581313798755,
+            "loss": 0.7084413293025477
+          }
+        },
+        {
+          "epoch": 7,
+          "iou": 0.48620666524482115,
+          "train_loss": {
+            "bce": 0.2214151714055752,
+            "dice": 0.46952982729287457,
+            "loss": 0.6909449992956017
+          }
+        },
+        {
+          "epoch": 8,
+          "iou": 0.5058154025637092,
+          "train_loss": {
+            "bce": 0.206639205075452,
+            "dice": 0.46159524368725235,
+            "loss": 0.6682344496035747
+          }
+        },
+        {
+          "epoch": 9,
+          "iou": 0.4895507801739446,
+          "train_loss": {
+            "bce": 0.19571223969926402,
+            "dice": 0.4517173093857525,
+            "loss": 0.6474295502407945
+          }
+        },
+        {
+          "epoch": 10,
+          "iou": 0.4936630689372082,
+          "train_loss": {
+            "bce": 0.1887086109733946,
+            "dice": 0.44290193207829975,
+            "loss": 0.6316105414101546
+          }
+        }
+      ]
+    }
+  },
+  "notebook_sha256": "b16bac953e72a5e0b538ff85d9420697d503cd84e002223ad8e6d27b8fcb7525",
+  "notebook_counter_exception": "prepare execution_count null; original outputs preserved, resume counts 1/2/3",
+  "limitations": [
+    "Large checkpoints remain on Drive: hashes and verified publication/reload in Colab, no independent local deserialization.",
+    "Frozen DINO features reused, not recomputed."
+  ],
+  "status": "accepted_stage6_with_documented_limits",
+  "identical_sam_base_states": true,
+  "notebook_error_outputs": 0
+}

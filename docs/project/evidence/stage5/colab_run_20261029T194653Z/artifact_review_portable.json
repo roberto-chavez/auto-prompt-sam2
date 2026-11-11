@@ -1,0 +1,38 @@
+{
+  "reviewed_at": "2026-10-31T03:10:07.901153+00:00",
+  "status": "automated_audit_passed_pending_human_review",
+  "scope": "CPU_arrays_hashes_no_models_no_training",
+  "models_executed": false,
+  "human_review_required": true,
+  "evidence_sha256": "504f2b9da5cdef97bb933be59a89c7b8af03f00b8bee939217244700ae115cef",
+  "notebook_sha256": "95ee653ecb0361c777ddfa5398efbac89b1e66b46f987077f236f54efa23a321",
+  "regimes": {
+    "official": {
+      "train_chips": 252,
+      "val_chips": 89,
+      "selection_recomputed": true,
+      "confusions_verified": true,
+      "first_val_probabilities_prompts_grid_reconstructed": true
+    },
+    "leave_paraguay_out": {
+      "train_chips": 213,
+      "val_chips": 75,
+      "selection_recomputed": true,
+      "confusions_verified": true,
+      "first_val_probabilities_prompts_grid_reconstructed": true
+    }
+  },
+  "predictions_verified": 1640,
+  "omitted_feature_payloads": 627,
+  "limitations": [
+    "Compact ZIP omits most feature payloads: their markers and Colab full-hash checks are audited, not independently recomputed.",
+    "Only first val shard per regime is reconstructed without models. Human notebook/output interpretation remains required."
+  ],
+  "notebook_counter_exception": "Preserved outputs checked despite null execution counts; source cells manually compared with original, only bundle SHA filled.",
+  "area_portability": {
+    "atol_m2": 1e-05,
+    "rtol": 1e-10,
+    "max_absolute_difference_m2": 2.9709190130233765e-06,
+    "policy": "Existing stage-3 cross-platform area tolerance; all other metric fields exact. Aggregation uses saved area only after individual tolerance check."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "notebook_sources_match_except_filled_bundle_sha": true,
+  "cells": [
+    {
+      "cell": 3,
+      "execution_count": 1,
+      "outputs": 1,
+      "errors": []
+    },
+    {
+      "cell": 5,
+      "execution_count": null,
+      "outputs": 1,
+      "errors": []
+    },
+    {
+      "cell": 7,
+      "execution_count": null,
+      "outputs": 1,
+      "errors": []
+    },
+    {
+      "cell": 9,
+      "execution_count": 3,
+      "outputs": 1,
+      "errors": []
+    },
+    {
+      "cell": 11,
+      "execution_count": 4,
+      "outputs": 1,
+      "errors": []
+    }
+  ],
+  "scope": "CPU metadata and source inspection; no models",
+  "base_checkpoints_match_stage4": {
+    "sam": true,
+    "dino": true
+  },
+  "compute_scope": {
+    "train_probe_units": 8,
+    "recovery_train_units": [],
+    "decoder_training": false,
+    "reserved_access": [],
+    "ndwi": {
+      "decision": "deferred_before_any_stage5_comparison",
+      "included": false,
+      "reason": "Separate extension; principal supervised comparison only. No label-free claim."
+    }
+  }
+}

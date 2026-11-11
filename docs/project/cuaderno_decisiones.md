@@ -241,3 +241,121 @@ El 0.1704 del brazo congelado se mide sobre **estos 40 chips**; no es la línea 
 **Uso de IA:** Claude (Anthropic) auditó el repositorio y el PDF del curso, diseñó e implementó `intervention.py`, el runner, las pruebas y los cuadernos, redactó la entrada E2 y la guía `PASOS_E2.md`; en el cierre revisó los notebooks ejecutados y el ZIP, verificó cifras contra `report.json`, inspeccionó curvas y ejemplos y redactó los resultados e interpretación de esta entrada. No se reentrenó ni se inventaron resultados; los experimentos los ejecutó el usuario en Colab. El usuario debe revisar, comprender y poder defender oralmente cada decisión y cada cifra (la ejecución puede delegarse; la comprensión no).
 
 **Estado:** E2 **ejecutada y documentada con evidencia en el repositorio**; la calificación es del profesor y no se da por acreditada. Pendientes: que el estudiante lea, comprenda y pueda defender esta interpretación (la política de IA del PDF §7 evalúa la comprensión en la defensa oral individual), respuesta de licencia de Sen1Floods11 y, como mejora opcional (no la exige el PDF), repetir `recover` tras un reinicio real del runtime. No se marca ninguna etapa 5–9 ni el proyecto como completos.
+
+## 2026-10-29 — Etapa 5: implementación y protocolo previo a Colab
+
+**Solicitud y fuentes:** implementar exclusivamente etapa 5; se leyó el resumen WAIMLAP (metodología/evaluación), hoja de ruta (2.1–2.4, etapa 5) y artefactos de etapas 1–4. Se reutilizan adaptador SAM, extractor DINO, geometría, métricas y generaciones persistentes. Código fuente fijado de SAM instalado inspeccionado sin construir modelos para verificar AMG/filters/transforms. No hay fuentes nuevas ni descargas de modelos. Salvedad histórica de licencia conservada.
+
+**Hipótesis previa:** los puntos dependen de la calidad del probe y pueden fallar por falsos positivos, componentes fragmentados o falta de positivos. Se espera que el scoring semántico descarte máscaras agnósticas de malla con baja probabilidad; no se promete una mejora. H1–H3 se contrastarán en sus etapas posteriores, no se ejecuta A1–A3 aquí.
+
+**Decisiones registradas antes de resultados de ambos regímenes:** [config probe](../../configs/probe.yaml), [prompts](../../configs/prompts.yaml) e [informe detallado](validacion_etapa5.md). Grilla 32×32×1024, salida DINO final normalizada sin tokens especiales; train-only scaler poblacional, desvío cero→1; todos los parches train inequívocos. Targets 0.50/0.05 sobre válidos manuales, mínimo 1 válido, ambiguos/sin válidos ignorados. Cuatro candidatos CUDA LBFGS: C 0.1/1 × ninguna/balanceada. Solver, objetivo, estado de convergencia y exclusión al agotar iteraciones se conservan. Sin refit train+val.
+
+**Prompts y selección:** dos umbrales positivos 0.5/0.7; ocho filas por régimen, IoU agua de segmentación val acumulada, primer máximo exacto por orden prefijado. Diagnósticos del probe auxiliares. Mapa bilineal nativo con bordes replicados y centros analíticos; conectividad 8, mínimo 16 píxeles, hasta 3+/3− y distancia 16 píxeles por llamada. Máximos restantes tras supresión radial; empates probabilidad/fila/columna, negativos globales p≤0.1. Déficits registrados sin relajación. Vacío sin SAM; mayor IoU predicha, primer índice en empate y unión. La inferencia no recibe etiquetas ni su validez; se bloquean los lectores comunes durante sus llamadas y el evaluador lee después.
+
+**Malla:** generador SAM oficial 32×32, batch 64, un crop, sin m2m ni limpieza; IoU predicha >0.8, estabilidad ≥0.95/offset 1, NMS de cajas 0.7. Media DINO en máscara∩validez de imagen, umbral val 0.5/0.7 con probe ya elegido por puntos, primer umbral en empate. Vacíos/sin validez rechazados; unión recortada solo por entrada. Candidatos agnósticos y decisiones persistidos. El orden de NMS se hereda del código/dispositivo fijados; recuperación semántica desde candidatos sin repetir AMG.
+
+**NDWI:** aplazado explícitamente antes de ejecutar etapa 5. No se implementa ni entrena esta extensión ahora, ni se condiciona la decisión al rendimiento. El método actual usa etiquetas manuales train para targets y val para selección. No se denomina libre de etiquetas. Cualquier extensión futura deberá declarar dependencias de calibración/decoder y presupuesto separado antes de etapa 7.
+
+**Aislamiento y persistencia:** official 252/89, excluido 213/75; estadísticas previas, features, scaler/probes, selección y bundles propios. Se comparte búsqueda prefijada y pesos originales, nunca artefactos aprendidos. Generaciones por unidad con identidad de fuentes/config/modelos/manifiesto/preprocesamiento/régimen, hashes e IDs train/val. Reanudación solo con escritor anterior detenido, unidades completas verificadas; probe incompleto se reinicia desde cero. Recuperación en otro boot Colab: hashes completos, pesos offline, features/puntos/probabilidades/predicción del primer val por régimen y scoring de malla desde disco sin reentrenar. Tolerancias fijadas en configuración/documentación.
+
+**Evidencia y límites:** 66 tests CPU sintéticos (16 nuevos) y pip check correctos; sintaxis limpia y transporte fuente íntegro. [Validación local](evidence/stage5/local_validation.json) y [bundle](evidence/stage5/bundle_validation.json). No se ajustó siquiera un probe sintético en PC, ni se construyeron modelos ni se leyeron datos reales en esta etapa. Las features voluminosas quedarán en Drive (~2.46 GiB sin comprimir); ZIP compacto conserva marcadores de todas y primer val de cada régimen, más probes/targets/predicciones. El revisor no podrá recalcular hashes/scaler desde features omitidas y declarará ese límite o pedirá los shards necesarios.
+
+**Pendientes y parada:** usuario ejecutará notebook 05 prepare/resume y recover en Colab GPU y compartirá salidas/JSON/ZIP. Faltan convergencia/VRAM reales, SHA efectivos, integridad y cobertura, métricas, repetición con pesos congelados y revisión externa/humana. Etapa 5 En curso; 4/9 concluidas. Etapas 6–9, entrenamiento del decoder, campaña final y demo sin iniciar. No se registra ninguna cifra de calidad nueva.
+
+**IA:** Codex preparó diseño técnico, módulos, tests, notebook, transporte/revisor y documentos. Sin subagentes, ejecución de modelos locales, resultados GPU inventados ni comunicaciones externas. El equipo debe revisar e interpretar la evidencia real antes del cierre académico.
+
+## 2026-10-30 — Etapa 5: evidencia recibida, revisión parcial
+
+Run `20261029T194653Z_8073c068fa_ed6583db`. Notebook original y JSON legibles conservados. ZIP original permanece en `colab_temp/`, sin modificación.
+
+Los reportes y salidas registran prepare/recover completos en T4 y boot IDs distintos, sin reentrenamiento durante recover. Ambos regímenes seleccionan C=0.1, ponderación ninguna, umbral positivo 0.7 y umbral de malla 0.5. IoU val reportada: puntos 0.298615/0.316842; malla 0.178537/0.208799 (official/excluido). Estas cifras aún no están validadas mediante auditoría independiente de todas las predicciones.
+
+El notebook conserva salidas pero tiene contadores nulos en prepare/resumen. El auditor estricto se detuvo por esa condición; se hizo una segunda revisión en memoria permitiendo salidas presentes, sin alterar notebook ni fuentes experimentales. Esa revisión se detuvo por integridad del ZIP: encabezados/directorio inconsistentes y entradas ilegibles. Véanse external_review.json y full_crc_scan.json. El SHA recibido difiere del impreso al finalizar recover; no se conoce todavía si la alteración ocurrió durante descarga/sincronización o en otro paso. No se intenta reparar ni sustituir evidencia.
+
+Acción requerida: descargar de nuevo el ZIP ya terminado y comprobarlo. No se solicita repetir prepare/recover ni consumir GPU para esa descarga. Si el ZIP de Drive también está dañado, exportar nuevamente desde las generaciones originales, sin entrenamiento ni inferencia. Etapa 5 en curso, 4/9 cerradas; NDWI aplazado, etapas posteriores sin iniciar. La demora previa no puede atribuirse con certeza a una operación: faltan tiempos por bloque de recuperación.
+
+IA: Codex inspeccionó notebook/JSON y ejecutó auditoría de transporte CPU, sin modelos, entrenamiento ni datos reservados. Revisión integral pendiente de transporte íntegro.
+
+## 2026-10-30 — Etapa 5: auditoría de nueva descarga y cierre
+
+Se acepta el run `20261029T194653Z_8073c068fa_ed6583db` tras revisión del notebook, reportes y nueva descarga. **Etapa 5 concluida; 5 de 9 etapas cerradas.** Etapas 6–9 y demo sin iniciar.
+
+## Integridad y revisión
+
+El ZIP nuevo coincide con el SHA impreso por recover: `504f2b9da5cdef97bb933be59a89c7b8af03f00b8bee939217244700ae115cef`, 1 517 820 977 bytes. Está conservado bajo `colab_temp/` y no se repara ni se ejecuta código contenido en él. La descarga anterior con SHA `771d…fd77` fue sustituida por el usuario; se preservan sus diagnósticos de 1 067 entradas ilegibles como antecedente, ya resuelto. La causa precisa de aquella alteración no se identifica.
+
+[Auditoría completa](artifact_review_portable.json), [comprobaciones independientes](independent_checks.json) y [cierre](closure_review.json). CRC e inventario sin duplicados, generaciones incluidas verificadas por tamaño/hash/identidad, 55 fuentes idénticas al paquete entregado, 3 078 unidades del índice. Las 1 640 predicciones corresponden a ocho filas de puntos y dos de malla sobre 89/75 val; confusiones, métricas y selección se recalcularon sin modelos. Test, Bolivia y Paraguay reservado no se abrieron. Manifiestos y preprocesamiento de cada régimen coinciden con etapa 2.
+
+El ZIP compacto omite 627 payloads de features, que permanecen en Drive: se verifican sus marcadores y el reporte de comprobación completa de Colab, no sus bytes de manera independiente ni el scaler recalculado desde todos esos arrays. Se reconstruyen desde disco las probabilidades, componentes/puntos del primer val por régimen y la aceptación semántica de malla; las métricas de todas las predicciones se comprueban con etiquetas val permitidas. Esta limitación prevista se conserva y no se presenta como auditoría externa completa de todas las features.
+
+Dos celdas del notebook tienen contador nulo pero salidas preservadas. Se comparó el código de todas las celdas: coincide exactamente con el original salvo completar el SHA del bundle. Las salidas y reportes inmutables acreditan prepare/recover sin errores. Se aceptó esa evidencia en lugar del contador obligatorio del auditor estricto. No se modificó el notebook. Las áreas físicas EPSG:6933 recalculadas en Windows difieren hasta 2.970919013e-6 m²: se aplica la tolerancia ya usada en etapa 3 (atol=1e-5 m², rtol=1e-10); todos los demás campos de métricas y TP/FP/FN/TN se exigen exactos. Los agregados usan las áreas originales únicamente tras verificar individualmente la tolerancia. [Adaptador reproducible de revisión](reproduce_portable_review.py); fuentes experimentales intactas. Los intentos estrictos fallidos permanecen para trazabilidad.
+
+## Ejecución y aislamiento
+
+Prepare y recover se realizaron en Colab Tesla T4, Python 3.12.13/PyTorch 2.7.1, boot IDs diferentes. Ocho entrenamientos de probe en prepare, ninguno en recover; 66 pruebas y pip check correctos por sesión. DINOv3 y SAM conservan hashes de checkpoints y fingerprints de estado antes/después; los checkpoints coinciden con los revisados en etapa 4. Decoder congelado, cero campaña final. La recuperación offline repite features del primer val y reproduce exactamente puntos y máscaras, con scores dentro de tolerancias previas. La malla se reconstruye desde candidatos persistidos, sin repetir AMG/NMS.
+
+Official usa 252 train y 89 val; excluido 213 y 75, con scaler/probe y estadísticas propios. Targets de entrenamiento: official 19 538 agua, 192 017 no agua y 46 493 ignorados; excluido 16 660, 158 771 y 42 681. Los parches sin validez están incluidos en los ignorados (25 667/24 377). No se mezclaron parches train/val. El flujo automático consume únicamente imagen/features/validez de entrada; etiquetas posteriores sirven a evaluación y targets train, sin validez manual en prompts.
+
+## Selección e interpretación
+
+Ambos regímenes eligen, independientemente, C=0.1, sin balanceo y umbral positivo 0.7; 128/129 iteraciones (official/excluido). El probe C=1 balanceado de cada régimen agotó el presupuesto sin convergencia: sus filas se conservaron y excluyeron según el criterio previo. No se amplió la búsqueda. Umbral semántico de malla seleccionado 0.5 en ambos, con probe fijado por puntos.
+
+| Métrica val | official puntos | excluido puntos | official malla | excluido malla |
+| --- | ---: | ---: | ---: | ---: |
+| IoU agua acumulada | 0.298615 | 0.316842 | 0.178537 | 0.208799 |
+| Precisión | 0.327153 | 0.354323 | 0.921761 | 0.905603 |
+| Recall | 0.773923 | 0.749701 | 0.181284 | 0.213444 |
+| Dice | 0.459897 | 0.481215 | 0.302980 | 0.345465 |
+| Mediana IoU por chip con agua válida | 0.113111 | 0.139504 | 0 | 0 |
+
+Los puntos logran mayor recall con muchos falsos positivos; la malla es más restrictiva, con alta precisión y baja cobertura. Son resultados de calibración en poblaciones diferentes; la diferencia official/excluido no prueba mejor transferencia geográfica. Tampoco contrasta H1–H3 ni sustituye las ablaciones controladas o la evaluación reservada. No se infieren categorías de fallo (sombras/vegetación) sin evidencia cualitativa específica.
+
+La configuración elegida produce cero componentes en 28/89 y 24/75 chips; se conservaron las máscaras vacías. Los presupuestos reales suman 1 204+/2 055− en official y 966+/1 593− en excluido, con hasta 3+/3− por llamada y déficits permitidos. La mediana baja y los vacíos son limitaciones relevantes para supervisión futura del decoder; no se corrigen ahora con puntos de etiqueta ni nuevas heurísticas.
+
+## Decisiones, límites y parada
+
+NDWI permanece aplazado tal como se registró antes de ejecutar. El probe es supervisado con etiquetas manuales train y selección con val; no es un sistema libre de etiquetas. Los bundles/probes seleccionados se conservan también como JSON legibles en esta carpeta, con generaciones originales en Drive. Los reportes originales mantienen su flag pending; este cierre externo los complementa sin reescribirlos.
+
+No falta repetir entrenamiento ni recuperación por la descarga dañada. Mantener artefactos completos de Drive y el ZIP íntegro; la consulta histórica de licencia del dataset y la revisión/comprensión académica humana siguen pendientes. La demora de recover no tiene diagnóstico temporal por bloque y no se atribuye con certeza a una operación. Se detiene el trabajo aquí, sin iniciar etapa 6.
+
+Asistencia IA: Codex auditó fuentes, notebook, bytes y arrays en CPU, interpretó métricas y actualizó decisiones/estado. No ejecutó modelos, entrenamiento local, inferencia GPU ni comunicaciones externas.
+
+## 2026-10-30 — Preparación de archivos para commit
+
+Se actualiza README a 5/9 con métricas val y sus límites, estructura vigente y reproducción de etapa 5. Se añade índice de evidencia distinguiendo cierre aceptado e intentos históricos fallidos. ZIP grande íntegro archivado por traslado dentro del workspace a artifacts/stage5-evidence; colab_temp se ignora. Se conserva validacion_etapa5.md como protocolo previo idéntico al snapshot auditado. Fuentes experimentales, reportes originales y notebooks no se alteran. IA: Codex realizó mantenimiento documental y verificaciones CPU; sin nueva etapa, modelos, entrenamiento ni operaciones remotas.
+
+
+## 2026-10-31 — Etapa 6: protocolo previo y preparación Colab
+
+Responsable de implementación: Codex (IA); ejecución Colab y interpretación científica: usuario/equipo, pendientes. Hipótesis previa: entrenamiento exclusivo del decoder podría mejorar IoU agua val respecto del flujo automático congelado de etapa 5; el sesgo/cobertura de prompts puede impedir mejora. Resultados nulos o negativos se conservarán sin extender el presupuesto ni modificar el régimen excluido mirando official.
+
+Se adopta la recomendación de la guía: selección por IoU predicha, logits a 512, máximo por componente (equivalente a máximo de probabilidades), BCEWithLogits + Dice válida 1/1, suavizado 1. Sin componentes: máscara vacía, sin gradiente y con conteo; sin válidos: no actualización. No hay puntos asistidos ni etiquetas en el generador. El argmax no entrena directamente la cabeza de scores; solo máscaras seleccionadas/máximos ganadores reciben gradiente de segmentación. Se registra esta limitación.
+
+Se fija antes de ambos regímenes: semilla 42, 10 épocas, AdamW 1e-5, WD 0.01, FP32, AMP desactivado, scheduler constante, microbatch 1/acumulación 4 contribuyentes, resto normalizado por su tamaño, clip 1, sin parada temprana ni augmentations. Pesos SAM base idénticos de origen, carga nueva por régimen; preprocesamiento/probe/features propios. DINO permanece inmutable al reutilizar caché verificada, sin instanciarlo. Conv_s0/conv_s1 siguen en el grafo del decoder.
+
+Reanudación al límite de época: last/best/epoch_N con optimizador, scheduler, AMP, RNG y muestreador. Prepare se interrumpe tras época 1 por régimen; resume en otro runtime comprueba estados exactos y replay de un paso train, revierte diagnóstico y continúa. Cambiar config/código/linaje invalida recuperación. Se conservan generaciones anteriores; no se asume atomicidad de Drive. No reducir memoria/batch/precisión silenciosamente si Colab falla.
+
+Resultado local: 75 pruebas CPU sin modelos y pip check correctos; no backward ni entrenamiento en PC. Resultados experimentales: pendientes, sin estimar IoU ni afirmar mejora. [Protocolo, límites y entrega](validacion_etapa6.md). Pendiente de notebook ejecutado, JSON/ZIP de ambos regímenes, gradientes, hashes, recuperación, cobertura y curvas; no cerrar por existencia de código. Licencia histórica y revisión académica humana pendientes. Sin ablaciones adicionales, evaluación final ni demo.
+
+La interpolación bilineal diferenciable de logits se fija en CPU del runtime Colab, con copias autograd GPU→CPU→GPU; decoder y resto del cómputo de modelos siguen en GPU. Esto evita la incompatibilidad conocida de backward bilineal CUDA con determinismo estricto de PyTorch 2.7. Coste de transferencia adicional, sin cambiar resolución ni precisión. No se ejecuta ningún backward en la PC. [Referencia oficial](https://docs.pytorch.org/docs/2.7/generated/torch.use_deterministic_algorithms.html).
+
+
+## 2026-11-01 — Revisión externa y cierre
+
+Etapa 6 concluida tras auditar la evidencia aportada. [Resultados, interpretación y límites](evidence/stage6/colab_review_20261101/interpretacion_y_cierre.md); [auditoría JSON](evidence/stage6/colab_review_20261101/review.json). Best val official 0.484067 (época 10) y excluido 0.505815 (época 8), mejoras +18.5452 y +18.8974 pp. Se conserva la caída posterior del excluido. 1 640 confusiones val recalculadas sin modelos. Recuperación y congelamiento acreditados en Colab. Cobertura train 161/252 y 139/213; sin respaldo asistido. Checkpoints grandes permanecen en Drive con inventarios verificados en Colab, sin inspección local independiente. Contador prepare vacío con salida preservada. Sin pendiente técnico de cierre; licencia y revisión académica humana pendientes. IA: Codex auditó y documentó; usuario ejecutó Colab. Detenerse antes de etapa 7.
+
+## 2026-11-01 — Etapa 7: hipótesis, matriz y preparación de ejecución
+
+Responsable: Codex (implementación y pruebas CPU); usuario/equipo (ejecución Colab y revisión científica, pendientes). Se reutilizan los cierres revisados de etapas 1–6 en ambos regímenes. [Protocolo y entrega](validacion_etapa7.md), [matriz declarativa](../../configs/ablations.yaml) y [pines de etapa 6](../../configs/stage7_dependencies.json). Ningún split, preprocesamiento, checkpoint, modelo ni código previo se modifica de forma implícita. Fecha de esta preregistración: 2026-11-01, anterior a cualquier ejecución nueva de etapa 7; las métricas de calibración de etapas 5–6 ya eran conocidas.
+
+Hipótesis originales WAIMLAP: H1 puntos DINOv3 quedarían entre referencia asistida y malla; H2 positivos mejorarían hasta saturar y negativos reducirían FP; H3 ajustar decoder ayudaría más a eventos vistos que a Bolivia. Se pueden refutar. Aquí solo se usa val y H3 geográfica queda pendiente de etapa 8. No se atribuyen FP a categorías sin evidencia específica ni se afirma significancia con una semilla.
+
+Decisiones previas: 13 filas/10 contrastes por régimen, conservados íntegros para la campaña final. A1 cambia fuente y mantiene decoder congelado. La referencia histórica de etapa 3 usa 1+/1− y 8 px, por lo que se conserva separada; la referencia emparejada usa 3+/3− y 16 px para el costo primario, sin pretender igualar cantidad de componentes ni total real de llamadas. Caja nativa `[0,0,511,511]`, sin etiquetas. Malla 32×32 y scoring previos. A2 separa k+ {1,3,5,10} con k−=3 de k− {0,1,3,5} con k+=3; ambos conjuntos son **recomendaciones**, sin afirmar que WAIMLAP los fijó. Se adopta este presupuesto común antes de las ejecuciones de ambos regímenes, sin usar el ganador de un barrido como control del siguiente. No hay ampliación adaptativa.
+
+A3 mantiene probe, puntos exactos, umbrales, chips, semilla y ruta directa de etapa 6: solo cambia decoder base/best propio. Se añade control congelado directo explícito, pues cambiar predictor por ruta directa junto con el decoder sería un segundo factor. Se reutilizan máscaras best verificadas y se reconstruye el primer chip de cada fila exitosa al perfilar y recuperar; la ausencia histórica de scores por componente en etapa 6 se declara, sin inventarlos. Diffs y hashes verifican los controles. La calibración previa de etapa 5 y selección de checkpoint de etapa 6 se registran aparte; no se recalibra ni reentrena nada.
+
+Eficiencia prefijada: FP32 sin autocast, batch una imagen, 5 warm-ups/20 repeticiones, primer ID val por régimen común a todas las filas, sincronización CUDA, memoria máxima allocated/reserved, desglose lectura/SHA, preprocesamiento, DINO, probe, prompts, SAM y posprocesamiento. Se separan features verificadas en RAM y flujo desde imagen sin features/embeddings cacheados, además de carga inicial offline. OS/Drive y allocator calientes, ambos modelos residentes. Perfil de un chip no representa a toda la validación. Conteos reales de puntos/faltantes se recuperan de prompts; llamadas antiguas se derivan de componentes o agenda fija de malla, y nuevas se instrumentan. La asistencia incluye lectura de etiquetas y no es desplegable.
+
+Selección automática solo por IoU agua acumulada val; empate exacto por menor mediana del flujo desde imagen en iguales condiciones y luego ID lexicográfico. Costo emparejado = IoU asistida − automática, también pp y sin truncar negativos. Fallos y resultados adversos permanecen, con parcial disponible y causa. Los 13 configs se fijan para evaluación final, incluidos fallidos bajo la misma configuración o fallo explícito, sin poda tras conocer reservados. NDWI continúa **aplazado y excluido de esta campaña final**, sin afirmación de sistema sin etiquetas.
+
+Cada régimen publicará selection/evaluation_lock con hashes y el registro conjunto exigirá ambos; la revisión externa sigue siendo requisito de cierre. La PC solo desarrolla y verifica CPU sintética sin modelos; inferencia/ablaciones/perfiles exclusivamente en Colab GPU por el usuario. No existen resultados nuevos ni locks finales medidos en esta preparación. Pendientes: prepare/recover offline en distinto runtime, notebook(s) con salidas, dos ZIP/JSON/logs y auditoría de métricas, hashes, fallos, perfiles e interpretación antes de concluir. Se mantiene **En curso, 6/9 concluidas**, sin reservados, etapas 8–9 ni demo. Asistencia IA: código, pruebas, documentación y preparación de notebook por Codex; ejecución y revisión científica humana pendientes.

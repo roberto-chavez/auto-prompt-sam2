@@ -12,3 +12,12 @@ weights/
 *.pt
 *.pth
 *.safetensors
+*.ckpt
+*.onnx
+*.tif
+*.tiff
+# Transportes y paquetes experimentales; conservar índices y hashes en docs/.
+*.zip
+
+# Adjuntos de Colab y descargas de revisión; evidencia ligera en docs/project/evidence/
+colab_temp/

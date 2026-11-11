@@ -1,0 +1,29 @@
+{
+  "review_date_local": "2026-10-30",
+  "status": "stage5_complete_with_documented_evidence_limits",
+  "run_id": "20261029T194653Z_8073c068fa_ed6583db",
+  "evidence_sha256": "504f2b9da5cdef97bb933be59a89c7b8af03f00b8bee939217244700ae115cef",
+  "zip_path": "artifacts/stage5-evidence/20261029T194653Z_8073c068fa_ed6583db.zip",
+  "zip_bytes": 1517820977,
+  "predictions_verified": 1640,
+  "artifacts_indexed": 3078,
+  "source_files_verified": 55,
+  "omitted_feature_payloads": 627,
+  "review_adaptations": {
+    "notebook": "Null counters in two cells accepted after exact source comparison except filled SHA, preserved successful outputs and immutable prepare/recover reports.",
+    "area": {
+      "atol_m2": 1e-05,
+      "rtol": 1e-10,
+      "max_absolute_difference_m2": 2.9709190130233765e-06,
+      "policy": "Existing stage-3 cross-platform area tolerance; all other metric fields exact. Aggregation uses saved area only after individual tolerance check."
+    }
+  },
+  "limitations": [
+    "Compact ZIP omits most feature payloads: their markers and Colab full-hash checks are audited, not independently recomputed.",
+    "Only first val shard per regime is reconstructed without models. Human notebook/output interpretation remains required."
+  ],
+  "ndwi": "deferred_as_preregistered",
+  "models_executed_locally": false,
+  "later_stages_started": false,
+  "supersedes": "external_review.json (damaged first download); historical failed audit records remain intact."
+}

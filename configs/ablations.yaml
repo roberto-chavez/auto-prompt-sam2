@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "stage": "phase1_stage7",
+  "date": "2026-11-01",
+  "regimes": ["official", "leave_paraguay_out"],
+  "roles": ["val"],
+  "seed": 42,
+  "positive_sweep": [1, 3, 5, 10],
+  "negative_sweep": [0, 1, 3, 5],
+  "fixed_positive": 3,
+  "fixed_negative": 3,
+  "candidate_status": "R: k+ inherited from draft; k- new recommendation; closed common budget before execution",
+  "calibration": {"execute": false, "source": "stage5_complete_bundle_and_stage6_best", "rule": "reuse_per_regime_probe_positive_threshold_grid_threshold_and_best_epoch_no_retuning"},
+  "hypotheses": {
+    "A1": {"date": "2026-11-01", "text": "H1 WAIMLAP: IoU puntos DINOv3 < referencia asistida e > malla. Caja completa es control espacial fijo. Puede refutarse.", "source": "docs/WAIMLAP/Abstract_CostOfThePrompt.md section 2"},
+    "A2+": {"date": "2026-11-01", "text": "H2 WAIMLAP: incrementar positivos mejora IoU hasta saturar; k- permanece 3.", "source": "docs/WAIMLAP/Abstract_CostOfThePrompt.md section 2"},
+    "A2-": {"date": "2026-11-01", "text": "H2 WAIMLAP: mas negativos reducen FP; k+ permanece 3. Vegetacion/sombras son hipotesis sin anotaciones de categoria.", "source": "docs/WAIMLAP/Abstract_CostOfThePrompt.md section 2"},
+    "A3": {"date": "2026-11-01", "text": "H3 WAIMLAP: ajustar decoder mejora eventos vistos mas que Bolivia. Aqui solo se mide la diferencia val; el contraste geografico queda pendiente de etapa 8.", "source": "docs/WAIMLAP/Abstract_CostOfThePrompt.md section 2"}
+  },
+  "profiling": {"batch_size": 1, "precision": "float32", "autocast": false, "warmup": 5, "repetitions": 20, "validation_chips": 1, "selection": "lexicographic_first_val_same_chip_all_rows", "cached": "verified_stage5_features_in_host_RAM_no_SAM_embedding_cache", "uncached": "read_and_verify_image_preprocess_DINO_probe_prompts_SAM_postprocess_no_feature_or_embedding_cache", "loading": "separate_offline_model_load_time_not_in_latency", "timing_scope": "full_pipeline_synchronized_host_wall_clock_no_metric_or_artifact_write", "filesystem_cache": "OS_and_Drive_caches_warm_not_cold_storage"},
+  "tie_break": ["water_iou_desc", "uncached_median_ms_asc", "id_asc"],
+  "ndwi": {"included": false, "decision": "deferred_from_stage5_and_excluded_from_stage7_and_final_campaign", "reason": "Separate extension not trained or calibrated; no label-free claim."},
+  "retain": "all_13_rows_even_failed_or_negative_no_adaptive_pruning",
+  "reserved_sets": "forbidden_stage7"
+}
