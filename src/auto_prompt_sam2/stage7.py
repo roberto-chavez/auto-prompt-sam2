@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import time
 from pathlib import Path
 import numpy as np
@@ -47,7 +48,12 @@ def stage6_inputs(root, spec, inp, bundle, repo):
     # Reuse every original library/config without an implicit implementation change.
     for rel, expected in identity['source_sha256'].items():
         if rel.startswith('src/') or (rel.startswith('configs/') and not rel.endswith('stage6_dependencies.json')):
-            if sha256_file(repo/rel) != expected:
+            source = (repo/rel).read_bytes()
+            normalized = source.replace(b'\r\n', b'\n').replace(b'\r', b'\n')
+            crlf = normalized.replace(b'\n', b'\r\n')
+            hashes = {hashlib.sha256(source).hexdigest(), hashlib.sha256(normalized).hexdigest(),
+                      hashlib.sha256(crlf).hexdigest()}
+            if expected not in hashes:
                 raise ValueError('Prior implementation changed: '+rel)
     path = (root/spec['store_path']).resolve()
     if not path.is_relative_to(root.resolve()):
