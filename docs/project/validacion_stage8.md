@@ -18,8 +18,8 @@ El protocolo está congelado en [`configs/stage8_protocol.json`](../../configs/s
 
 ## Ejecución en Colab
 
-1. Abrir [`notebooks/08_evaluacion_final_geografica.ipynb`](../../notebooks/08_evaluacion_final_geografica.ipynb) desde el commit fijado en `MyDrive/auto-prompt-sam2/stage8/code_commit.txt`.
-2. Usar runtime Colab GPU con Python 3.12/Linux x86_64. Se requiere `MyDrive/auto-prompt-sam2` con artefactos originales de etapas 1–7 y checkpoints. El cuaderno detiene la ejecución si falta algún requisito; no cambia pines ni modelo.
+1. Abrir [`notebooks/08_evaluacion_final_geografica.ipynb`](../../notebooks/08_evaluacion_final_geografica.ipynb) desde el commit fijado en `MyDrive/auto-prompt-sam2/auto-prompt-sam2/stage8/code_commit.txt`.
+2. Usar runtime Colab GPU con Python 3.12/Linux x86_64. Se requiere `MyDrive/auto-prompt-sam2/auto-prompt-sam2` con artefactos originales de etapas 1–7 y checkpoints. El cuaderno detiene la ejecución si falta algún requisito; no cambia pines ni modelo.
 3. Ejecutar celdas en orden. La revisión, autorización y hash se verifican antes de abrir imágenes/etiquetas. No reutilizar el notebook de etapa 7 para esto.
 4. Primera ejecución con `RESUME=False`. Tras una interrupción técnica, continuar con el mismo código, root, hash y runtime mediante `RESUME=True`.
 5. Guardar `stage8_report.json`, el notebook ejecutado y el log. Máscaras y salidas por chip permanecen en Drive privado; no incluirlas en Git mientras la licencia del dataset siga pendiente.
