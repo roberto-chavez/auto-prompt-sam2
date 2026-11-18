@@ -113,7 +113,12 @@ def main(root, review_path, frozen_sha256, resume=False):
     if any(s["selected_id"] != "a3_tuned" for s in selections.values()):
         raise ValueError("Stage-7 selected checkpoint differs from the reviewed lock")
 
-    stage5_store, stage5_report, _ = read_dependency(root, "stage5", deps6["stage5"])
+    # Stage 8 extracts fresh DINO features for every reserved chip. It never calls
+    # ValidationEngine.reuse() and does not consume Stage-5 cached feature payloads.
+    # Verify the pinned Stage-5 report and completed state, but do not read/hash every
+    # unused cache object through DriveFS (which can stall on large remote folders).
+    stage5_store, stage5_report, _ = read_dependency(
+        root, "stage5", deps6["stage5"], verify_artifacts=False)
     model_config = env["models"]
     outputs = {}
     stage7_matrix = _json(REPO / "configs/ablations.yaml")

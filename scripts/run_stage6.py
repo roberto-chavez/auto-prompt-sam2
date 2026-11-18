@@ -25,8 +25,13 @@ def source_paths():
         REPO/'docs/project/validacion_etapa6.md', REPO/'configs/stage6_dependencies.json'})
 
 
-def read_dependency(root, stage, spec):
-    """Pin the prior validation report by SHA, then verify its generation inventory."""
+def read_dependency(root, stage, spec, *, verify_artifacts=True):
+    """Pin a prior validation report and, by default, verify its generation inventory.
+
+    Some downstream evaluations rerun inference from frozen checkpoints and do not
+    consume the prior feature cache. Those callers may still verify the pinned report
+    and completed run state without reading every cached payload from Drive.
+    """
     store = ArtifactStore(root/stage/'environment/runs'/safe_name(spec['run_id']))
     candidates = sorted((store.root/'validation').glob('*/COMPLETE.json'), reverse=True)
     for p in candidates:
@@ -39,10 +44,11 @@ def read_dependency(root, stage, spec):
             state = json.loads(store.read('state', marker['identity'])[0])
             if state['state'] != 'complete':
                 raise ValueError('Prior computation incomplete')
-            for name, item in report.get('artifacts', {}).items():
-                _, m = store.read(name, item.get('identity', marker['identity']), item['generation'])
-                if m['sha256'] != item['sha256']:
-                    raise ValueError('Dependency artifact changed: '+name)
+            if verify_artifacts:
+                for name, item in report.get('artifacts', {}).items():
+                    _, m = store.read(name, item.get('identity', marker['identity']), item['generation'])
+                    if m['sha256'] != item['sha256']:
+                        raise ValueError('Dependency artifact changed: '+name)
             if stage == 'stage3':
                 for regime, value in report['regimes'].items():
                     baseline = ArtifactStore(root/'regimes'/regime/'runs'/report['run_id']/'assisted')
