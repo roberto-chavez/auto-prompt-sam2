@@ -1,0 +1,40 @@
+{
+  "pair": {
+    "both_computational_locks_verified": true,
+    "external_review": "pending",
+    "stage8_authorized": false,
+    "reserved_access": []
+  },
+  "regimes": {
+    "official": {
+      "status": "portable_consistency_passed_not_stage_closure",
+      "zip_sha256": "df51ddc57ea3f9dac31443f1873d5fdcba8fadeb4f264d3245f7cc7c8a62c55b",
+      "generation_count": 1252,
+      "rows": 13,
+      "selected_id": "a3_tuned",
+      "failures": [],
+      "validation_masks_independently_audited": 1157,
+      "offline_recovery_present": true,
+      "models_executed": false,
+      "reserved_access": [],
+      "pending": [
+        "Human review of executed notebook, logs, hardware, failures and interpretation"
+      ]
+    },
+    "leave_paraguay_out": {
+      "status": "portable_consistency_passed_not_stage_closure",
+      "zip_sha256": "89c24a9afb140e24a9335756ba5ef8d21b4fa2f0796d05b1445301e6e48ab665",
+      "generation_count": 1042,
+      "rows": 13,
+      "selected_id": "a3_tuned",
+      "failures": [],
+      "validation_masks_independently_audited": 975,
+      "offline_recovery_present": true,
+      "models_executed": false,
+      "reserved_access": [],
+      "pending": [
+        "Human review of executed notebook, logs, hardware, failures and interpretation"
+      ]
+    }
+  }
+}

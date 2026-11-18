@@ -29,8 +29,15 @@ El presupuesto es nominal por componente. Recuento real verificado el 18 de novi
 Los componentes son 8 774 vs. 685 en official y 7 349 vs. 531 en el régimen excluido. La comparación comparte el tope nominal por componente y difiere en los componentes y el esfuerzo real. [Conteos y hashes originales](evidence/e3/e3_point_budget.json).
 
 
-## Auditoría de la etapa 7 (Drive: `MyDrive/auto-prompt-sam2/stage7/revision_stage7_1794435476494193372.json`)
-Terminó. Ambos regímenes: `portable_consistency_passed_not_stage_closure`, 13 filas, `failures: []`, 1 157 (official) y 975 (excluido) máscaras de validación auditadas, `models_executed:false`, `reserved_access:[]`; ZIP verificados `ed582c1f…` (official, 1 230 generaciones) y `06f6dc83…` (excluido, 1 020). Pendientes declarados: revisión humana y **recover offline en otro runtime de Colab** (`offline_recovery_present:false`). Copia de los campos leídos: `evidence/e3/revision_stage7_*.json` (transcripción). Hallazgo: la salida del notebook muestra un intento previo fallido (`ValueError: Prior implementation changed: configs/baseline.yaml`) y dos hashes de evidence.zip por régimen; el segundo coincide con la auditoría.
+## Recuperación y auditoría de etapa 7 verificadas el 18 de noviembre
+
+Se ejecutó recover en otro runtime Colab T4 con Python 3.12 aislado y el paquete original de fuentes SHA-256 e9556df886da8bd6585f8c3a29558fdd0c2fea052a2ab96a74e60025dbe94638. Las 13 filas de cada régimen conservaron métricas, selección y locks. La primera imagen de cada fila se reconstruyó sin features en caché con igualdad bit a bit.
+
+La [auditoría final](evidence/e3/revision_stage7_20261118.json) verifica distinto boot_id entre validación y recuperación, cero fallos, 1 157 máscaras official y 975 del régimen excluido auditadas contra etiquetas de validación. Ambos offline_recovery_present son true. Su SHA-256 coincide con el archivo original en Drive, b35b1066f50e29c9b692ed96941c2499676ce41ccb7412b0993780f1685f5d41.
+
+[Notebook de recuperación y auditoría ejecutado](evidence/e3/recovery_20261118.ipynb). Las lecturas paralelas precargaron antecedentes de validación en caché del sistema de archivos; los checks de hash y la reconstrucción sin caché de features permanecieron activos. Los ZIP finales en Drive tienen hashes df51ddc5… (official) y 89c24a9a… (excluido). La auditoría anterior del 11 de noviembre se conserva como antecedente.
+
+La revisión humana del equipo sigue pendiente, stage8_authorized permanece false y reserved_access permanece vacío.
 
 ## Fase C según el PDF
 §2: «Se evalúa el modelo en un dominio de distribución distinta a la de su preentrenamiento… reportar explícitamente lo que no funcionó». El cambio natural→Sentinel-2 ya está medido (etapas 3–7) y sus fallos reportados. La transferencia geográfica con reservados (Bolivia/Paraguay) es del **protocolo del equipo**, no una exigencia literal del PDF.
@@ -38,7 +45,7 @@ Terminó. Ambos regímenes: `portable_consistency_passed_not_stage_closure`, 13 
 
 ## Etapa 8 (transferencia geográfica)
 Actualización E3: `src/auto_prompt_sam2/evaluation.py` (compuerta, protocolo congelable, métricas por conjunto/evento, bootstrap pareado, contraste visto vs reservado) y `configs/stage8_protocol.json` (borrador; hash `52d6310c…cff3d`, congelar registrándolo ANTES de abrir). Probado con datos sintéticos (`tests/test_evaluation.py`, 4 pruebas). Falta conectar los predictores de la etapa 7 a los chips reservados (GPU). Compuerta real: CERRADA (`python scripts/run_stage8_local_test.py <revision_stage7_*.json>`).
-Condiciones que faltan (`scripts/check_stage8_gate.py`, devuelve «BLOQUEADA»): revisión externa/humana, `stage8_authorized=true` y recover offline en otro runtime. `reserved_access` sigue vacío. `notebooks/08_evaluacion_final_geografica.ipynb` solo aplica la compuerta; el evaluador agregado está implementado y probado con datos sintéticos; falta conectarlo al predictor GPU sobre los reservados.
+Condiciones que faltan (`scripts/check_stage8_gate.py`, devuelve «BLOQUEADA»): revisión externa/humana, `stage8_authorized=true`. La recuperación offline ya está verificada. `reserved_access` sigue vacío. `notebooks/08_evaluacion_final_geografica.ipynb` solo aplica la compuerta; el evaluador agregado está implementado y probado con datos sintéticos; falta conectarlo al predictor GPU sobre los reservados.
 
 ## Demo
 Roberto ejecutó el backend manual en Colab T4 el 11 de noviembre. La auditoría del 18 de noviembre verificó el ZIP y el notebook ejecutado sin errores: Ghana_1033830, máscara binaria de 512 × 512 con 23 252 positivos y hash de chip coincidente. [Evidencia y alcance](evidence/e3/demo_20261111_roberto/README.md). Este run usa SAM congelado y puntos manuales. La interfaz Gradio completa, el decoder ajustado y los puntos automáticos en la demo siguen pendientes.

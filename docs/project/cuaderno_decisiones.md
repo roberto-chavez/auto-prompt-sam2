@@ -392,3 +392,9 @@ Se revisaron outputs.zip y el notebook ejecutado enviados por WhatsApp el 11 de 
 Se actualizó el póster A0 en inglés con A1–A3 y las limitaciones actuales. El informe conserva IEEEtran y declara el alcance real de la demo y los reservados pendientes.
 
 Se totalizaron los conteos reales de A1 desde los result_a1 originales en Drive. Official usó 9 879+/26 322− asistidos frente a 1 204+/2 055− automáticos; excluido, 8 311+/22 047− frente a 966+/1 593−. Se guardaron hashes SHA-256 de las cuatro fuentes. La igualdad nominal por componente acompaña diferencias reales de componentes y total de puntos.
+
+## 18 de noviembre de 2026 — recuperación offline de etapa 7
+
+Codex ejecutó recover en un nuevo runtime Colab Tesla T4 mediante el paquete original de fuentes e9556df8… y un Python 3.12 aislado. Cada una de las 13 filas por régimen se recuperó con igualdad bit a bit de la primera imagen reconstruida sin features en caché. Métricas, selecciones y locks permanecieron idénticos. Se precargaron archivos de antecedentes y predicciones de validación para reducir la latencia de Drive, conservando los controles de hash y la separación de features.
+
+La auditoría posterior recalculó confusiones de las 2 132 máscaras contra las etiquetas de validación y verificó distintos boot_id. Cero fallos y ambos offline_recovery_present true. El JSON original y el notebook están publicados. La revisión humana del equipo continúa pendiente y los reservados permanecen cerrados. Esta ejecución recupera evidencia de validación y carece de resultados nuevos de transferencia geográfica.
