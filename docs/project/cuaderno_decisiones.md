@@ -384,3 +384,11 @@ Cada régimen publicará selection/evaluation_lock con hashes y el registro conj
 - **Licencia Sen1Floods11:** sigue pendiente (catálogos `proprietary`; sin respuesta del publicador); mensaje de seguimiento en `accesos_y_licencias.md`. No se publican visualizaciones de chips.
 - **Demo:** sin ejecución con pesos reales (sin GPU/HF aquí); notebook de Colab listo; conexión del flujo automático descrita, no implementada.
 - **IA:** Claude escribió evaluador, pruebas y documentación; no ejecutó modelos ni abrió datos reservados.
+
+## 18 de noviembre de 2026 — verificación de la demo enviada por Roberto
+
+Se revisaron outputs.zip y el notebook ejecutado enviados por WhatsApp el 11 de noviembre. Cero celdas con error y marcador final presente. Tesla T4, SAM 2.1 tiny congelado, puntos manuales, chip Ghana_1033830 con hash coincidente. La máscara 512 × 512 contiene 23 252 positivos, igual al JSON. La cabeza de IoU predicho eligió la máscara 2; su puntuación describe confianza del modelo. Esta prueba acredita el backend manual sobre un chip y mantiene pendiente la prueba interactiva de Gradio y la integración automática. Codex realizó la auditoría y las actualizaciones documentales. Los originales con imágenes se conservan privados por la licencia pendiente, y GitHub recibe código, salidas de texto y hashes.
+
+Se actualizó el póster A0 en inglés con A1–A3 y las limitaciones actuales. El informe conserva IEEEtran y declara el alcance real de la demo y los reservados pendientes.
+
+Se totalizaron los conteos reales de A1 desde los result_a1 originales en Drive. Official usó 9 879+/26 322− asistidos frente a 1 204+/2 055− automáticos; excluido, 8 311+/22 047− frente a 966+/1 593−. Se guardaron hashes SHA-256 de las cuatro fuentes. La igualdad nominal por componente acompaña diferencias reales de componentes y total de puntos.

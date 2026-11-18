@@ -1,7 +1,7 @@
 # E3 — estado verificado (2026-11-11, actualizado tras la etapa 7 ejecutada)
 
 ## Qué exige el PDF (Tarea_Final_DeepLearning_PREGRADO_2026-2.pdf)
-Dos filas E3, fecha 11-nov-2026: «Entrega de trabajo» (2 pts) e «Informe final (4–8 pág., IEEE/LNCS) revisado con la retroalimentación del workshop» (4 pts). El workshop (18–20 nov) es posterior al plazo: su retroalimentación está **pendiente de confirmación** (no existe aún; no se inventó). §8 cita una «plantilla de WAIMLAP» que no existe en el repositorio. Los §§2–3 también exigen evaluar bajo cambio de dominio, analizar fallos y entregar una demo funcional y reproducible. Las etapas 7–9 y la elección de Bolivia o Paraguay como conjuntos reservados forman parte del protocolo del equipo. La evaluación geográfica reservada y la verificación de la demo con pesos reales siguen pendientes.
+Dos filas E3, fecha 11-nov-2026: «Entrega de trabajo» (2 pts) e «Informe final (4–8 pág., IEEE/LNCS) revisado con la retroalimentación del workshop» (4 pts). El workshop (18–20 nov) es posterior al plazo: su retroalimentación está **pendiente de confirmación** (no existe aún; no se inventó). §8 cita una «plantilla de WAIMLAP» que no existe en el repositorio. Los §§2–3 también exigen evaluar bajo cambio de dominio, analizar fallos y entregar una demo funcional y reproducible. Las etapas 7–9 y la elección de Bolivia o Paraguay como conjuntos reservados forman parte del protocolo del equipo. La evaluación geográfica reservada sigue pendiente. El backend manual de la demo ya tiene evidencia de inferencia real.
 
 ## Resultados (solo validación)
 Todas las cifras se regeneran con `python scripts/e3_collect_results.py` → [`evidence/e3/consolidated_results.md`](evidence/e3/consolidated_results.md). Fuente de la etapa 7: [`07_ablaciones_y_seleccion_ejecutado.ipynb`](../../notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb) (commit `ebde34e`), métricas extraídas a [`evidence/e3/stage7_metrics_from_notebook.json`](evidence/e3/stage7_metrics_from_notebook.json).
@@ -19,7 +19,15 @@ Controles del usuario verificados contra la salida del notebook (coinciden a 4 d
 - **Hipótesis H1:** primera parte (puntos < asistida) **refutada en validación**; segunda (puntos > malla) se cumple. H2 parcial. H3 no evaluable sin etapa 8.
 
 ## Presupuesto de puntos (no afirmar igualdad de totales)
-El presupuesto es nominal **por componente**, y los componentes difieren (etiquetas vs sonda). Total real conocido solo para el automático de la etapa 5 (1 204+/2 055− official; 966+/1 593− excluido). Los conteos reales de A1 están en los `result_*.json` de la evidencia (Drive); `python scripts/e3_point_budget.py DIR` los totaliza. **Pendiente**.
+El presupuesto es nominal por componente. Recuento real verificado el 18 de noviembre a partir de los JSON guardados en Drive, sin modelos ni acceso a reservados.
+
+| Régimen | Asistido positivos / negativos | Automático positivos / negativos |
+| --- | ---: | ---: |
+| official, 89 chips | 9 879 / 26 322 | 1 204 / 2 055 |
+| leave_paraguay_out, 75 chips | 8 311 / 22 047 | 966 / 1 593 |
+
+Los componentes son 8 774 vs. 685 en official y 7 349 vs. 531 en el régimen excluido. La comparación comparte el tope nominal por componente y difiere en los componentes y el esfuerzo real. [Conteos y hashes originales](evidence/e3/e3_point_budget.json).
+
 
 ## Auditoría de la etapa 7 (Drive: `MyDrive/auto-prompt-sam2/stage7/revision_stage7_1794435476494193372.json`)
 Terminó. Ambos regímenes: `portable_consistency_passed_not_stage_closure`, 13 filas, `failures: []`, 1 157 (official) y 975 (excluido) máscaras de validación auditadas, `models_executed:false`, `reserved_access:[]`; ZIP verificados `ed582c1f…` (official, 1 230 generaciones) y `06f6dc83…` (excluido, 1 020). Pendientes declarados: revisión humana y **recover offline en otro runtime de Colab** (`offline_recovery_present:false`). Copia de los campos leídos: `evidence/e3/revision_stage7_*.json` (transcripción). Hallazgo: la salida del notebook muestra un intento previo fallido (`ValueError: Prior implementation changed: configs/baseline.yaml`) y dos hashes de evidence.zip por régimen; el segundo coincide con la auditoría.
@@ -30,10 +38,10 @@ Terminó. Ambos regímenes: `portable_consistency_passed_not_stage_closure`, 13 
 
 ## Etapa 8 (transferencia geográfica)
 Actualización E3: `src/auto_prompt_sam2/evaluation.py` (compuerta, protocolo congelable, métricas por conjunto/evento, bootstrap pareado, contraste visto vs reservado) y `configs/stage8_protocol.json` (borrador; hash `52d6310c…cff3d`, congelar registrándolo ANTES de abrir). Probado con datos sintéticos (`tests/test_evaluation.py`, 4 pruebas). Falta conectar los predictores de la etapa 7 a los chips reservados (GPU). Compuerta real: CERRADA (`python scripts/run_stage8_local_test.py <revision_stage7_*.json>`).
-Condiciones que faltan (`scripts/check_stage8_gate.py`, devuelve «BLOQUEADA»): revisión externa/humana, `stage8_authorized=true` y recover offline en otro runtime. `reserved_access` sigue vacío. `notebooks/08_evaluacion_final_geografica.ipynb` solo aplica la compuerta; el evaluador de la etapa 8 **no está implementado** (se escribe tras la autorización).
+Condiciones que faltan (`scripts/check_stage8_gate.py`, devuelve «BLOQUEADA»): revisión externa/humana, `stage8_authorized=true` y recover offline en otro runtime. `reserved_access` sigue vacío. `notebooks/08_evaluacion_final_geografica.ipynb` solo aplica la compuerta; el evaluador agregado está implementado y probado con datos sintéticos; falta conectarlo al predictor GPU sobre los reservados.
 
 ## Demo
-Verificada solo en pruebas locales de interfaz (17 pruebas); ver `fase2_demo.md`, sección E3. Máscara con pesos reales **no verificada** (sin GPU ni Hugging Face aquí). Procedimiento: `notebooks/E3_demo_verificacion_colab.ipynb` (preparado, no ejecutado). Solo puntos manuales; el flujo automático **no está integrado**.
+Roberto ejecutó el backend manual en Colab T4 el 11 de noviembre. La auditoría del 18 de noviembre verificó el ZIP y el notebook ejecutado sin errores: Ghana_1033830, máscara binaria de 512 × 512 con 23 252 positivos y hash de chip coincidente. [Evidencia y alcance](evidence/e3/demo_20261111_roberto/README.md). Este run usa SAM congelado y puntos manuales. La interfaz Gradio completa, el decoder ajustado y los puntos automáticos en la demo siguen pendientes.
 
 ## Limitaciones
 Una semilla, sin IC; selección de época/umbral en la misma validación; sin reservados; Sen1Floods11 sin licencia verificada.

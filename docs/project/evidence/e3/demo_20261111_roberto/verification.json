@@ -1,0 +1,16 @@
+{
+  "review_date": "2026-11-18",
+  "source": "Robin de los Bosques / Roberto, WhatsApp attachments sent 2026-11-11 19:54\u201319:56",
+  "outputs_zip_sha256": "a541d98e69988a744a2335a320a343e79da39eef8ed5c0dd9890253814e5f276",
+  "original_notebook_sha256": "ab4aafa3151f5075226e2e8aa6305ad38a0a7684437d07611dd99b4b89cc83df",
+  "mask_sha256": "7204dd78d73bf1040599c0493147a414eb4b8be3a59f0554e343ebc5a0768ce7",
+  "mask_shape": [
+    512,
+    512
+  ],
+  "mask_nonzero": 23252,
+  "notebook_error_outputs": 0,
+  "completion_marker_present": true,
+  "removed_image_outputs": 1,
+  "scope": "Manual points, frozen SAM 2.1 tiny backend, one validation chip. UI click-through and automatic prompting were not tested by this run."
+}

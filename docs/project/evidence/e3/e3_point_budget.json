@@ -1,0 +1,47 @@
+{
+  "review_date": "2026-11-18",
+  "source": "Mounted team Drive / regimes/{regime}/stage7/*/evidence/result_a1_{assisted,points}.json",
+  "scope": "Read existing validation JSON only; no model or reserved data access.",
+  "regimes": {
+    "official": {
+      "assisted": {
+        "source_sha256": "7a4e98466e495410be3189c6d865f6c7181c12b88fd6d2dcdcbf402d084d6a9d",
+        "chips": 89,
+        "components": 8774,
+        "positive_points": 9879,
+        "negative_points": 26322,
+        "positive_shortfall": 16443,
+        "negative_shortfall": 0
+      },
+      "automatic": {
+        "source_sha256": "0161ae822dfbb5f3c7f7da730cbec73315e1a8ef0673e4393e5fdba8256c37f7",
+        "chips": 89,
+        "components": 685,
+        "positive_points": 1204,
+        "negative_points": 2055,
+        "positive_shortfall": 851,
+        "negative_shortfall": 0
+      }
+    },
+    "leave_paraguay_out": {
+      "assisted": {
+        "source_sha256": "77ebe68f87a8b2e641f6e4fa373a084bcdc20d7fdee6b5e78efc984ecc421980",
+        "chips": 75,
+        "components": 7349,
+        "positive_points": 8311,
+        "negative_points": 22047,
+        "positive_shortfall": 13736,
+        "negative_shortfall": 0
+      },
+      "automatic": {
+        "source_sha256": "5531e7cda92d7892b3e13953610a49fbfa1c10e047d9d259bc69739a7ac3b325",
+        "chips": 75,
+        "components": 531,
+        "positive_points": 966,
+        "negative_points": 1593,
+        "positive_shortfall": 627,
+        "negative_shortfall": 0
+      }
+    }
+  }
+}

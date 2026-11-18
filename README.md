@@ -13,26 +13,27 @@ app_port: 7860
 
 Proyecto de **Deep Learning (1INF52), semestre 2026-2**, Ingeniería Informática, **Pontificia Universidad Católica del Perú (PUCP)**, con materiales para WAIMLAP 2026.
 
-> **Estado al 11 de noviembre de 2026: fase 1 concluida; fase 2 implementada hasta la integración de pesos y validación remota.** Se conservan los resultados del equipo y los notebooks `E2_01` y `E2_02`. La demo Gradio permite preparar imágenes y puntos sin modelos en la PC; la inferencia y el despliegue quedan por verificar en GPU remota. [Guía de la demo y archivos que pedir al compañero](docs/project/fase2_demo.md).
+> **Estado al 18 de noviembre de 2026: etapas 5–7 ejecutadas en validación y backend de demo manual verificado con pesos reales.** Se conservan los resultados del equipo y los notebooks `E2_01` y `E2_02`. Roberto ejecutó SAM 2.1 tiny congelado en Tesla T4 sobre un chip de validación. La interfaz completa de Gradio y su despliegue siguen pendientes. [Guía de la demo y archivos que pedir al compañero](docs/project/fase2_demo.md).
 
-La propuesta original estudiaba prompts automáticos derivados de DINOv3 para SAM 2.1. La fase 1 realizada se concentra en **datos, referencia asistida, disección del modelo y ajuste exclusivo del mask decoder**, con puntos simulados desde las etiquetas. El cierre acepta ese alcance y conserva sus resultados y limitaciones; no supone haber implementado el flujo automático DINOv3→SAM ni evaluado la generalización geográfica.
+El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 conserva la intervención preliminar asistida. Las etapas 5–7 añaden la sonda DINOv3, los puntos automáticos, el ajuste del decoder y las ablaciones A1–A3. La evaluación geográfica reservada sigue pendiente.
 
-## E3 — punto de entrada (actualizado 2026-11-11)
+## E3 — punto de entrada (actualizado 2026-11-18)
 
+- **Póster actualizado:** [PDF A0 para imprimir](docs/WAIMLAP/Poster_CostOfThePrompt.pdf) y [PowerPoint editable](docs/WAIMLAP/Poster_CostOfThePrompt.pptx).
 - **Informe (IEEE, 4 págs.):** [`reports/e3/informe_E3.pdf`](reports/e3/informe_E3.pdf); fuente IEEEtran (conference): [`informe_E3_IEEEtran.tex`](reports/e3/informe_E3_IEEEtran.tex) con `fig_iou.pdf` y `fig_curvas.pdf`. Compilar: `pdflatex` dos veces. Retroalimentación del workshop: pendiente de confirmación.
 - **Estado, límites y compuerta de etapa 8:** [`docs/project/e3_estado.md`](docs/project/e3_estado.md).
 - **Resultados consolidados (validación, A1–A3 incluidos):** [`consolidated_results.md`](docs/project/evidence/e3/consolidated_results.md); regenerar con `python scripts/e3_collect_results.py`.
 - **Notebook etapa 7 ejecutado:** [`notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb`](notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb); métricas extraídas en `docs/project/evidence/e3/stage7_metrics_from_notebook.json`.
-- **Demo:** pruebas locales de interfaz; verificación con pesos reales en Colab: `notebooks/E3_demo_verificacion_colab.ipynb` (preparada, no ejecutada). Solo puntos manuales.
+- **Demo:** backend manual con pesos reales verificado en T4 sobre Ghana_1033830. [Notebook ejecutado, JSON y auditoría](docs/project/evidence/e3/demo_20261111_roberto/README.md). La interfaz interactiva completa sigue pendiente.
 - **Licencias:** Sen1Floods11 pendiente; mensaje al publicador en [`accesos_y_licencias.md`](docs/project/accesos_y_licencias.md).
 - **Etapa 8:** evaluador y protocolo listos y probados con datos sintéticos (`src/auto_prompt_sam2/evaluation.py`, `configs/stage8_protocol.json`); compuerta bloqueada (`python scripts/check_stage8_gate.py <revision_stage7_*.json>`); conjuntos reservados cerrados.
-- **Pendiente:** totales reales de puntos (`scripts/e3_point_budget.py`), revisión humana y recover offline de la etapa 7, etapa 8, licencia de Sen1Floods11.
+- **Pendiente:** revisión humana y recover offline de la etapa 7, evaluación geográfica reservada y licencia de Sen1Floods11. [Conteos reales de puntos verificados](docs/project/evidence/e3/e3_point_budget.json).
 
 ## Probar la demo
 
 La demo permite cargar una imagen y colocar **puntos positivos sobre agua y negativos sobre fondo**. Con inferencia habilitada, SAM usa esas indicaciones para delimitar la región y mostrar su máscara. La comparación entrega la misma imagen y los mismos puntos a SAM original y al modelo con el decoder ajustado.
 
-**El modo predeterminado es `preview`: “Segmentar” está deshabilitado.** En la PC se puede revisar la carga y los puntos; todavía no se ha validado inferencia real ni publicado una URL de demo. Para activar el brazo original se necesita GPU en Colab/Spaces y SAM base, que puede descargarse públicamente. Para comparar hace falta además el `best/payload` del compañero. Recibir ese archivo no activa inferencia en la PC.
+**El modo predeterminado es `preview`: “Segmentar” está deshabilitado.** En la PC se puede revisar la carga y los puntos; el backend manual ya produjo una máscara con pesos reales en T4. La URL de demo desplegada sigue pendiente. Para activar el brazo original se necesita GPU en Colab/Spaces y SAM base, que puede descargarse públicamente. Para comparar hace falta además el `best/payload` del compañero. Recibir ese archivo no activa inferencia en la PC.
 
 Desde la raíz del repositorio, Python 3.10 o superior, en PowerShell:
 
@@ -58,7 +59,7 @@ Abrir [la interfaz local](http://127.0.0.1:7860). En **Automático (según exten
 | PNG/JPEG | RGB, gris o transparencia; se adapta sin deformar a un lienzo 512×512. Preferir imágenes limpias, sin títulos ni bordes. |
 | Visualización Sentinel-1, como un PNG de `S1Hand` | Se puede cargar como imagen exploratoria; el rendimiento del decoder ajustado con Sentinel-2 no está evaluado sobre radar. |
 
-Los puntos son **manuales** en esta demo; colocarlos no entrena al modelo. En E2 se simularon desde etiquetas. El generador automático DINOv3→SAM de la propuesta original sigue sin implementarse.
+Los puntos son **manuales** en esta demo; colocarlos no entrena al modelo. En E2 se simularon desde etiquetas. El generador automático DINOv3→SAM se ejecutó en las etapas 5–7 y su integración en la interfaz Gradio sigue pendiente.
 
 Consultar la [guía completa y los checkpoints que pedir](docs/project/fase2_demo.md), la [validación local y sus límites](docs/project/validacion_fase2.md) y la [guía para publicar estos cambios en GitHub](docs/project/publicacion_github.md). La configuración está en [configs/demo.json](configs/demo.json); el despliegue se prepara con [Dockerfile](Dockerfile).
 
@@ -90,7 +91,7 @@ El [informe de resultados](docs/project/resultados_fase1.md) reúne configuraci�
 ## Alcance y límites del cierre
 
 - Los prompts proceden de las etiquetas: **la referencia es asistida y requiere etiquetas para generar sus puntos**. Los chips sin agua reciben una predicción vacía por construcción.
-- DINOv3 se instrumentó en la disección anterior, pero no se utilizó para generar prompts ni en el entrenamiento de E2. No hay probe de agua entrenado ni pipeline automático terminado.
+- E2 conserva el experimento asistido. Las etapas 5–7 posteriores entrenaron la sonda de agua y ejecutaron el pipeline automático DINOv3→SAM en validación.
 - Una semilla, subconjuntos pequeños y mejor época seleccionada y reportada en la misma validación; no se afirma significancia estadística ni rendimiento final en test, Bolivia o Paraguay reservado.
 - FLOPs y campo receptivo tienen cobertura y límites metodológicos declarados. `recover` de E2 reprodujo la evaluación en un proceso nuevo de la misma sesión; no hay evidencia de reinicio real del runtime de E2.
 - La consulta de licencia de Sen1Floods11 sigue pendiente según el [registro de accesos y licencias](docs/project/accesos_y_licencias.md). El cierre de seguimiento no modifica ese estado.
@@ -122,7 +123,7 @@ Las métricas, predicciones, puntos y notebooks ejecutados están versionados co
 
 **Implementado:** [app.py](app.py), carga de chips Sentinel-2 de 512×512 y visualizaciones PNG/JPEG, puntos positivos/negativos manuales, superposición y máscaras binarias, configuración de pesos locales o de Hugging Face, y Dockerfile para Spaces. La PC utiliza `preview` por defecto, sin cargar SAM ni producir máscaras. La inferencia queda restringida a Colab/Spaces con GPU; el decoder ajustado es opcional y se verifica contra el reporte E2 antes de cargarlo.
 
-El [inicio rápido](#probar-la-demo) permite revisar la interfaz. La [guía de fase 2](docs/project/fase2_demo.md) incluye configuración, rutas y hashes exactos de checkpoints, pasos para Spaces y aceptación remota. El [registro de validación](docs/project/validacion_fase2.md) documenta 17 pruebas locales sin modelos. **Pendiente:** recibir `best/payload` para la comparación, probar inferencia GPU y completar el despliegue. SAM base puede obtenerse públicamente y validarse sin esperar al decoder ajustado.
+El [inicio rápido](#probar-la-demo) permite revisar la interfaz. La [guía de fase 2](docs/project/fase2_demo.md) incluye configuración, rutas y hashes exactos de checkpoints, pasos para Spaces y aceptación remota. El [registro de validación](docs/project/validacion_fase2.md) documenta 17 pruebas locales sin modelos. **Pendiente:** recibir `best/payload` para la comparación, verificar la interfaz interactiva y completar el despliegue. La inferencia manual congelada ya tiene evidencia GPU. SAM base puede obtenerse públicamente y validarse sin esperar al decoder ajustado.
 
 El informe final, el póster actualizado, la demo y la defensa oral se gestionan por separado. Los requisitos académicos de estrés y análisis de fallos siguen siendo referencia para esas entregas; cerrar la fase 1 reducida no los acredita. Las fechas consignadas en las bases son E1: 7 de octubre; E2: 21 de octubre; trabajo e informe final: 11 de noviembre; póster WAIMLAP: 18–20 de noviembre de 2026.
 

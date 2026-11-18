@@ -1,0 +1,19 @@
+{
+ "points": [
+  [
+   256,
+   256,
+   1
+  ],
+  [
+   100,
+   100,
+   0
+  ]
+ ],
+ "mask_pixels": 23252,
+ "selection": "{'predicted_iou': [0.24055461585521698, 0.5609048008918762, 0.6578053832054138], 'selected_index': 2, 'selection': 'highest_predicted_iou_first_index_on_tie'}",
+ "gpu": "Tesla T4",
+ "chip_sha256": "aebdf646e05e688da22d47ba947045f6af5df5e9d4b0d669903f998509043c69",
+ "checkpoint": "facebook/sam2.1-hiera-tiny"
+}
