@@ -38,17 +38,25 @@ class Stage8Evaluator(unittest.TestCase):
         def perfect(c): return (c["labels"] == 1).astype(int)
         def noisy(c): p = perfect(c).copy(); p[1, :] = 1; return p
         def empty(c): return np.zeros_like(c["labels"])
-        preds = {r: {"a1_assisted": empty, "a1_points": noisy, "a3_tuned": perfect} for r in PROTO["regimes"]}
+        preds = {r: {"a1_assisted": empty, "a1_points": noisy, "a3_frozen": noisy, "a3_tuned": perfect} for r in PROTO["regimes"]}
         out = evaluate(PROTO, sets, preds)
         s = out["regimes"]["official"]["test_seen"]
         self.assertEqual(s["chips"], 90)
         self.assertEqual(s["rows"]["a3_tuned"]["pooled"]["values"]["water_iou"], 1.0)
         self.assertEqual(s["rows"]["a1_assisted"]["pooled"]["values"]["water_iou"], 0.0)
         self.assertGreater(s["comparisons"]["decoder"]["difference_pooled_water_iou"], 0)
+        self.assertEqual(s["comparisons"]["route_parity"]["difference_pooled_water_iou"], 0)
         lo, hi = (s["comparisons"]["decoder"]["bootstrap_ci"][k] for k in ("lo", "hi"))
         self.assertLessEqual(lo, hi); self.assertGreater(lo, 0)
         self.assertEqual(out["regimes"]["leave_paraguay_out"]["paraguay_heldout"]["chips"], 67)
         self.assertGreater(out["regimes"]["official"]["geographic_shift_descriptive"]["a3_tuned"]["seen"], 0.99)
+
+    def test_stage8_protocol_has_decoder_route_control(self):
+        self.assertIn("a3_frozen", PROTO["rows"])
+        decoder = next(c for c in PROTO["comparisons"] if c["id"] == "decoder")
+        route = next(c for c in PROTO["comparisons"] if c["id"] == "route_parity")
+        self.assertEqual((decoder["a"], decoder["b"]), ("a3_tuned", "a3_frozen"))
+        self.assertEqual((route["a"], route["b"]), ("a3_frozen", "a1_points"))
 
     def test_wrong_chip_count_fails_instead_of_dropping(self):
         sets = synthetic(PROTO["regimes"]); sets["official"]["bolivia_heldout"].pop()

@@ -1,0 +1,46 @@
+{
+  "pair": {
+    "both_computational_locks_verified": true,
+    "external_review": "human_review_confirmed_by_user",
+    "stage8_authorized": true,
+    "reserved_access": [],
+    "human_review_receipt_sha256": "41d6ac8782cb168347077da1e7ec5e31c1059f879fb96ff9e66383af09e77d25"
+  },
+  "regimes": {
+    "official": {
+      "status": "portable_consistency_passed_human_review_confirmed_not_stage8_run",
+      "zip_sha256": "df51ddc57ea3f9dac31443f1873d5fdcba8fadeb4f264d3245f7cc7c8a62c55b",
+      "generation_count": 1252,
+      "rows": 13,
+      "selected_id": "a3_tuned",
+      "failures": [],
+      "validation_masks_independently_audited": 1157,
+      "offline_recovery_present": true,
+      "models_executed": false,
+      "reserved_access": [],
+      "pending": []
+    },
+    "leave_paraguay_out": {
+      "status": "portable_consistency_passed_human_review_confirmed_not_stage8_run",
+      "zip_sha256": "89c24a9afb140e24a9335756ba5ef8d21b4fa2f0796d05b1445301e6e48ab665",
+      "generation_count": 1042,
+      "rows": 13,
+      "selected_id": "a3_tuned",
+      "failures": [],
+      "validation_masks_independently_audited": 975,
+      "offline_recovery_present": true,
+      "models_executed": false,
+      "reserved_access": [],
+      "pending": []
+    }
+  },
+  "stage8_authorization_record": {
+    "status": "authorized_and_protocol_frozen_pending_execution",
+    "authorized_by": "user, direct instruction in conversation on 2026-11-18",
+    "scope": "stage 8 evaluation only; evaluate under a frozen protocol without tuning from reserved results",
+    "protocol_sha256_candidate": "0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681",
+    "source_revision_sha256": "b35b1066f50e29c9b692ed96941c2499676ce41ccb7412b0993780f1685f5d41",
+    "reserved_access": [],
+    "note": "User-confirmed human review and authorization recorded; protocol frozen before reserved access. This preflight does not claim stage-8 results."
+  }
+}

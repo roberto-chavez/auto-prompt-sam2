@@ -27,8 +27,8 @@ El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 co
 - **Demo:** backend manual con pesos reales verificado en T4 sobre Ghana_1033830. [Notebook ejecutado, JSON y auditoría](docs/project/evidence/e3/demo_20261111_roberto/README.md). La interfaz interactiva completa sigue pendiente.
 - **Licencias:** Sen1Floods11 pendiente; mensaje al publicador en [`accesos_y_licencias.md`](docs/project/accesos_y_licencias.md).
 - **Recuperación verificada el 18 de noviembre:** [notebook ejecutado](docs/project/evidence/e3/recovery_20261118.ipynb) y [auditoría final](docs/project/evidence/e3/revision_stage7_20261118.json). Ambos regímenes recuperados en un runtime distinto y 2 132 máscaras auditadas sin fallos.
-- **Etapa 8:** evaluador y protocolo listos y probados con datos sintéticos (`src/auto_prompt_sam2/evaluation.py`, `configs/stage8_protocol.json`); compuerta bloqueada (`python scripts/check_stage8_gate.py <revision_stage7_*.json>`); conjuntos reservados cerrados.
-- **Pendiente:** revisión humana del equipo sobre etapa 7, evaluación geográfica reservada y licencia de Sen1Floods11. [Conteos reales de puntos verificados](docs/project/evidence/e3/e3_point_budget.json).
+- **Etapa 8:** revisión humana confirmada, autorización registrada y protocolo congelado antes de abrir reservados (SHA-256 `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`). Control `a3_frozen` añadido para separar el efecto del decoder del cambio de ruta. Ejecutores: [`notebook 08`](notebooks/08_evaluacion_final_geografica.ipynb) y [`run_stage8.py`](scripts/run_stage8.py). **Todavía no se ha ejecutado la evaluación geográfica ni se han abierto los reservados.**
+- **Pendiente:** ejecutar etapa 8 en Colab con el root persistente y checkpoints de Drive, terminar la prueba interactiva de Gradio, y recibir respuesta de licencia de Sen1Floods11. [Revisión humana y preflight](docs/project/evidence/e3/revision_humana_stage7_para_stage8.md); [conteos reales de puntos verificados](docs/project/evidence/e3/e3_point_budget.json).
 
 ## Probar la demo
 

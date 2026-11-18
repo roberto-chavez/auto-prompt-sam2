@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "stage": "phase1_stage8",
+  "status": "frozen_before_reserved_access",
+  "frozen_at": "2026-11-18 (America/Lima)",
+  "protocol_path": "configs/stage8_protocol.json",
+  "protocol_sha256": "0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681",
+  "protocol_file_sha256": "53cc57416f64e192939f7d4cb821fa6a5b33b15e007420e93768db864c803a02",
+  "human_review_receipt_sha256": "41d6ac8782cb168347077da1e7ec5e31c1059f879fb96ff9e66383af09e77d25",
+  "authorization": "User explicitly authorized continuing Stage 8 on 2026-11-18.",
+  "reserved_access": [],
+  "protocol_change": "Added the a3_frozen route control so a3_tuned is compared to the same direct-inference route and only the decoder checkpoint changes.",
+  "note": "Frozen before any reserved image/label access. Do not tune checkpoints, thresholds, prompt budgets, or select rows from reserved results."
+}

@@ -1,25 +1,97 @@
 {
   "schema_version": 1,
   "stage": "phase1_stage8",
-  "status": "DRAFT_NOT_FROZEN: freeze by recording its SHA-256 (python scripts/run_stage8_local_test.py --print-hash) in docs/project/cuaderno_decisiones.md BEFORE any reserved set is opened",
+  "status": "FROZEN_BEFORE_RESERVED_ACCESS_2026-11-18",
   "source": "docs/project/hoja_de_ruta_fase1_original.md section 11; stage-7 closure (selected row a3_tuned in both regimes)",
   "primary_metric": "pooled_water_iou",
-  "secondary_metrics": ["precision", "recall", "dice", "per_chip_median_iqr", "fp_area_m2_on_chips_without_water"],
+  "secondary_metrics": [
+    "precision",
+    "recall",
+    "dice",
+    "per_chip_median_iqr",
+    "fp_area_m2_on_chips_without_water"
+  ],
   "regimes": {
-    "official": {"sets": {"test_seen": 90, "bolivia_heldout": 15}, "training_events_exclude": ["Bolivia"]},
-    "leave_paraguay_out": {"sets": {"test_seen": 76, "paraguay_heldout": 67}, "training_events_exclude": ["Paraguay"]}
+    "official": {
+      "sets": {
+        "test_seen": 90,
+        "bolivia_heldout": 15
+      },
+      "training_events_exclude": [
+        "Bolivia"
+      ]
+    },
+    "leave_paraguay_out": {
+      "sets": {
+        "test_seen": 76,
+        "paraguay_heldout": 67
+      },
+      "training_events_exclude": [
+        "Paraguay"
+      ]
+    }
   },
-  "rows": ["a1_assisted", "a1_points", "a3_tuned"],
-  "row_notes": {"a1_assisted": "label-simulated 3+/3- per component (labels used only for the fixed prompt procedure and metrics)",
-                "a1_points": "DINOv3 probe points, frozen decoder (equals a3_frozen)",
-                "a3_tuned": "selected stage-7 row: decoder tuned in stage 6 on automatic prompts"},
-  "frozen_before_opening": ["checkpoints (hash)", "probe/scaler (hash)", "positive and grid thresholds", "best epoch", "k+ = 3, k- = 3", "seed 42"],
+  "rows": [
+    "a1_assisted",
+    "a1_points",
+    "a3_frozen",
+    "a3_tuned"
+  ],
+  "row_notes": {
+    "a1_assisted": "label-simulated 3+/3- per component (labels used only for the fixed prompt procedure and metrics)",
+    "a1_points": "DINOv3 probe points with frozen decoder via the stage-5 predictor API",
+    "a3_frozen": "stage-6 direct route with the base decoder and the same frozen DINOv3 probe/prompts; route control for a3_tuned",
+    "a3_tuned": "selected stage-7 row: same stage-6 direct route/prompts as a3_frozen, decoder tuned in stage 6"
+  },
+  "frozen_before_opening": [
+    "checkpoints (hash)",
+    "probe/scaler (hash)",
+    "positive and grid thresholds",
+    "best epoch",
+    "k+ = 3, k- = 3",
+    "seed 42"
+  ],
   "no_retuning": true,
   "comparisons": [
-    {"id": "prompt_source", "a": "a1_points", "b": "a1_assisted", "type": "paired_same_chips", "note": "decoder frozen in both; component sources and totals of points differ (see report)"},
-    {"id": "decoder", "a": "a3_tuned", "b": "a1_points", "type": "paired_same_chips", "note": "same prompts; only the decoder changes"},
-    {"id": "geographic_shift", "a": "test_seen", "b": "heldout", "type": "descriptive_independent_sets", "note": "different chips and events: descriptive, not a causal estimate"}
+    {
+      "id": "prompt_source",
+      "a": "a1_points",
+      "b": "a1_assisted",
+      "type": "paired_same_chips",
+      "note": "decoder frozen in both; component sources and totals of points differ (see report)"
+    },
+    {
+      "id": "decoder",
+      "a": "a3_tuned",
+      "b": "a3_frozen",
+      "type": "paired_same_chips",
+      "note": "same stage-6 direct route and prompts; only the decoder checkpoint changes"
+    },
+    {
+      "id": "route_parity",
+      "a": "a3_frozen",
+      "b": "a1_points",
+      "type": "paired_same_chips",
+      "note": "same base decoder and prompt policy; predictor API vs differentiable direct route, quantified as a route control"
+    },
+    {
+      "id": "geographic_shift",
+      "a": "test_seen",
+      "b": "heldout",
+      "type": "descriptive_independent_sets",
+      "note": "different chips and events: descriptive, not a causal estimate"
+    }
   ],
-  "uncertainty": {"method": "bootstrap_over_chips", "resamples": 2000, "seed": 42, "level": 0.95},
-  "reserved_use": "evaluation only; no checkpoint, threshold, k or row selection may use these results"
+  "uncertainty": {
+    "method": "bootstrap_over_chips",
+    "resamples": 2000,
+    "seed": 42,
+    "level": 0.95
+  },
+  "reserved_use": "evaluation only; no checkpoint, threshold, k or row selection may use these results",
+  "protocol_change_note_2026_11_18": "Before any reserved access, add a3_frozen to isolate the decoder effect from the stage-5 predictor API versus stage-6 direct inference route. Stage-7 validation already contains a3_frozen as the route control. No model/data results were inspected to make this correction.",
+  "frozen_at": "2026-11-18 (America/Lima)",
+  "human_review_receipt_sha256": "41d6ac8782cb168347077da1e7ec5e31c1059f879fb96ff9e66383af09e77d25",
+  "stage8_authorized": true,
+  "reserved_access_opened_before_freeze": false
 }
