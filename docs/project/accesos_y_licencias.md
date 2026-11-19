@@ -2,7 +2,7 @@
 
 > **Seguimiento al 2026-11-03:** fase 1 **concluida con alcance reducido**, sin cambiar el estado de licencia registrado. Los datos y pesos de SAM ya se utilizaron en las ejecuciones archivadas; las restricciones y valores nulos que aparecen en la revisión inicial siguiente describen ese momento histórico. No hay respuesta nueva documentada del publicador. El acceso autenticado posterior de SAM/DINOv3 está registrado al final. Véase el [estado vigente](estado_actual_fase1.md).
 
-Consulta: **2026-10-28 (America/Lima)**. **Estado actual:** HEAD autenticado de SAM/DINOv3 autorizado y verificado mediante los informes Colab; solo permanece pendiente la licencia de Sen1Floods11. La tabla inicial conserva el resultado anónimo histórico. Evidencia ejecutada: [public_sources.json](evidence/stage1/public_sources.json), regenerable mediante `python scripts/audit_public_sources.py`. Solo consultas de metadatos, documentación y HEAD; no se adquirieron imágenes, etiquetas, splits ni pesos. Las revisiones se fijan en [environment.yaml](../../configs/environment.yaml).
+Consulta inicial: **2026-10-28 (America/Lima)**. **Actualización 2026-11-18:** el usuario informa que el profesor confirmó los términos de uso de Sen1Floods11 para el proyecto de curso. No se ha archivado la confirmación ni se conoce su alcance respecto de redistribución. Los datos originales y los productos por chip permanecen privados. El resto de este documento conserva hallazgos históricos y no sustituye esta actualización. La tabla inicial conserva el resultado anónimo histórico. Evidencia ejecutada: [public_sources.json](evidence/stage1/public_sources.json), regenerable mediante `python scripts/audit_public_sources.py`. Solo consultas de metadatos, documentación y HEAD; no se adquirieron imágenes, etiquetas, splits ni pesos. Las revisiones se fijan en [environment.yaml](../../configs/environment.yaml).
 
 | Recurso | Identidad confirmada | Acceso comprobado | Licencia y resolución pendiente |
 | --- | --- | --- | --- |
@@ -43,7 +43,7 @@ Por instrucción expresa del usuario, la etapa 1 se cierra con salvedad y se rea
 
 ## Revisión de Sen1Floods11 — 2026-11-11 (E3)
 
-**Conclusión: sigue PENDIENTE; no hay autorización explícita del publicador.** Lo encontrado:
+**Alcance aclarado:** el usuario informa que el profesor confirmó los términos de uso para el proyecto del curso. No hay respuesta archivada del publicador ni documento con alcance de redistribución pública. Por ello la confirmación docente no se presenta como licencia general del dataset. Lo encontrado:
 
 - Los catálogos oficiales del bucket (`…/sen1floods11/v1.1/catalog/…/collection.json`) declaran `proprietary` (consulta del 2026-10-28, ver `evidence/stage1/public_sources.json`).
 - El artículo (Bonafilia et al., CVPR Workshops 2020, [página CVF](https://openaccess.thecvf.com/content_CVPRW_2020/html/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.html)) remite a `github.com/cloudtostreet/Sen1Floods11` y no indica licencia.
@@ -51,7 +51,7 @@ Por instrucción expresa del usuario, la etapa 1 se cierra con salvedad y se rea
 - No pude abrir el README de GitHub del publicador desde este entorno (sitio fuera de la lista permitida); la consulta anterior lo fijó en el commit `b9e460d…`.
 - Consulta ya enviada el 2026-10-28 a support@floodbase.com ([registro](evidence/stage1/licensing_request_sent.md)); no hay respuesta archivada.
 
-**Consecuencia práctica:** no redistribuir datos ni ejemplos derivados (máscaras o visualizaciones de chips) en GitHub ni en la demo pública; los resultados agregados y el código se mantienen. Las visualizaciones del smoke test de la demo se guardan solo localmente.
+**Consecuencia práctica:** el dataset original no se redistribuye. No publicar máscaras o visualizaciones derivadas hasta guardar la confirmación del profesor y precisar que cubre esa publicación. Los resultados agregados y el código se mantienen. Las visualizaciones del smoke test de la demo se guardan solo localmente.
 
 ### Mensaje de seguimiento para el publicador (enviar tú)
 **Para:** support@floodbase.com (y, si existe, el contacto del repositorio `cloudtostreet/Sen1Floods11`)  
@@ -62,3 +62,7 @@ Por instrucción expresa del usuario, la etapa 1 se cierra con salvedad y se rea
 > Could you please confirm (1) the license or terms that apply to the data, (2) whether non-commercial academic use in a course project and a workshop poster/extended abstract is permitted, (3) whether we may publish derived outputs (predicted masks, figures showing individual chips, aggregated metrics) in a public GitHub repository, and (4) how the dataset should be cited and acknowledged?
 > We will not redistribute the original data. Thank you,
 > Eliezer Villarreal, PUCP — villarreal.eliezer@pucp.edu.pe
+
+## Actualización comunicada por el usuario — 2026-11-18
+
+El usuario informa que el profesor confirmó los términos de uso de Sen1Floods11 para este proyecto de curso. No se aportó un correo o mensaje para archivar, ni se especificó si la confirmación cubre redistribuir datos originales o publicar visualizaciones y máscaras derivadas. Por tanto, esta nota registra el permiso docente comunicado, no una licencia general del titular. No subir el dataset original; conservar productos por chip privados hasta aclarar ese alcance.

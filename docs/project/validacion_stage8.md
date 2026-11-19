@@ -1,36 +1,53 @@
-# Etapa 8 — protocolo congelado y ejecución
+# Etapa 8 — protocolo, revisión y resultados
 
-Fecha: 2026-11-18 (America/Lima). Estado: preflight aprobado; ejecución geográfica todavía pendiente.
+Estado al 18 de noviembre de 2026: **ejecución completada**. El texto anterior de esta página que decía «pendiente» quedó obsoleto; esta versión sustituye ese estado.
 
-## Revisión y autorización
+## Revisión humana y protocolo
 
-El usuario confirmó haber revisado la etapa 7 y autorizó continuar. El recibo humano es [`human_review_stage7_user_20261118.json`](evidence/e3/human_review_stage7_user_20261118.json); el snapshot original [`revision_stage7_20261118.json`](evidence/e3/revision_stage7_20261118.json) permanece inalterado. El preflight [`stage8_preflight_human_reviewed_20261118.json`](evidence/e3/stage8_preflight_human_reviewed_20261118.json) pasa `scripts/check_stage8_gate.py` y conserva `reserved_access=[]`.
+El usuario confirmó haber revisado el notebook, logs/hardware, fallos e interpretación de etapa 7. El recibo [`human_review_stage7_user_20261118.json`](evidence/e3/human_review_stage7_user_20261118.json) registra esa auto-confirmación del equipo; no es una revisión externa. El preflight y autorización están en [`stage8_preflight_human_reviewed_20261118.json`](evidence/e3/stage8_preflight_human_reviewed_20261118.json).
 
-## Corrección del protocolo antes de acceso reservado
+El protocolo se congeló antes de abrir los conjuntos reservados: hash canónico `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`. [`stage8_protocol_freeze_20261118.json`](evidence/e3/stage8_protocol_freeze_20261118.json) conserva la fecha, el hash canónico y el valor de hash de archivo declarado en ese momento.
 
-El borrador comparaba `a3_tuned` (ruta directa de entrenamiento) con `a1_points` (API predictor). Eso mezcla el cambio del decoder con una diferencia de ruta. Antes de leer imágenes o etiquetas reservadas se añadió `a3_frozen`:
+## Ejecución y artefactos
 
-- `a3_tuned` vs. `a3_frozen`: misma ruta directa, mismos prompts; cambia solo el checkpoint del decoder.
-- `a3_frozen` vs. `a1_points`: mismo decoder base y política de prompts; cuantifica la diferencia entre ruta directa y predictor.
-- `a1_points` vs. `a1_assisted`: contraste descriptivo de fuente; la fila asistida usa etiquetas para simular puntos y no es desplegable.
+La ejecución ocurrió en Colab T4 el 18 de noviembre. El resumen público [`stage8_results_summary.json`](evidence/e3/stage8_results_summary.json) registra estado `complete`, el commit fuente `0cd7b39c0564df2c31322eaac06fa4a866f4de37`, el hash del protocolo, el hash del par de etapa 7 y el SHA-256 esperado del reporte íntegro: `aa95eee0fb110e4e94d39728d5d86ac1fcba06881fa8ea6c940e2c4e4e771f76`.
 
-El protocolo está congelado en [`configs/stage8_protocol.json`](../../configs/stage8_protocol.json). Hash SHA-256 canónico: `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`. El [registro de congelamiento](evidence/e3/stage8_protocol_freeze_20261118.json) conserva la fecha, el hash de archivo y que no hubo acceso reservado previo.
+El reporte íntegro, notebook ejecutado y log se ubicaron en Drive según la ruta incluida en el resumen. No están archivados en este clon; el conector de Drive no devolvió esos archivos en esta sesión, por lo que no se volvió a descargar ni recalcular el hash. No se afirma una verificación independiente del reporte íntegro. La tabla de resultados agregados que sigue se basa en el resumen publicado.
 
-## Ejecución en Colab
+## Resultados agregados
 
-1. Abrir [`notebooks/08_evaluacion_final_geografica.ipynb`](../../notebooks/08_evaluacion_final_geografica.ipynb) desde el commit fijado en `MyDrive/auto-prompt-sam2/auto-prompt-sam2/stage8/code_commit.txt`.
-2. Usar runtime Colab GPU con Python 3.12/Linux x86_64. Se requiere `MyDrive/auto-prompt-sam2/auto-prompt-sam2` con artefactos originales de etapas 1–7 y checkpoints. El cuaderno detiene la ejecución si falta algún requisito; no cambia pines ni modelo.
-3. Ejecutar celdas en orden. La revisión, autorización y hash se verifican antes de abrir imágenes/etiquetas. No reutilizar el notebook de etapa 7 para esto.
-4. Primera ejecución con `RESUME=False`. Tras una interrupción técnica, continuar con el mismo código, root, hash y runtime mediante `RESUME=True`.
-5. Guardar `stage8_report.json`, el notebook ejecutado y el log. Máscaras y salidas por chip permanecen en Drive privado; no incluirlas en Git mientras la licencia del dataset siga pendiente.
+| Régimen / conjunto | n chips | Asistido | Automático, congelado | Decoder ajustado |
+|---|---:|---:|---:|---:|
+| official / test_seen | 90 | 0.1823 | 0.2838 | 0.3974 |
+| official / Bolivia reservada | 15 | 0.1961 | 0.4994 | 0.5248 |
+| leave_paraguay_out / test_seen | 76 | 0.1961 | 0.3111 | 0.3319 |
+| leave_paraguay_out / Paraguay reservado | 67 | 0.1796 | 0.1346 | 0.2540 |
 
-El runner conserva resultados por chip, hashes de máscara y métricas en Drive; los resultados resumidos informan IoU pooled, métricas por evento, mediana/IQR por chip, bootstrap pareado de 2 000 muestras, comparación de ruta y cambio visto/reservado. No se elige ningún umbral, checkpoint o fila con datos reservados. Los análisis son de una semilla y el contraste entre conjuntos geográficos es descriptivo.
+Métrica: pooled water IoU. Las filas `a3_frozen` y `a1_points` coinciden exactamente. Prompt automático menos asistido: Bolivia +0.3033 (IC pareado 95% [0.1785, 0.3821]); Paraguay −0.0451 ([-0.1015, 0.0043]). Decoder ajustado menos congelado: Bolivia +0.0254 ([-0.0472, 0.1430]); Paraguay +0.1194 ([0.0640, 0.1782]). Los IC usan 2 000 remuestreos pareados por chip; el experimento tiene una semilla.
 
-## Estado de ejecución
+## Integridad y cambios después del congelamiento
 
-- Preflight y autorización: aprobados.
-- Protocolo: congelado antes del acceso reservado.
-- Código/notebook: preparado; todavía sin ejecución Colab.
-- Imágenes/etiquetas reservadas leídas: no.
-- Resultados de etapa 8: no disponibles todavía.
-- Licencia de Sen1Floods11: respuesta del publicador pendiente.
+Entre el commit de congelamiento `3b03524` y el commit fuente de ejecución `0cd7b39` hubo cambios de plomería:
+
+- `src/auto_prompt_sam2/stage7.py` acepta hashes de código/configuración con saltos de línea LF o CRLF normalizados, para evitar discrepancias de plataforma al recuperar fuentes.
+- `scripts/run_stage8.py` verifica el reporte y estado completado de etapa 5, pero omite leer y hashear todos los objetos de caché de etapa 5 porque la etapa 8 vuelve a calcular features y no los consume.
+- `scripts/run_stage6.py` añade el parámetro `verify_artifacts`; la omisión de cachés solo se usa en la lectura de etapa 5 de la etapa 8.
+- El notebook 08 reinstala pins de etapa 2 y marca el contexto de ejecución Colab.
+
+Estos cambios no modifican filas, umbrales, selección ni pesos del protocolo; sí cambian qué payloads de caché se verifican y cómo se toleran saltos de línea. Debe citarse esta diferencia al describir la procedencia de la ejecución.
+
+El registro de congelamiento declara `protocol_file_sha256=53cc5741…`; los bytes actuales y los del protocolo versionado en `3b03524` dan `522e8695…`, mientras que el hash canónico declarado (`0ccacde9…`) sí se reproduce. La diferencia de hash de archivo **no queda explicada por CRLF/LF** al recalcular los bytes disponibles. Se conserva como discrepancia de procedencia sin atribuirle causa no verificada.
+
+La auditoría de etapa 7 registra los ZIP finales con hashes `df51ddc5…` (official) y `89c24a9a…` (leave_paraguay_out). Hubo generaciones posteriores a la auditoría anterior; para reproducir, usa el par más reciente nombrado en `revision_stage7_20261118.json`, no mezcles generaciones.
+
+## Demo y límites
+
+La demo verificada es un backend manual congelado en un chip. No es la UI Gradio probada de punta a punta ni la demo automática DINOv3→SAM. La UI puede cargar el decoder `best` de E2, que no es el `a3_tuned` usado en etapa 8; por tanto, no representa ese brazo evaluado. Conectar el decoder de etapa 8 requiere disponer de sus pesos y validarlos en GPU. El flujo automático tampoco está conectado a la UI.
+
+Una semilla; checkpoint seleccionado con validación; reservados pequeños; los intervalos bootstrap por chip no sustituyen semillas independientes. La actividad 9 es una extensión interna opcional, no requisito confirmado del PDF del curso.
+
+## Pendientes de archivo y análisis opcional
+
+- El notebook ejecutado de etapa 8, el log y `stage8_report.json` completo están en Drive; el reporte debe verificarse localmente con `python scripts/verify_stage8_report.py <ruta-a-stage8_report.json>`. No se incluyen en este commit porque el acceso de Drive no devolvió los archivos.
+- No se hizo análisis visual de casos de mejora y error. Es opcional; no publicar ejemplos de chips hasta guardar el permiso docente y aclarar su alcance para derivados.
+- Más semillas y ampliar los reservados son mejoras científicas, no requisitos confirmados del PDF.

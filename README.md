@@ -13,28 +13,28 @@ app_port: 7860
 
 Proyecto de **Deep Learning (1INF52), semestre 2026-2**, Ingeniería Informática, **Pontificia Universidad Católica del Perú (PUCP)**, con materiales para WAIMLAP 2026.
 
-> **Estado al 18 de noviembre de 2026: etapas 5–7 ejecutadas en validación y backend de demo manual verificado con pesos reales.** Se conservan los resultados del equipo y los notebooks `E2_01` y `E2_02`. Roberto ejecutó SAM 2.1 tiny congelado en Tesla T4 sobre un chip de validación. La interfaz completa de Gradio y su despliegue siguen pendientes. [Guía de la demo y archivos que pedir al compañero](docs/project/fase2_demo.md).
+> **Estado al 18 de noviembre de 2026: etapas 5–8 ejecutadas y backend manual de demo verificado con pesos reales.** Se conservan los resultados del equipo y los notebooks `E2_01` y `E2_02`. Roberto ejecutó SAM 2.1 tiny congelado en Tesla T4 sobre un chip de validación. La interfaz completa de Gradio y su despliegue siguen pendientes. [Guía de la demo y archivos que pedir al compañero](docs/project/fase2_demo.md).
 
 El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 conserva la intervención preliminar asistida. Las etapas 5–7 añaden la sonda DINOv3, los puntos automáticos, el ajuste del decoder y las ablaciones A1–A3. La etapa 8 ejecutó la evaluación geográfica con el protocolo congelado; el resumen de métricas está en la documentación E3, mientras los artefactos por chip permanecen privados en Drive.
 
 ## E3 — punto de entrada (actualizado 2026-11-18)
 
-- **Póster actualizado:** [PDF A0 para imprimir](docs/WAIMLAP/Poster_CostOfThePrompt.pdf) y [PowerPoint editable](docs/WAIMLAP/Poster_CostOfThePrompt.pptx).
+- **Póster actualizado:** [PDF A0 para imprimir](docs/WAIMLAP/Poster_WAIMLAp_2026_final_A0.pdf) y [PowerPoint editable](docs/WAIMLAP/Poster_WAIMLAp_2026_final_A0.pptx).
 - **Informe (IEEE, 4 págs.):** [`reports/e3/informe_E3.pdf`](reports/e3/informe_E3.pdf); fuente IEEEtran (conference): [`informe_E3_IEEEtran.tex`](reports/e3/informe_E3_IEEEtran.tex) con `fig_iou.pdf` y `fig_curvas.pdf`. Compilar: `pdflatex` dos veces. Retroalimentación del workshop: pendiente de confirmación.
 - **Estado, límites y compuerta de etapa 8:** [`docs/project/e3_estado.md`](docs/project/e3_estado.md).
 - **Resultados consolidados (validación, A1–A3 incluidos):** [`consolidated_results.md`](docs/project/evidence/e3/consolidated_results.md); regenerar con `python scripts/e3_collect_results.py`.
 - **Notebook etapa 7 ejecutado:** [`notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb`](notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb); métricas extraídas en `docs/project/evidence/e3/stage7_metrics_from_notebook.json`.
 - **Demo:** backend manual con pesos reales verificado en T4 sobre Ghana_1033830. [Notebook ejecutado, JSON y auditoría](docs/project/evidence/e3/demo_20261111_roberto/README.md). La interfaz interactiva completa sigue pendiente.
-- **Licencias:** Sen1Floods11 pendiente; mensaje al publicador en [`accesos_y_licencias.md`](docs/project/accesos_y_licencias.md).
+- **Dataset:** el usuario informa que el profesor confirmó los términos para el curso; no está archivada la confirmación escrita ni el alcance de redistribución. Detalle en [`accesos_y_licencias.md`](docs/project/accesos_y_licencias.md).
 - **Recuperación verificada el 18 de noviembre:** [notebook ejecutado](docs/project/evidence/e3/recovery_20261118.ipynb) y [auditoría final](docs/project/evidence/e3/revision_stage7_20261118.json). Ambos regímenes recuperados en un runtime distinto y 2 132 máscaras auditadas sin fallos.
-- **Etapa 8:** revisión humana confirmada; evaluación ejecutada en Colab T4 con protocolo congelado (SHA-256 `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`). Informe verificable en Drive, SHA-256 `aa95eee0…771f76`; resumen agregado seguro para publicar en [`stage8_results_summary.json`](docs/project/evidence/e3/stage8_results_summary.json). El decoder ajustado mejoró +11.9 pp frente al congelado en Paraguay reservado (IC bootstrap pareado 95% [+6.4, +17.8]); en Bolivia el efecto fue +2.5 pp (IC [−4.7, +14.3]). El efecto de los puntos automáticos varía: +30.3 pp frente al asistido en Bolivia y −4.5 pp en Paraguay. No se generaliza a otros países.
-- **Pendiente:** terminar la prueba interactiva de Gradio, recibir respuesta de licencia de Sen1Floods11 e incorporar la retroalimentación del workshop. Las predicciones, máscaras y GeoTIFF derivados continúan en Drive privado. [Preflight y revisión humana](docs/project/evidence/e3/revision_humana_stage7_para_stage8.md); [conteos reales de puntos](docs/project/evidence/e3/e3_point_budget.json).
+- **Etapa 8:** revisión humana confirmada; evaluación ejecutada en Colab T4 con protocolo congelado (SHA-256 `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`). El resumen publica el SHA-256 esperado del informe en Drive (no recalculado en esta sesión): `aa95eee0…771f76`; resumen agregado seguro para publicar en [`stage8_results_summary.json`](docs/project/evidence/e3/stage8_results_summary.json). El decoder ajustado mejoró +11.9 pp frente al congelado en Paraguay reservado (IC bootstrap pareado 95% [+6.4, +17.8]); en Bolivia el efecto fue +2.5 pp (IC [−4.7, +14.3]). El efecto de los puntos automáticos varía: +30.3 pp frente al asistido en Bolivia y −4.5 pp en Paraguay. No se generaliza a otros países.
+- **Pendiente:** probar la UI Gradio de punta a punta, conectar el flujo automático DINOv3→SAM y añadir la retroalimentación del workshop. Los artefactos por chip de E8 siguen en Drive, no en Git. [Preflight y revisión humana](docs/project/evidence/e3/revision_humana_stage7_para_stage8.md); [conteos reales de puntos](docs/project/evidence/e3/e3_point_budget.json).
 
 ## Probar la demo
 
 La demo permite cargar una imagen y colocar **puntos positivos sobre agua y negativos sobre fondo**. Con inferencia habilitada, SAM usa esas indicaciones para delimitar la región y mostrar su máscara. La comparación entrega la misma imagen y los mismos puntos a SAM original y al modelo con el decoder ajustado.
 
-**El modo predeterminado es `preview`: “Segmentar” está deshabilitado.** En la PC se puede revisar la carga y los puntos; el backend manual ya produjo una máscara con pesos reales en T4. La URL de demo desplegada sigue pendiente. Para activar el brazo original se necesita GPU en Colab/Spaces y SAM base, que puede descargarse públicamente. Para comparar hace falta además el `best/payload` del compañero. Recibir ese archivo no activa inferencia en la PC.
+**El modo predeterminado es `preview`: “Segmentar” está deshabilitado.** En la PC se puede revisar la carga y los puntos; el backend manual ya produjo una máscara con pesos reales en T4. No hay URL de demo desplegada; publicar una es opcional si la demostración se hace en Colab. Para activar el brazo original se necesita GPU en Colab/Spaces y SAM base, que puede descargarse públicamente. Para comparar hace falta además el `best/payload` del compañero. Recibir ese archivo no activa inferencia en la PC.
 
 Desde la raíz del repositorio, Python 3.10 o superior, en PowerShell:
 
@@ -95,7 +95,7 @@ El [informe de resultados](docs/project/resultados_fase1.md) reúne configuraci�
 - E2 conserva el experimento asistido. Las etapas 5–7 posteriores entrenaron la sonda de agua y ejecutaron el pipeline automático DINOv3→SAM en validación.
 - Una semilla, subconjuntos pequeños y mejor época seleccionada y reportada en la misma validación; no se afirma significancia estadística ni rendimiento final en test, Bolivia o Paraguay reservado.
 - FLOPs y campo receptivo tienen cobertura y límites metodológicos declarados. `recover` de E2 reprodujo la evaluación en un proceso nuevo de la misma sesión; no hay evidencia de reinicio real del runtime de E2.
-- La consulta de licencia de Sen1Floods11 sigue pendiente según el [registro de accesos y licencias](docs/project/accesos_y_licencias.md). El cierre de seguimiento no modifica ese estado.
+- El usuario informa que el profesor confirmó los términos para el proyecto de curso; la confirmación escrita y su alcance de redistribución no están archivados. Véase el [registro de accesos y licencias](docs/project/accesos_y_licencias.md).
 
 **Concluir la fase 1 del proyecto no equivale a una calificación académica de E2 ni al cumplimiento de todos los entregables finales del curso.** Las [bases del curso](docs/course/tarea_final_deep_learning.md) se conservan como referencia de requisitos.
 
