@@ -15,7 +15,7 @@ Proyecto de **Deep Learning (1INF52), semestre 2026-2**, Ingeniería Informátic
 
 > **Estado al 18 de noviembre de 2026: etapas 5–7 ejecutadas en validación y backend de demo manual verificado con pesos reales.** Se conservan los resultados del equipo y los notebooks `E2_01` y `E2_02`. Roberto ejecutó SAM 2.1 tiny congelado en Tesla T4 sobre un chip de validación. La interfaz completa de Gradio y su despliegue siguen pendientes. [Guía de la demo y archivos que pedir al compañero](docs/project/fase2_demo.md).
 
-El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 conserva la intervención preliminar asistida. Las etapas 5–7 añaden la sonda DINOv3, los puntos automáticos, el ajuste del decoder y las ablaciones A1–A3. La evaluación geográfica reservada sigue pendiente.
+El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 conserva la intervención preliminar asistida. Las etapas 5–7 añaden la sonda DINOv3, los puntos automáticos, el ajuste del decoder y las ablaciones A1–A3. La etapa 8 ejecutó la evaluación geográfica con el protocolo congelado; el resumen de métricas está en la documentación E3, mientras los artefactos por chip permanecen privados en Drive.
 
 ## E3 — punto de entrada (actualizado 2026-11-18)
 
@@ -27,8 +27,8 @@ El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 co
 - **Demo:** backend manual con pesos reales verificado en T4 sobre Ghana_1033830. [Notebook ejecutado, JSON y auditoría](docs/project/evidence/e3/demo_20261111_roberto/README.md). La interfaz interactiva completa sigue pendiente.
 - **Licencias:** Sen1Floods11 pendiente; mensaje al publicador en [`accesos_y_licencias.md`](docs/project/accesos_y_licencias.md).
 - **Recuperación verificada el 18 de noviembre:** [notebook ejecutado](docs/project/evidence/e3/recovery_20261118.ipynb) y [auditoría final](docs/project/evidence/e3/revision_stage7_20261118.json). Ambos regímenes recuperados en un runtime distinto y 2 132 máscaras auditadas sin fallos.
-- **Etapa 8:** revisión humana confirmada, autorización registrada y protocolo congelado antes de abrir reservados (SHA-256 `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`). Control `a3_frozen` añadido para separar el efecto del decoder del cambio de ruta. Ejecutores: [`notebook 08`](notebooks/08_evaluacion_final_geografica.ipynb) y [`run_stage8.py`](scripts/run_stage8.py). **Todavía no se ha ejecutado la evaluación geográfica ni se han abierto los reservados.**
-- **Pendiente:** ejecutar etapa 8 en Colab con el root persistente y checkpoints de Drive, terminar la prueba interactiva de Gradio, y recibir respuesta de licencia de Sen1Floods11. [Revisión humana y preflight](docs/project/evidence/e3/revision_humana_stage7_para_stage8.md); [conteos reales de puntos verificados](docs/project/evidence/e3/e3_point_budget.json).
+- **Etapa 8:** revisión humana confirmada; evaluación ejecutada en Colab T4 con protocolo congelado (SHA-256 `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`). Informe verificable en Drive, SHA-256 `aa95eee0…771f76`; resumen agregado seguro para publicar en [`stage8_results_summary.json`](docs/project/evidence/e3/stage8_results_summary.json). El decoder ajustado mejoró +11.9 pp frente al congelado en Paraguay reservado (IC bootstrap pareado 95% [+6.4, +17.8]); en Bolivia el efecto fue +2.5 pp (IC [−4.7, +14.3]). El efecto de los puntos automáticos varía: +30.3 pp frente al asistido en Bolivia y −4.5 pp en Paraguay. No se generaliza a otros países.
+- **Pendiente:** terminar la prueba interactiva de Gradio, recibir respuesta de licencia de Sen1Floods11 e incorporar la retroalimentación del workshop. Las predicciones, máscaras y GeoTIFF derivados continúan en Drive privado. [Preflight y revisión humana](docs/project/evidence/e3/revision_humana_stage7_para_stage8.md); [conteos reales de puntos](docs/project/evidence/e3/e3_point_budget.json).
 
 ## Probar la demo
 

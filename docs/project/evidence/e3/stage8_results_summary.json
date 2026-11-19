@@ -1,0 +1,98 @@
+{
+  "stage": "phase1_stage8",
+  "status": "complete",
+  "run_timestamp_utc": "2026-11-18T23:50:02Z",
+  "report_drive_path": "stage8/c3ddafe753c41e94f8c69de6ed6947aa9f68ec5b8c5f9086c3ae99909bbe0c5c/stage8_report.json",
+  "report_sha256": "aa95eee0fb110e4e94d39728d5d86ac1fcba06881fa8ea6c940e2c4e4e771f76",
+  "source_commit": "0cd7b39c0564df2c31322eaac06fa4a866f4de37",
+  "protocol_sha256": "0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681",
+  "stage7_pair_sha256": "996b35878997ebcf5e4662a6e1800056964d73f6dc6ee85225d6302bb00eddcf",
+  "metric": "pooled_water_iou",
+  "rows": {
+    "official": {
+      "test_seen": {
+        "chips": 90,
+        "a1_assisted": 0.18231891683671816,
+        "a1_points": 0.2837635939948064,
+        "a3_frozen": 0.2837635939948064,
+        "a3_tuned": 0.3974007844461752
+      },
+      "bolivia_heldout": {
+        "chips": 15,
+        "a1_assisted": 0.196096834465196,
+        "a1_points": 0.4993621795162946,
+        "a3_frozen": 0.4993621795162946,
+        "a3_tuned": 0.5248111919642298
+      }
+    },
+    "leave_paraguay_out": {
+      "test_seen": {
+        "chips": 76,
+        "a1_assisted": 0.1960527958401035,
+        "a1_points": 0.3110630300204041,
+        "a3_frozen": 0.3110630300204041,
+        "a3_tuned": 0.3319463136826699
+      },
+      "paraguay_heldout": {
+        "chips": 67,
+        "a1_assisted": 0.17962068828498798,
+        "a1_points": 0.13455283482562846,
+        "a3_frozen": 0.13455283482562846,
+        "a3_tuned": 0.2539979462687634
+      }
+    }
+  },
+  "paired_bootstrap_2000_seed42": {
+    "official": {
+      "test_seen": {
+        "prompt_source_delta_a1_points_minus_assisted": {
+          "delta": 0.10144467715808822,
+          "ci95": [0.024063824483813764, 0.1838681005489203]
+        },
+        "decoder_delta_a3_tuned_minus_frozen": {
+          "delta": 0.11363719045136883,
+          "ci95": [-0.0037195397014774057, 0.22751873012900437]
+        }
+      },
+      "bolivia_heldout": {
+        "prompt_source_delta_a1_points_minus_assisted": {
+          "delta": 0.3032653450510986,
+          "ci95": [0.17849810497184238, 0.3820519386678626]
+        },
+        "decoder_delta_a3_tuned_minus_frozen": {
+          "delta": 0.025449012447935182,
+          "ci95": [-0.047247807095830735, 0.14303588368268524]
+        }
+      }
+    },
+    "leave_paraguay_out": {
+      "test_seen": {
+        "prompt_source_delta_a1_points_minus_assisted": {
+          "delta": 0.1150102341803006,
+          "ci95": [0.027197261638745085, 0.21299761548629942]
+        },
+        "decoder_delta_a3_tuned_minus_frozen": {
+          "delta": 0.020883283662265828,
+          "ci95": [-0.1337786690323204, 0.16662020106258849]
+        }
+      },
+      "paraguay_heldout": {
+        "prompt_source_delta_a1_points_minus_assisted": {
+          "delta": -0.045067853459359514,
+          "ci95": [-0.10152090156357124, 0.004263500188713489]
+        },
+        "decoder_delta_a3_tuned_minus_frozen": {
+          "delta": 0.11944511144313491,
+          "ci95": [0.06400261034449042, 0.1781752545844179]
+        }
+      }
+    }
+  },
+  "route_parity": "a3_frozen and a1_points matched exactly in all four sets; paired delta and CI are zero",
+  "caveats": [
+    "Single experimental seed; bootstrap resampling is paired by chip and does not replace independent seeds.",
+    "The adjusted decoder checkpoint was selected on validation before this reserved evaluation.",
+    "Pooled water IoU excludes chips where the water class has a zero denominator.",
+    "This public-safe summary omits per-chip identifiers, masks, GeoTIFFs, and prediction arrays; the dataset license remains unresolved."
+  ]
+}

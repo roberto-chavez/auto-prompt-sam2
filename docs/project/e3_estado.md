@@ -1,7 +1,7 @@
-# E3 — estado verificado (2026-11-11, actualizado tras la etapa 7 ejecutada)
+# E3 — estado verificado (actualizado 2026-11-18 tras la etapa 8)
 
 ## Qué exige el PDF (Tarea_Final_DeepLearning_PREGRADO_2026-2.pdf)
-Dos filas E3, fecha 11-nov-2026: «Entrega de trabajo» (2 pts) e «Informe final (4–8 pág., IEEE/LNCS) revisado con la retroalimentación del workshop» (4 pts). El workshop (18–20 nov) es posterior al plazo: su retroalimentación está **pendiente de confirmación** (no existe aún; no se inventó). §8 cita una «plantilla de WAIMLAP» que no existe en el repositorio. Los §§2–3 también exigen evaluar bajo cambio de dominio, analizar fallos y entregar una demo funcional y reproducible. Las etapas 7–9 y la elección de Bolivia o Paraguay como conjuntos reservados forman parte del protocolo del equipo. La evaluación geográfica reservada sigue pendiente. El backend manual de la demo ya tiene evidencia de inferencia real.
+Dos filas E3, fecha 11-nov-2026: «Entrega de trabajo» (2 pts) e «Informe final (4–8 pág., IEEE/LNCS) revisado con la retroalimentación del workshop» (4 pts). El workshop (18–20 nov) es posterior al plazo: su retroalimentación está **pendiente de incorporar**. §8 cita una «plantilla de WAIMLAP» que no existe en el repositorio. La inferencia geográfica de la etapa 8 se ejecutó el 18 de noviembre con el protocolo congelado. Siguen pendientes la prueba interactiva completa de Gradio, la licencia de Sen1Floods11 y la retroalimentación del workshop. El backend manual de la demo sí tiene evidencia de inferencia real.
 
 ## Resultados (solo validación)
 Todas las cifras se regeneran con `python scripts/e3_collect_results.py` → [`evidence/e3/consolidated_results.md`](evidence/e3/consolidated_results.md). Fuente de la etapa 7: [`07_ablaciones_y_seleccion_ejecutado.ipynb`](../../notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb) (commit `ebde34e`), métricas extraídas a [`evidence/e3/stage7_metrics_from_notebook.json`](evidence/e3/stage7_metrics_from_notebook.json).
@@ -37,7 +37,7 @@ La [auditoría final](evidence/e3/revision_stage7_20261118.json) verifica distin
 
 [Notebook de recuperación y auditoría ejecutado](evidence/e3/recovery_20261118.ipynb). Las lecturas paralelas precargaron antecedentes de validación en caché del sistema de archivos; los checks de hash y la reconstrucción sin caché de features permanecieron activos. Los ZIP finales en Drive tienen hashes df51ddc5… (official) y 89c24a9a… (excluido). La auditoría anterior del 11 de noviembre se conserva como antecedente.
 
-Al 18 de noviembre, la revisión humana del equipo está confirmada y la autorización de etapa 8 quedó registrada en un preflight derivado. El snapshot original conserva `stage8_authorized=false`; los conjuntos reservados siguen cerrados hasta el ejecutor de etapa 8.
+Al 18 de noviembre, la revisión humana del equipo está confirmada y la autorización de etapa 8 quedó registrada en un preflight derivado. El snapshot original conserva `stage8_authorized=false`; el preflight derivado registra autorización y supera la compuerta antes del acceso reservado.
 
 ## Fase C según el PDF
 §2: «Se evalúa el modelo en un dominio de distribución distinta a la de su preentrenamiento… reportar explícitamente lo que no funcionó». El cambio natural→Sentinel-2 ya está medido (etapas 3–7) y sus fallos reportados. La transferencia geográfica con reservados (Bolivia/Paraguay) es del **protocolo del equipo**, no una exigencia literal del PDF.
@@ -48,10 +48,21 @@ La revisión humana de etapa 7 fue confirmada por el usuario el 2026-11-18; la a
 
 El protocolo se corrigió y congeló **antes de abrir datos reservados**: hash canónico `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681` ([registro](evidence/e3/stage8_protocol_freeze_20261118.json)). Se añadió `a3_frozen` como control de ruta: el efecto del decoder se contrasta `a3_tuned` vs. `a3_frozen` con la misma ruta directa; `a3_frozen` vs. `a1_points` cuantifica la diferencia entre la API predictor y la ruta directa.
 
-El evaluador agregado está implementado y probado previamente con datos sintéticos. Se añadió `scripts/run_stage8.py` y el notebook ejecutable [`08_evaluacion_final_geografica.ipynb`](../../notebooks/08_evaluacion_final_geografica.ipynb) para ejecutar los cuatro brazos sobre `test_seen` y Bolivia/Paraguay reservados, verificando IDs, hashes y preflight antes de leer imágenes/etiquetas. **Aún no se ejecutó inferencia geográfica ni se abrió ningún conjunto reservado.** Requiere ejecutar el notebook en Colab con el root de Drive y checkpoints de etapas 1–7. La licencia del dataset sigue pendiente; los mosaicos/máscaras permanecerán solo en Drive privado y no se publicarán.
+La evaluación terminó en Colab T4 el 18 de noviembre. El reporte verificable está en Drive (`stage8/c3ddafe753c41e94f8c69de6ed6947aa9f68ec5b8c5f9086c3ae99909bbe0c5c/stage8_report.json`), con SHA-256 `aa95eee0fb110e4e94d39728d5d86ac1fcba06881fa8ea6c940e2c4e4e771f76`; el resumen reproducible sin identificadores por chip ni máscaras está en [`stage8_results_summary.json`](evidence/e3/stage8_results_summary.json). La identidad del run fija el código `0cd7b39c0564df2c31322eaac06fa4a866f4de37`, el protocolo `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681` y el par de etapa 7 `996b35878997ebcf5e4662a6e1800056964d73f6dc6ee85225d6302bb00eddcf`.
+
+| Régimen / conjunto | n chips | A1 asistido | A1 puntos automáticos congelado | A3 decoder ajustado |
+| --- | ---: | ---: | ---: | ---: |
+| official / test_seen | 90 | 0.1823 | 0.2838 | 0.3974 |
+| official / Bolivia reservada | 15 | 0.1961 | 0.4994 | 0.5248 |
+| leave_paraguay_out / test_seen | 76 | 0.1961 | 0.3111 | 0.3319 |
+| leave_paraguay_out / Paraguay reservado | 67 | 0.1796 | 0.1346 | 0.2540 |
+
+Métrica: pooled water IoU; un chip sin agua no define IoU de agua y se excluye de ese agregado. Las filas `a3_frozen` coinciden exactamente con `a1_points` (diferencia de ruta 0). En los reservados, la diferencia automática menos asistida fue +0.3033 en Bolivia (IC bootstrap pareado 95% [0.1785, 0.3821]) y −0.0451 en Paraguay (IC [−0.1015, 0.0043]); el resultado cambia por país. El ajuste del decoder frente a la ruta congelada fue +0.0254 en Bolivia (IC [−0.0472, 0.1430]) y +0.1194 en Paraguay (IC [0.0640, 0.1782]). En el conjunto visto, los cambios del decoder fueron +0.1136 official (IC [−0.0037, 0.2275]) y +0.0209 leave-Paraguay-out (IC [−0.1338, 0.1666]). IC calculados con 2 000 bootstrap pareados por chip, semilla 42; una sola semilla experimental.
+
+Estos datos respaldan **transferencia geográfica medida**, pero no una ventaja universal del prompt automático ni un efecto concluyente del decoder en todos los conjuntos. La elección del checkpoint ajustado procede de validación; los conjuntos reservados tienen 15 y 67 chips. La licencia del dataset sigue pendiente; las máscaras y predicciones permanecen solo en Drive privado y no se publican. La prueba interactiva completa de Gradio y la integración automática en la demo también siguen pendientes.
 
 ## Demo
 Roberto ejecutó el backend manual en Colab T4 el 11 de noviembre. La auditoría del 18 de noviembre verificó el ZIP y el notebook ejecutado sin errores: Ghana_1033830, máscara binaria de 512 × 512 con 23 252 positivos y hash de chip coincidente. [Evidencia y alcance](evidence/e3/demo_20261111_roberto/README.md). Este run usa SAM congelado y puntos manuales. La interfaz Gradio completa, el decoder ajustado y los puntos automáticos en la demo siguen pendientes.
 
 ## Limitaciones
-Una semilla, sin IC; selección de época/umbral en la misma validación; sin reservados; Sen1Floods11 sin licencia verificada.
+Una semilla; los IC bootstrap son por chips y no equivalen a réplicas independientes; la selección del decoder y del umbral usa la validación; los reservados contienen 15 chips de Bolivia y 67 de Paraguay; Sen1Floods11 sigue sin licencia verificada.
