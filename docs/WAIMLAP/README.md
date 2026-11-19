@@ -1,6 +1,6 @@
 # Materiales para WAIMLAP
 
-Actualización del 18 de noviembre de 2026.
+Actualización del 19 de noviembre de 2026.
 
 - [Póster final A0 listo para imprimir](Poster_WAIMLAp_2026_final_A0.pdf), vertical, 841 × 1189 mm y dos columnas, en inglés.
 - [Fuente editable PowerPoint del póster final](Poster_WAIMLAp_2026_final_A0.pptx), con gráficos y QR al repositorio.
