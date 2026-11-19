@@ -21,6 +21,7 @@ ENV_FIELDS = {
     "DEMO_DECODER_REVISION": "decoder_revision",
     "DEMO_DECODER_FILENAME": "decoder_filename",
     "DEMO_DECODER_KIND": "decoder_kind",
+    "DEMO_AUTO_BUNDLE": "automatic_bundle_path",
     "DEMO_CACHE_DIR": "cache_dir",
 }
 

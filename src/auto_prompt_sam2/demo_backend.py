@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import logging
 import threading
+import json
+from pathlib import Path
 
 import numpy as np
 
 from .demo_config import (artifact_contract, configured_decoder, decoder_expectation, decoder_kind,
-                          require_remote_runtime, resolve_path, stage6_decoder_pin, verify_file)
+                          require_remote_runtime, resolve_path, stage6_decoder_pin, verify_file, read_json)
 from .demo_images import validate_points
 from .sam_adapter import select_multimask
 
@@ -60,7 +62,106 @@ class DemoBackend:
         self.config = config
         self.report, self.params = artifact_contract(config)
         self._predictors = {}
+        self._dino = None
+        self._automatic_bundle = None
         self._lock = threading.Lock()
+
+    def _load_automatic_bundle(self):
+        if self._automatic_bundle is not None:
+            return self._automatic_bundle
+        path = self.config.get("automatic_bundle_path")
+        if not path:
+            raise FileNotFoundError("Configura DEMO_AUTO_BUNDLE con el payload oficial_complete_bundle de Stage 5")
+        path = resolve_path(path)
+        payload = path.read_bytes()
+        bundle = json.loads(payload)
+        # Stage 6/7 pin the complete Stage-5 bundle by canonical content hash.
+        pinned = read_json(Path(__file__).resolve().parents[2] /
+                           "configs/stage7_dependencies.json")["stage6"]["official"]["identity"]["bundle_sha256"]
+        from .artifacts import digest
+        if digest(bundle) != pinned:
+            raise ValueError("El bundle automático no coincide con el pin de Stage 7")
+        if (bundle.get("regime") != "official" or
+                bundle.get("base_checkpoint_sha256", {}).get("sam") != self.report["model"]["checkpoint_sha256"]):
+            raise ValueError("El bundle automático usa otro régimen o checkpoint SAM")
+        self._automatic_bundle = bundle
+        return bundle
+
+    def _dino_model(self, bundle):
+        if self._dino is not None:
+            return self._dino
+        from .features import load_frozen_dino
+        cache = resolve_path(self.config["cache_dir"])
+        self._dino, _ = load_frozen_dino(bundle["models"]["dinov3"], cache,
+            expected_sha256=bundle["base_checkpoint_sha256"]["dino"])
+        return self._dino
+
+    def _predict_automatic(self, image, bundle):
+        import torch
+        import torch.nn.functional as F
+        from .automatic_prompts import probability_map, infer_points
+        from .features import token_layout, tokens_to_grid
+        from .probe import probabilities
+
+        params = bundle["preprocessing"]
+        model = self._dino_model(bundle)
+        dino = params["config"]["dino"]
+        rgb = torch.from_numpy(np.moveaxis(image.rgb, -1, 0).copy()).float()
+        rgb = F.interpolate(rgb[None], size=(dino["size"], dino["size"]), mode="bilinear",
+                             align_corners=False, antialias=True)[0]
+        mean = torch.tensor(dino["mean"], dtype=torch.float32)[:, None, None]
+        std = torch.tensor(dino["std"], dtype=torch.float32)[:, None, None]
+        tensor = ((rgb - mean) / std)[None].cuda()
+        layout = token_layout((512, 512), 16, model.config.num_register_tokens, model.config.hidden_size)
+        with torch.inference_mode():
+            grid = tokens_to_grid(model(pixel_values=tensor).last_hidden_state, layout)
+            features = grid[0].permute(1, 2, 0).float().cpu().numpy().copy()
+        if features.shape != (32, 32, 1024) or not np.isfinite(features).all():
+            raise ValueError("DINOv3 feature geometry/value mismatch")
+        patch_probabilities = probabilities(features, bundle["probe"], regime="official")
+        probability = probability_map(patch_probabilities, output_hw=image.valid.shape)
+        policy = bundle["prompts"]
+        threshold = bundle["positive_threshold"]
+        result, prompts = infer_points(self._predictor("frozen"), image.rgb.astype(np.float32),
+                                       probability, image.valid, policy, threshold)
+        predictor = self._predictors.get("frozen")
+        if predictor is not None:
+            predictor.reset_predictor()
+        summary = {k: v for k, v in prompts.items() if k != "component_map"}
+        summary["component_map"] = None
+        summary["points"] = sum(len(component["point_coords"]) for component in prompts["components"])
+        summary["components"] = len(prompts["components"])
+        summary["positive_threshold"] = threshold
+        summary["probe_source"] = "pinned Stage-5 official_complete_bundle"
+        return result, summary, probability
+
+    def segment_automatic(self, image, compare=True):
+        """DINOv3 probe -> deterministic points -> frozen SAM; optionally the pinned a3_tuned arm."""
+        require_remote_runtime(self.config)
+        with self._lock:
+            import torch
+            with torch.inference_mode():
+                bundle = self._load_automatic_bundle()
+                generated, prompt_info, probability = self._predict_automatic(image, bundle)
+                frozen = generated
+                tuned = None
+                status = (f"Automático: {prompt_info['components']} componentes, {prompt_info['points']} puntos; "
+                          f"umbral {prompt_info['positive_threshold']:.2f}; DINOv3 → SAM congelado")
+                if compare and configured_decoder(self.config):
+                    try:
+                        from .automatic_prompts import infer_points
+                        tuned, _ = infer_points(self._predictor("tuned"), image.rgb.astype(np.float32),
+                            probability, image.valid, bundle["prompts"], bundle["positive_threshold"])
+                        predictor = self._predictors.get("tuned")
+                        if predictor is not None:
+                            predictor.reset_predictor()
+                        status += ("; comparado con a3_tuned official (mismo prompt automático; "
+                                   "no implica evaluación independiente)")
+                    except Exception:
+                        LOG.exception("No se pudo ejecutar a3_tuned en la ruta automática")
+                        status += "; a3_tuned no disponible (revisar log)"
+                return {"frozen": frozen, "tuned": tuned, "status": status,
+                        "automatic_prompts": prompt_info}
 
     def _checkpoint(self, arm):
         config, report = self.config, self.report

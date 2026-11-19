@@ -13,6 +13,7 @@ FILES = [
     Path("app.py"), Path("requirements-demo.txt"), Path("requirements-demo-inference.txt"),
     Path("configs/demo.json"),
     Path("configs/environment.yaml"),
+    Path("configs/stage7_dependencies.json"),
     Path("docs/project/evidence/e2/colab_run_20261030T013250Z/run/report.json"),
     Path("docs/project/evidence/stage2/official_preprocessing.json"),
 ]

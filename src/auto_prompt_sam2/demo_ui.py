@@ -57,15 +57,21 @@ class DemoController:
             message = str(error)
         return updated, draw_points(image, updated), updated, None, None, None, None, {}, message
 
-    def segment(self, image, points, compare):
+    def segment(self, image, points, compare, strategy="Manual"):
         if self.config["mode"] == "preview":
             return None, None, None, None, {}, "Modo preparación: imágenes y puntos disponibles; inferencia deshabilitada"
         try:
-            validate_points(points, image, self.config["max_points"])
-            result = self.backend.segment(image, points, compare)
+            if strategy == "Automático · DINOv3 → SAM":
+                result = self.backend.segment_automatic(image, compare)
+            else:
+                validate_points(points, image, self.config["max_points"])
+                result = self.backend.segment(image, points, compare)
             frozen, tuned = result["frozen"], result["tuned"]
             metadata = {"input": image.metadata, "points_xy_label": points,
-                        "policy": "all_manual_points_in_one_object_prompt",
+                        "strategy": strategy,
+                        "policy": ("pinned_DINOv3_probe_and_deterministic_components" if strategy.startswith("Automático")
+                                   else "all_manual_points_in_one_object_prompt"),
+                        "automatic_prompts": result.get("automatic_prompts"),
                         "run_id_decoder": ((stage6_decoder_pin()["generation"] if decoder_kind(self.config) == "stage6_a3_tuned"
                                            else self.report["run_id"]) if tuned is not None else None),
                         "decoder_kind": decoder_kind(self.config),
@@ -84,9 +90,9 @@ class DemoController:
             return None, None, None, None, {}, "Inferencia no disponible. Revisa GPU, pesos y logs del servidor"
 
 
-def build_demo(config=None):
+def build_demo(config=None, controller=None):
     config = config or load_demo_config()
-    controller = DemoController(config)
+    controller = controller or DemoController(config)
     mode_note = ("**Modo preparación: no se ejecutan modelos.** Puedes cargar imágenes y marcar puntos."
                  if config["mode"] == "preview" else
                  "**Inferencia GPU bajo demanda.** Los pesos se cargan al pulsar Segmentar.")
@@ -100,10 +106,12 @@ def build_demo(config=None):
         gr.Markdown("# El costo del prompt\nSegmentación asistida de agua superficial · SAM 2.1 tiny")
         gr.Markdown(mode_note + "\n\n" + decoder_note)
         gr.Markdown("1. Carga un GeoTIFF **512×512** o un **PNG/JPEG** (se adapta sin deformar). "
-                    "2. Elige positivo o negativo y haz clic. "
+                    "2. Elige modo manual (clics) o automático (DINOv3 genera los puntos). "
                     "3. Pulsa **Segmentar**. Verde (+): agua; rojo (−): fondo. "
-                    "Todos los puntos describen una región en una sola llamada.")
+                    "Todos los puntos manuales describen una región en una sola llamada.")
         image_state, points_state = gr.State(None), gr.State([])
+        strategy = gr.Radio(["Manual", "Automático · DINOv3 → SAM"], value="Manual",
+                            label="Fuente de puntos")
         layout = gr.Dropdown(LAYOUTS, value=LAYOUTS[0], label="Formato y orden de bandas")
         file = gr.File(label="Imagen satelital (máximo 32 MB por defecto)", type="filepath",
                        file_types=[".tif", ".tiff", ".png", ".jpg", ".jpeg"])
@@ -139,14 +147,17 @@ def build_demo(config=None):
         file.change(controller.upload, [file, layout], upload_outputs, **event_args)
         layout.change(controller.upload, [file, layout], upload_outputs, **event_args)
 
-        def select(image, points, polarity, evt: gr.SelectData):
+        def select(image, points, polarity, strategy, evt: gr.SelectData):
+            if strategy != "Manual":
+                return points, draw_points(image, points), points, None, None, None, None, {}, \
+                    "Los clics se desactivan en modo automático; DINOv3 genera los puntos"
             return controller.edit(image, points, "add", evt.index, polarity == "Positivo (+)")
 
-        canvas.select(select, [image_state, points_state, polarity], edit_outputs, **event_args)
+        canvas.select(select, [image_state, points_state, polarity, strategy], edit_outputs, **event_args)
         undo.click(lambda im, pts: controller.edit(im, pts, "undo"), [image_state, points_state], edit_outputs, **event_args)
         clear.click(lambda im, pts: controller.edit(im, pts, "clear"), [image_state, points_state], edit_outputs, **event_args)
         compare.change(lambda: (None, None, None, None, {}, "Comparación cambiada; vuelve a segmentar"),
                        [], result_outputs, **event_args)
-        run.click(controller.segment, [image_state, points_state, compare], result_outputs, **event_args)
+        run.click(controller.segment, [image_state, points_state, compare, strategy], result_outputs, **event_args)
     demo.queue(max_size=16, default_concurrency_limit=1)
     return demo
