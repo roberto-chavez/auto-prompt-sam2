@@ -25,7 +25,8 @@ from auto_prompt_sam2.demo_config import (artifact_contract, inspect_artifacts, 
                                          require_remote_runtime, verify_file)
 from auto_prompt_sam2.demo_images import (AUTO_LAYOUT, DISPLAY_LAYOUT, RGB_LAYOUT, S2_LAYOUT, DemoImage,
                                          draw_points, load_image, validate_points)
-from auto_prompt_sam2.demo_backend import best_decoder_state, predict_manual, DemoBackend
+from auto_prompt_sam2.demo_backend import best_decoder_state, predict_manual, DemoBackend, stage6_decoder_state
+from auto_prompt_sam2.demo_config import decoder_expectation, stage6_decoder_pin
 from auto_prompt_sam2.demo_ui import DemoController, build_demo
 
 
@@ -195,6 +196,38 @@ class DemoContracts(unittest.TestCase):
                         dict(payload, best={"epoch": 1, "state": {}})):
             with self.assertRaises(ValueError):
                 best_decoder_state(altered, self.report)
+
+    def test_a3_tuned_pin_matches_stage7_lock_and_is_local_only(self):
+        pin = stage6_decoder_pin()
+        self.assertEqual(pin["sha256"], "ca639740af32dc23b41932d6d3f17426b7b2e2d6d40394ef3fc51b63766bf55a")
+        self.assertEqual((pin["size"], pin["generation"]),
+                         (16908153, "20261101T231354388506Z_175b8b784023"))
+        config = dict(self.config, decoder_kind="stage6_a3_tuned")
+        self.assertEqual(decoder_expectation(config, self.report), (pin["sha256"], pin["size"]))
+        self.assertNotEqual(decoder_expectation(self.config | {"decoder_kind": "e2_best"}, self.report)[0], pin["sha256"])
+        with self.assertRaises(ValueError):  # no public/remote hosting for a3_tuned
+            load_demo_config(environ={"DEMO_DECODER_KIND": "stage6_a3_tuned", "DEMO_DECODER_REPO_ID": "x/y",
+                                      "DEMO_DECODER_REVISION": "0" * 40, "DEMO_DECODER_FILENAME": "f"})
+        with self.assertRaises(ValueError):
+            load_demo_config(environ={"DEMO_DECODER_KIND": "unknown"})
+        backend = DemoBackend(dict(config, mode="inference", decoder_checkpoint_path=None, allow_download=True))
+        with self.assertRaises(FileNotFoundError):
+            backend._checkpoint("tuned")
+
+    def test_a3_tuned_wrong_file_is_rejected_by_hash(self):
+        bad = self.root / "payload"
+        bad.write_bytes(b"not the pinned decoder")
+        backend = DemoBackend(dict(self.config, mode="inference", decoder_kind="stage6_a3_tuned",
+                                   decoder_checkpoint_path=str(bad)))
+        with self.assertRaises(ValueError):
+            backend._checkpoint("tuned")
+
+    def test_stage6_decoder_schema(self):
+        tensor = SimpleNamespace(shape=(1,), dtype="float32")
+        self.assertEqual(stage6_decoder_state({"w": tensor}), {"w": tensor})
+        for bad in ({}, None, {"w": 1}, {"best": {}}, {"config_sha256": "x", "w": tensor}):
+            with self.assertRaises(ValueError):
+                stage6_decoder_state(bad)
 
     def test_preview_never_calls_backend_and_edits_clear_results(self):
         backend = Mock()

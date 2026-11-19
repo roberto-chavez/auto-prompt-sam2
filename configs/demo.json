@@ -7,6 +7,7 @@
   "decoder_repo_id": null,
   "decoder_revision": null,
   "decoder_filename": null,
+  "decoder_kind": "stage6_a3_tuned",
   "allow_download": false,
   "cache_dir": ".cache/demo",
   "max_upload_mb": 32,

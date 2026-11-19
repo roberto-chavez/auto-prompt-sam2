@@ -20,8 +20,36 @@ ENV_FIELDS = {
     "DEMO_DECODER_REPO_ID": "decoder_repo_id",
     "DEMO_DECODER_REVISION": "decoder_revision",
     "DEMO_DECODER_FILENAME": "decoder_filename",
+    "DEMO_DECODER_KIND": "decoder_kind",
     "DEMO_CACHE_DIR": "cache_dir",
 }
+
+
+DECODER_KINDS = ("e2_best", "stage6_a3_tuned")
+STAGE6_PIN_FILE = "configs/stage7_dependencies.json"
+STAGE6_PIN_REGIME = "official"
+
+
+def decoder_kind(config):
+    return config.get("decoder_kind") or "e2_best"
+
+
+def stage6_decoder_pin(config=None):
+    """Pinned Stage-6 `decoder_export` (a3_tuned, official regime) as fixed by Stage 7/8."""
+    item = read_json(REPO / STAGE6_PIN_FILE)["stage6"][STAGE6_PIN_REGIME]["artifacts"]["decoder_export"]
+    if not re.fullmatch(r"[0-9a-f]{64}", item["sha256"]) or type(item["size"]) is not int:
+        raise ValueError("Pin del decoder de la etapa 6 inválido")
+    return {"sha256": item["sha256"], "size": item["size"], "generation": item["generation"],
+            "identity_sha256": item["identity_sha256"]}
+
+
+def decoder_expectation(config, report):
+    """(sha256, size) the configured decoder file must match."""
+    if decoder_kind(config) == "stage6_a3_tuned":
+        pin = stage6_decoder_pin(config)
+        return pin["sha256"], pin["size"]
+    entry = report["checkpoints"]["best"]
+    return entry["sha256"], entry["bytes"]
 
 
 def resolve_path(value):
@@ -50,11 +78,15 @@ def load_demo_config(path=None, *, environ=None):
     for key, ceiling in (("max_points", 256), ("max_upload_mb", 128)):
         if type(config[key]) is not int or not 1 <= config[key] <= ceiling:
             raise ValueError(f"{key} fuera del rango permitido")
+    if decoder_kind(config) not in DECODER_KINDS:
+        raise ValueError("decoder_kind debe ser e2_best o stage6_a3_tuned")
     remote = [config.get(k) for k in ("decoder_repo_id", "decoder_revision", "decoder_filename")]
     if any(remote) and not all(remote):
         raise ValueError("Decoder remoto: indicar repo_id, revision y filename juntos")
     if all(remote) and not re.fullmatch(r"[0-9a-f]{40}", remote[1]):
         raise ValueError("La revisión HF del decoder debe ser un commit de 40 caracteres")
+    if decoder_kind(config) == "stage6_a3_tuned" and any(remote):
+        raise ValueError("a3_tuned solo se carga desde un archivo local verificado; no se aloja públicamente")
     if all(remote) and config.get("decoder_checkpoint_path"):
         raise ValueError("Elegir decoder local o remoto, no ambos")
     return config
@@ -110,13 +142,12 @@ def configured_decoder(config):
 def inspect_artifacts(config):
     """Read-only preflight; hashes local bytes but never deserializes or downloads."""
     report, params = artifact_contract(config)
-    result = {"mode": config["mode"], "run_id": report["run_id"],
+    result = {"mode": config["mode"], "run_id": report["run_id"], "decoder_kind": decoder_kind(config),
               "preprocessing_matches_report": True, "upper_dn": params["upper_dn"],
               "models_executed": False, "weights_deserialized": False}
     for arm, field, sha, size in (
         ("base", "base_checkpoint_path", report["model"]["checkpoint_sha256"], None),
-        ("decoder", "decoder_checkpoint_path", report["checkpoints"]["best"]["sha256"],
-         report["checkpoints"]["best"]["bytes"]),
+        ("decoder", "decoder_checkpoint_path", *decoder_expectation(config, report)),
     ):
         if config.get(field):
             verify_file(resolve_path(config[field]), sha, size)

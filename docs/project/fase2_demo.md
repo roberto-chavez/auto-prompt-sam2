@@ -163,3 +163,19 @@ La implementación usa la [API oficial del predictor SAM fijado](https://github.
 ## Evidencia revisada el 18 de noviembre
 
 Roberto ejecutó la ruta manual congelada en Tesla T4 y guardó una máscara de 512 × 512 con 23 252 positivos sobre Ghana_1033830. El ZIP, el JSON y el notebook ejecutado concuerdan. La [auditoría y el notebook](evidence/e3/demo_20261111_roberto/README.md) detallan el alcance. La validación interactiva de Gradio, el decoder ajustado y la integración de prompts automáticos continúan pendientes.
+
+## Decoder ajustado de la demo: `a3_tuned` (decisión 2026-11-18)
+
+`configs/demo.json` fija `"decoder_kind": "stage6_a3_tuned"`: el brazo ajustado es el decoder `a3_tuned` del régimen **official**, el mismo que evaluó la etapa 8, y no el `best` de E2 (`DEMO_DECODER_KIND=e2_best` lo restaura).
+
+| Campo | Valor |
+|---|---|
+| Ruta en Drive (store) | `regimes/official/stage6/0f8f08fb38e4e459203d37c4d86138a9273ac31f8090d2d1d97278cf98288904/decoder_export/20261101T231354388506Z_175b8b784023/payload` (+ `COMPLETE.json` en la misma carpeta) |
+| SHA-256 del `payload` | `ca639740af32dc23b41932d6d3f17426b7b2e2d6d40394ef3fc51b63766bf55a` |
+| Tamaño | 16,908,153 bytes |
+| Origen del pin | `configs/stage7_dependencies.json` (`stage6.official.artifacts.decoder_export`), el mismo que usan `run_stage7.py` y `run_stage8.py` |
+| Verificación | `COMPLETE.json` de Drive comparado con el pin (sha256, size, generation, identity_sha256, identity); hash del `payload` confirmado manualmente por el usuario el 2026-11-18 |
+
+- Solo se carga desde un archivo **local** (`DEMO_DECODER_CHECKPOINT`, p. ej. copia desde Drive en Colab); el código rechaza decoder remoto con este tipo y verifica tamaño y SHA-256 antes de deserializar (`weights_only=True`). No se aloja públicamente mientras la licencia de Sen1Floods11 siga pendiente.
+- Se ajustó con puntos **automáticos**; con clics manuales **no está evaluado**. La interfaz lo indica.
+- Estado: código y pruebas sintéticas (`tests/demo`); la carga real y la comparación en GPU siguen **pendientes**.

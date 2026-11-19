@@ -6,8 +6,8 @@ import threading
 
 import numpy as np
 
-from .demo_config import (artifact_contract, configured_decoder, require_remote_runtime,
-                          resolve_path, verify_file)
+from .demo_config import (artifact_contract, configured_decoder, decoder_expectation, decoder_kind,
+                          require_remote_runtime, resolve_path, stage6_decoder_pin, verify_file)
 from .demo_images import validate_points
 from .sam_adapter import select_multimask
 
@@ -25,6 +25,17 @@ def best_decoder_state(payload, report):
     if not best["state"]:
         raise ValueError("El decoder está vacío")
     return best["state"]
+
+
+def stage6_decoder_state(payload):
+    """Stage-6 `decoder_export`: a plain mask-decoder state_dict of tensors (a3_tuned)."""
+    if not isinstance(payload, dict) or not payload:
+        raise ValueError("El payload de la etapa 6 debe ser un state_dict no vacío")
+    if "best" in payload or "config_sha256" in payload:
+        raise ValueError("Este es un payload E2; usar decoder_kind=e2_best")
+    if not all(isinstance(k, str) and hasattr(v, "shape") and hasattr(v, "dtype") for k, v in payload.items()):
+        raise ValueError("El state_dict contiene entradas que no son tensores")
+    return payload
 
 
 def predict_manual(predictor, image, points):
@@ -62,8 +73,9 @@ class DemoBackend:
             local = config.get("decoder_checkpoint_path")
             repo, revision, filename = (config.get(k) for k in
                                         ("decoder_repo_id", "decoder_revision", "decoder_filename"))
-            entry = report["checkpoints"]["best"]
-            sha, size = entry["sha256"], entry["bytes"]
+            sha, size = decoder_expectation(config, report)
+            if decoder_kind(config) == "stage6_a3_tuned" and not local:
+                raise FileNotFoundError("a3_tuned requiere decoder_checkpoint_path local (Drive/Colab); sin descarga remota")
         if local:
             path = resolve_path(local)
         else:
@@ -90,7 +102,8 @@ class DemoBackend:
         state = None
         if arm == "tuned":
             payload = torch.load(self._checkpoint("tuned"), map_location="cpu", weights_only=True)
-            state = best_decoder_state(payload, self.report)
+            state = (stage6_decoder_state(payload) if decoder_kind(self.config) == "stage6_a3_tuned"
+                     else best_decoder_state(payload, self.report))
         # Separate model instances keep the baseline immutable after decoder loading.
         model = build_sam2(self.report["identity"]["model"]["architecture_config"],
                            str(base_path), device="cuda", mode="eval", apply_postprocessing=False)
@@ -119,7 +132,12 @@ class DemoBackend:
                 elif compare:
                     try:
                         tuned = predict_manual(self._predictor("tuned"), image, points)
-                        status = f"Comparación con best, época {self.report['checkpoints']['best']['epoch']}"
+                        if decoder_kind(self.config) == "stage6_a3_tuned":
+                            status = ("Comparación con a3_tuned (etapa 6/7, régimen official, generación "
+                                      f"{stage6_decoder_pin()['generation']}); ajustado con puntos automáticos, "
+                                      "no evaluado con clics manuales")
+                        else:
+                            status = f"Comparación con best, época {self.report['checkpoints']['best']['epoch']}"
                     except Exception:
                         LOG.exception("No se pudo ejecutar el decoder ajustado")
                         status = "Decoder ajustado no disponible o inválido; revisar configuración y logs del servidor"

@@ -4,7 +4,7 @@ import logging
 import gradio as gr
 
 from .demo_backend import DemoBackend
-from .demo_config import artifact_contract, configured_decoder, load_demo_config
+from .demo_config import artifact_contract, configured_decoder, decoder_kind, load_demo_config, stage6_decoder_pin
 from .demo_images import LAYOUTS, draw_points, load_image, validate_points
 
 LOG = logging.getLogger(__name__)
@@ -66,7 +66,9 @@ class DemoController:
             frozen, tuned = result["frozen"], result["tuned"]
             metadata = {"input": image.metadata, "points_xy_label": points,
                         "policy": "all_manual_points_in_one_object_prompt",
-                        "run_id_decoder": self.report["run_id"] if tuned is not None else None,
+                        "run_id_decoder": ((stage6_decoder_pin()["generation"] if decoder_kind(self.config) == "stage6_a3_tuned"
+                                           else self.report["run_id"]) if tuned is not None else None),
+                        "decoder_kind": decoder_kind(self.config),
                         "note": "Scores predichos por SAM; no son IoU medida ni métricas de agua",
                         "frozen_selection": frozen["selection"],
                         "tuned_selection": tuned["selection"] if tuned is not None else None}
@@ -90,6 +92,9 @@ def build_demo(config=None):
                  "**Inferencia GPU bajo demanda.** Los pesos se cargan al pulsar Segmentar.")
     decoder_note = ("Decoder configurado; integridad y carga pendientes hasta la primera inferencia."
                     if configured_decoder(config) else "Decoder ajustado pendiente de incorporar.")
+    if decoder_kind(config) == "stage6_a3_tuned":
+        decoder_note += (" Brazo ajustado = a3_tuned (etapa 6/7, régimen official), el decoder evaluado en la etapa 8; "
+                         "se ajustó con puntos automáticos y **no está evaluado con clics manuales**.")
     with gr.Blocks(title="El costo del prompt · Sentinel-2", analytics_enabled=False,
                    delete_cache=(3600, 3600)) as demo:
         gr.Markdown("# El costo del prompt\nSegmentación asistida de agua superficial · SAM 2.1 tiny")
