@@ -12,7 +12,7 @@ El protocolo se congeló antes de abrir los conjuntos reservados: hash canónico
 
 La ejecución ocurrió en Colab T4 el 18 de noviembre. El resumen público [`stage8_results_summary.json`](evidence/e3/stage8_results_summary.json) registra estado `complete`, el commit fuente `0cd7b39c0564df2c31322eaac06fa4a866f4de37`, el hash del protocolo, el hash del par de etapa 7 y el SHA-256 esperado del reporte íntegro: `aa95eee0fb110e4e94d39728d5d86ac1fcba06881fa8ea6c940e2c4e4e771f76`.
 
-El reporte íntegro, notebook ejecutado y log se ubicaron en Drive según la ruta incluida en el resumen. No están archivados en este clon; el conector de Drive no devolvió esos archivos en esta sesión, por lo que no se volvió a descargar ni recalcular el hash. No se afirma una verificación independiente del reporte íntegro. La tabla de resultados agregados que sigue se basa en el resumen publicado.
+El reporte íntegro y el log se recuperaron de Drive el 2026-11-18 (ver «Verificación del reporte»); el notebook ejecutado no se encontró en Drive. No están archivados en este clon; el conector de Drive no devolvió esos archivos en esta sesión, por lo que no se volvió a descargar ni recalcular el hash. No se afirma una verificación independiente del reporte íntegro. La tabla de resultados agregados que sigue se basa en el resumen publicado.
 
 ## Resultados agregados
 
@@ -36,7 +36,7 @@ Entre el commit de congelamiento `3b03524` y el commit fuente de ejecución `0cd
 
 Estos cambios no modifican filas, umbrales, selección ni pesos del protocolo; sí cambian qué payloads de caché se verifican y cómo se toleran saltos de línea. Debe citarse esta diferencia al describir la procedencia de la ejecución.
 
-El registro de congelamiento declara `protocol_file_sha256=53cc5741…`; los bytes actuales y los del protocolo versionado en `3b03524` dan `522e8695…`, mientras que el hash canónico declarado (`0ccacde9…`) sí se reproduce. La diferencia de hash de archivo **no queda explicada por CRLF/LF** al recalcular los bytes disponibles. Se conserva como discrepancia de procedencia sin atribuirle causa no verificada.
+El registro de congelamiento declara `protocol_file_sha256=53cc5741…`; los bytes versionados en `3b03524` y los actuales dan `522e8695…`, mientras que el hash canónico declarado (`0ccacde9…`) sí se reproduce. **Causa confirmada (2026-11-18):** `53cc5741…` es exactamente el SHA-256 del mismo archivo con finales de línea CRLF (el congelamiento se calculó sobre una copia de trabajo de Windows); `522e8695…` es el de la versión LF almacenada en Git (`.gitattributes`: `* text=auto`). El contenido es idéntico salvo los saltos de línea. Lo mismo ocurre con `human_review_receipt_sha256=41d6ac87…`: es el hash de `human_review_stage7_user_20261118.json` con CRLF (el archivo LF versionado da `50194ab7…`). Detalle y comandos en [`stage8_hash_reconciliation_20261118.json`](evidence/e3/stage8_hash_reconciliation_20261118.json).
 
 La auditoría de etapa 7 registra los ZIP finales con hashes `df51ddc5…` (official) y `89c24a9a…` (leave_paraguay_out). Hubo generaciones posteriores a la auditoría anterior; para reproducir, usa el par más reciente nombrado en `revision_stage7_20261118.json`, no mezcles generaciones.
 
@@ -48,6 +48,13 @@ Una semilla; checkpoint seleccionado con validación; reservados pequeños; los 
 
 ## Pendientes de archivo y análisis opcional
 
-- El notebook ejecutado de etapa 8, el log y `stage8_report.json` completo están en Drive; el reporte debe verificarse localmente con `python scripts/verify_stage8_report.py <ruta-a-stage8_report.json>`. No se incluyen en este commit porque el acceso de Drive no devolvió los archivos.
+- El reporte completo (verificado, ver arriba) y el notebook ejecutado, si se recupera, viven en Drive; el reporte se re-verifica con `python scripts/verify_stage8_report.py <ruta-a-stage8_report.json>`. El log está archivado en este repositorio; el reporte no, por contener resultados por chip con licencia pendiente.
 - No se hizo análisis visual de casos de mejora y error. Es opcional; no publicar ejemplos de chips hasta guardar el permiso docente y aclarar su alcance para derivados.
 - Más semillas y ampliar los reservados son mejoras científicas, no requisitos confirmados del PDF.
+
+## Verificación del reporte (2026-11-18)
+
+- `stage8_report.json` (875,056 bytes, Drive `1_xgdF0-Tz2l4AlxKoCKaAhV2rqW_2D1V`) descargado y comprobado con `python scripts/verify_stage8_report.py`: SHA-256 `aa95eee0fb110e4e94d39728d5d86ac1fcba06881fa8ea6c940e2c4e4e771f76` = esperado → **verificado**. Contiene `status: complete`, `protocol_sha256 0ccacde9…`, `source_commit 0cd7b39…`, `stage7_pair_sha256 996b3587…`. El reporte completo no se versiona (contiene resultados por chip mientras la licencia siga pendiente).
+- Log de la ejecución final (`stage8_20261118T235002Z.log`): archivado en [`evidence/e3/stage8_run_log_20261118T235002Z.log`](evidence/e3/stage8_run_log_20261118T235002Z.log) (SHA-256 `67662cb0…f37f`); no contiene datos del dataset, solo progreso por conjunto y fila (90/15/76/67 chips × 4 filas) y las identidades de ejecución. Los otros logs de Drive de esa fecha están vacíos o son intentos truncados (0–721 bytes).
+- **Notebook ejecutado de etapa 8: no existe en Drive** (búsqueda por título y `.ipynb` sin resultados); `notebooks/08_evaluacion_final_geografica.ipynb` en Git no tiene salidas. La evidencia de ejecución son el log, el reporte verificado y el resumen. Si el notebook sigue abierto en Colab, descargarlo con las salidas y añadirlo.
+- `code_commit.txt` en Drive (`0cd7b39…`) fue modificado a las 00:33Z, después de la ejecución (23:50Z); la identidad de código de la ejecución consta además dentro del reporte (`run_identity.source_commit`).

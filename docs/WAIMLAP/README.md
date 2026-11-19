@@ -10,4 +10,4 @@ Actualización del 18 de noviembre de 2026.
 
 El póster final incorpora resultados de las etapas 5–8. Distingue la validación de desarrollo de las pruebas geográficas reservadas en Bolivia y Paraguay, reporta IoU y los intervalos bootstrap pareados, y declara la selección de checkpoint en validación y el uso de una sola semilla. La demo verificada usa puntos manuales y SAM congelado.
 
-La retroalimentación del workshop sigue pendiente. El profesor confirmó los términos de uso de Sen1Floods11; el póster no incluye raster ni máscaras originales del dataset. Los raster y la máscara original de la demo permanecen en el Drive privado. El informe enlazado contiene los resultados actuales.
+La retroalimentación del workshop sigue pendiente. El usuario informa que el profesor confirmó los términos de uso de Sen1Floods11 (sin confirmación archivada; véase `docs/project/accesos_y_licencias.md`); el póster no incluye raster ni máscaras originales del dataset. Los raster y la máscara original de la demo permanecen en el Drive privado. El informe enlazado contiene los resultados actuales.

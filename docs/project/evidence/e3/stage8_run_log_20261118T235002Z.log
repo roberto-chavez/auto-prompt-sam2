@@ -1,0 +1,125 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+official test_seen a1_assisted 1 / 90
+official test_seen a1_assisted 11 / 90
+official test_seen a1_assisted 21 / 90
+official test_seen a1_assisted 31 / 90
+official test_seen a1_assisted 41 / 90
+official test_seen a1_assisted 51 / 90
+official test_seen a1_assisted 61 / 90
+official test_seen a1_assisted 71 / 90
+official test_seen a1_assisted 81 / 90
+official test_seen a1_points 1 / 90
+official test_seen a1_points 11 / 90
+official test_seen a1_points 21 / 90
+official test_seen a1_points 31 / 90
+official test_seen a1_points 41 / 90
+official test_seen a1_points 51 / 90
+official test_seen a1_points 61 / 90
+official test_seen a1_points 71 / 90
+official test_seen a1_points 81 / 90
+official test_seen a3_frozen 1 / 90
+official test_seen a3_frozen 11 / 90
+official test_seen a3_frozen 21 / 90
+official test_seen a3_frozen 31 / 90
+official test_seen a3_frozen 41 / 90
+official test_seen a3_frozen 51 / 90
+official test_seen a3_frozen 61 / 90
+official test_seen a3_frozen 71 / 90
+official test_seen a3_frozen 81 / 90
+official test_seen a3_tuned 1 / 90
+official test_seen a3_tuned 11 / 90
+official test_seen a3_tuned 21 / 90
+official test_seen a3_tuned 31 / 90
+official test_seen a3_tuned 41 / 90
+official test_seen a3_tuned 51 / 90
+official test_seen a3_tuned 61 / 90
+official test_seen a3_tuned 71 / 90
+official test_seen a3_tuned 81 / 90
+official bolivia_heldout a1_assisted 1 / 15
+official bolivia_heldout a1_assisted 11 / 15
+official bolivia_heldout a1_points 1 / 15
+official bolivia_heldout a1_points 11 / 15
+official bolivia_heldout a3_frozen 1 / 15
+official bolivia_heldout a3_frozen 11 / 15
+official bolivia_heldout a3_tuned 1 / 15
+official bolivia_heldout a3_tuned 11 / 15
+leave_paraguay_out test_seen a1_assisted 1 / 76
+leave_paraguay_out test_seen a1_assisted 11 / 76
+leave_paraguay_out test_seen a1_assisted 21 / 76
+leave_paraguay_out test_seen a1_assisted 31 / 76
+leave_paraguay_out test_seen a1_assisted 41 / 76
+leave_paraguay_out test_seen a1_assisted 51 / 76
+leave_paraguay_out test_seen a1_assisted 61 / 76
+leave_paraguay_out test_seen a1_assisted 71 / 76
+leave_paraguay_out test_seen a1_points 1 / 76
+leave_paraguay_out test_seen a1_points 11 / 76
+leave_paraguay_out test_seen a1_points 21 / 76
+leave_paraguay_out test_seen a1_points 31 / 76
+leave_paraguay_out test_seen a1_points 41 / 76
+leave_paraguay_out test_seen a1_points 51 / 76
+leave_paraguay_out test_seen a1_points 61 / 76
+leave_paraguay_out test_seen a1_points 71 / 76
+leave_paraguay_out test_seen a3_frozen 1 / 76
+leave_paraguay_out test_seen a3_frozen 11 / 76
+leave_paraguay_out test_seen a3_frozen 21 / 76
+leave_paraguay_out test_seen a3_frozen 31 / 76
+leave_paraguay_out test_seen a3_frozen 41 / 76
+leave_paraguay_out test_seen a3_frozen 51 / 76
+leave_paraguay_out test_seen a3_frozen 61 / 76
+leave_paraguay_out test_seen a3_frozen 71 / 76
+leave_paraguay_out test_seen a3_tuned 1 / 76
+leave_paraguay_out test_seen a3_tuned 11 / 76
+leave_paraguay_out test_seen a3_tuned 21 / 76
+leave_paraguay_out test_seen a3_tuned 31 / 76
+leave_paraguay_out test_seen a3_tuned 41 / 76
+leave_paraguay_out test_seen a3_tuned 51 / 76
+leave_paraguay_out test_seen a3_tuned 61 / 76
+leave_paraguay_out test_seen a3_tuned 71 / 76
+leave_paraguay_out paraguay_heldout a1_assisted 1 / 67
+leave_paraguay_out paraguay_heldout a1_assisted 11 / 67
+leave_paraguay_out paraguay_heldout a1_assisted 21 / 67
+leave_paraguay_out paraguay_heldout a1_assisted 31 / 67
+leave_paraguay_out paraguay_heldout a1_assisted 41 / 67
+leave_paraguay_out paraguay_heldout a1_assisted 51 / 67
+leave_paraguay_out paraguay_heldout a1_assisted 61 / 67
+leave_paraguay_out paraguay_heldout a1_points 1 / 67
+leave_paraguay_out paraguay_heldout a1_points 11 / 67
+leave_paraguay_out paraguay_heldout a1_points 21 / 67
+leave_paraguay_out paraguay_heldout a1_points 31 / 67
+leave_paraguay_out paraguay_heldout a1_points 41 / 67
+leave_paraguay_out paraguay_heldout a1_points 51 / 67
+leave_paraguay_out paraguay_heldout a1_points 61 / 67
+leave_paraguay_out paraguay_heldout a3_frozen 1 / 67
+leave_paraguay_out paraguay_heldout a3_frozen 11 / 67
+leave_paraguay_out paraguay_heldout a3_frozen 21 / 67
+leave_paraguay_out paraguay_heldout a3_frozen 31 / 67
+leave_paraguay_out paraguay_heldout a3_frozen 41 / 67
+leave_paraguay_out paraguay_heldout a3_frozen 51 / 67
+leave_paraguay_out paraguay_heldout a3_frozen 61 / 67
+leave_paraguay_out paraguay_heldout a3_tuned 1 / 67
+leave_paraguay_out paraguay_heldout a3_tuned 11 / 67
+leave_paraguay_out paraguay_heldout a3_tuned 21 / 67
+leave_paraguay_out paraguay_heldout a3_tuned 31 / 67
+leave_paraguay_out paraguay_heldout a3_tuned 41 / 67
+leave_paraguay_out paraguay_heldout a3_tuned 51 / 67
+leave_paraguay_out paraguay_heldout a3_tuned 61 / 67
+{
+  "stage8_report": "/content/drive/.shortcut-targets-by-id/13KHSjT7UTgWPAsuTA3jE80_ImA424Gq_/auto-prompt-sam2/stage8/c3ddafe753c41e94f8c69de6ed6947aa9f68ec5b8c5f9086c3ae99909bbe0c5c/stage8_report.json",
+  "protocol_sha256": "0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681",
+  "run_identity": {
+    "stage": "phase1_stage8",
+    "protocol_sha256": "0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681",
+    "stage7_pair_sha256": "996b35878997ebcf5e4662a6e1800056964d73f6dc6ee85225d6302bb00eddcf",
+    "source_commit": "0cd7b39c0564df2c31322eaac06fa4a866f4de37"
+  },
+  "result_counts": {
+    "official": {
+      "test_seen": 90,
+      "bolivia_heldout": 15
+    },
+    "leave_paraguay_out": {
+      "test_seen": 76,
+      "paraguay_heldout": 67
+    }
+  }
+}
