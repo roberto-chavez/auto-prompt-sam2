@@ -13,7 +13,7 @@ app_port: 7860
 
 Proyecto de **Deep Learning (1INF52), semestre 2026-2**, Ingeniería Informática, **Pontificia Universidad Católica del Perú (PUCP)**, con materiales para WAIMLAP 2026.
 
-> **Estado al 18 de noviembre de 2026: etapas 5–8 ejecutadas y backend manual de demo verificado con pesos reales.** Se conservan los resultados del equipo y los notebooks `E2_01` y `E2_02`. Roberto ejecutó SAM 2.1 tiny congelado en Tesla T4 sobre un chip de validación. La interfaz completa de Gradio y su despliegue siguen pendientes. [Guía de la demo y archivos que pedir al compañero](docs/project/fase2_demo.md).
+> **Estado al 19 de noviembre de 2026: etapas 5–8 ejecutadas y backend manual verificado con pesos reales.** Se integró en el código la ruta DINOv3→puntos→SAM y el brazo `a3_tuned` oficial en la UI de Gradio. La validación interactiva de esa integración sigue pendiente por falta de GPU disponible en Colab. El notebook de verificación está preparado y no ejecutado: [E3 demo automática y a3_tuned](notebooks/E3_demo_automatica_a3_tuned_colab.ipynb).
 
 El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 conserva la intervención preliminar asistida. Las etapas 5–7 añaden la sonda DINOv3, los puntos automáticos, el ajuste del decoder y las ablaciones A1–A3. La etapa 8 ejecutó la evaluación geográfica con el protocolo congelado; el resumen de métricas está en la documentación E3, mientras los artefactos por chip permanecen privados en Drive.
 
@@ -24,17 +24,17 @@ El proyecto evalúa prompts automáticos derivados de DINOv3 para SAM 2.1. E2 co
 - **Estado, límites y compuerta de etapa 8:** [`docs/project/e3_estado.md`](docs/project/e3_estado.md).
 - **Resultados consolidados (validación, A1–A3 incluidos):** [`consolidated_results.md`](docs/project/evidence/e3/consolidated_results.md); regenerar con `python scripts/e3_collect_results.py`.
 - **Notebook etapa 7 ejecutado:** [`notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb`](notebooks/07_ablaciones_y_seleccion_ejecutado.ipynb); métricas extraídas en `docs/project/evidence/e3/stage7_metrics_from_notebook.json`.
-- **Demo:** backend manual con pesos reales verificado en T4 sobre Ghana_1033830. [Notebook ejecutado, JSON y auditoría](docs/project/evidence/e3/demo_20261111_roberto/README.md). La interfaz interactiva completa sigue pendiente.
+- **Demo:** backend manual con pesos reales verificado en T4 sobre Ghana_1033830 ([evidencia](docs/project/evidence/e3/demo_20261111_roberto/README.md)). El código ya integra DINOv3→puntos→SAM y `a3_tuned` en Gradio; falta ejecutar y verificar la UI de punta a punta en GPU ([notebook preparado](notebooks/E3_demo_automatica_a3_tuned_colab.ipynb)).
 - **Dataset:** el usuario informa que el profesor confirmó los términos para el curso; no está archivada la confirmación escrita ni el alcance de redistribución. Detalle en [`accesos_y_licencias.md`](docs/project/accesos_y_licencias.md).
 - **Recuperación verificada el 18 de noviembre:** [notebook ejecutado](docs/project/evidence/e3/recovery_20261118.ipynb) y [auditoría final](docs/project/evidence/e3/revision_stage7_20261118.json). Ambos regímenes recuperados en un runtime distinto y 2 132 máscaras auditadas sin fallos.
 - **Etapa 8:** revisión humana confirmada; evaluación ejecutada en Colab T4 con protocolo congelado (SHA-256 `0ccacde9dbf259d1d4403085e331ef34b93fc2381291638d69cd14a0c3cbc681`). El reporte completo en Drive fue verificado el 18 de noviembre contra el SHA-256 esperado `aa95eee0…771f76`; por contener resultados por chip no se versiona. El resumen agregado seguro para publicar está en [`stage8_results_summary.json`](docs/project/evidence/e3/stage8_results_summary.json). El decoder ajustado mejoró +11.9 pp frente al congelado en Paraguay reservado (IC bootstrap pareado 95% [+6.4, +17.8]); en Bolivia el efecto fue +2.5 pp (IC [−4.7, +14.3]). El efecto de los puntos automáticos varía: +30.3 pp frente al asistido en Bolivia y −4.5 pp en Paraguay. No se generaliza a otros países.
-- **Pendiente:** probar la UI Gradio de punta a punta, cargar `a3_tuned` en la demo con GPU (cargador listo, ver `fase2_demo.md`), conectar el flujo automático DINOv3→SAM y añadir la retroalimentación del workshop. Los artefactos por chip de E8 siguen en Drive, no en Git. [Preflight y revisión humana](docs/project/evidence/e3/revision_humana_stage7_para_stage8.md); [conteos reales de puntos](docs/project/evidence/e3/e3_point_budget.json).
+- **Pendiente:** validar en GPU la UI de Gradio con modelos reales, incluyendo el flujo automático y `a3_tuned`, y añadir la retroalimentación del workshop. La GPU T4 de Colab no estuvo disponible por límite de uso. El notebook no abre túnel público; requiere el secreto `HF_TOKEN` y los artefactos privados de Drive. Los artefactos por chip de E8 siguen en Drive, no en Git. [Preflight y revisión humana](docs/project/evidence/e3/revision_humana_stage7_para_stage8.md); [conteos reales de puntos](docs/project/evidence/e3/e3_point_budget.json).
 
 ## Probar la demo
 
-La demo permite cargar una imagen y colocar **puntos positivos sobre agua y negativos sobre fondo**. Con inferencia habilitada, SAM usa esas indicaciones para delimitar la región y mostrar su máscara. La comparación entrega la misma imagen y los mismos puntos a SAM original y al modelo con el decoder ajustado.
+La demo permite cargar una imagen y elegir entre **puntos manuales** o **puntos automáticos DINOv3**. SAM usa esos puntos para delimitar el agua; opcionalmente compara SAM congelado con el decoder ajustado `a3_tuned`. La interfaz está integrada en código, pero esa ruta completa aún no está verificada con pesos reales.
 
-**El modo predeterminado es `preview`: “Segmentar” está deshabilitado.** En la PC se puede revisar la carga y los puntos; el backend manual ya produjo una máscara con pesos reales en T4. No hay URL de demo desplegada; publicar una es opcional si la demostración se hace en Colab. Para activar el brazo original se necesita GPU en Colab/Spaces y SAM base, que puede descargarse públicamente. Para comparar hace falta además el `best/payload` del compañero. Recibir ese archivo no activa inferencia en la PC.
+**El modo predeterminado es `preview`: “Segmentar” está deshabilitado.** La inferencia está limitada por el código a Colab o Hugging Face Spaces con GPU; la ejecución local en Windows no está soportada. El backend manual ya produjo una máscara con pesos reales en T4. Para verificar el flujo automático hacen falta GPU, acceso autorizado a DINOv3 y los artefactos privados de Drive. No hay URL pública desplegada.
 
 Desde la raíz del repositorio, Python 3.10 o superior, en PowerShell:
 
@@ -52,7 +52,7 @@ python3 -m venv .venv-demo
 .venv-demo/bin/python app.py
 ```
 
-Abrir [la interfaz local](http://127.0.0.1:7860). En **Automático (según extensión)** se reconocen PNG/JPEG y TIFF de Sen1Floods11; esa opción elige el formato del archivo, **no genera los puntos**.
+Abrir [la interfaz local](http://127.0.0.1:7860). El formato de archivo se elige en el selector de formato; la fuente de puntos se elige por separado entre Manual y Automático (DINOv3→SAM). El notebook de E3 prepara esa comprobación, todavía pendiente de ejecución en GPU.
 
 | Entrada | Tratamiento |
 | --- | --- |

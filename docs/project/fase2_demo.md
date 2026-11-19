@@ -154,15 +154,13 @@ La validación local cubre RGB/B4-B3-B2, escala fija, nodata, dimensiones/tipos/
 
 La implementación usa la [API oficial del predictor SAM fijado](https://github.com/facebookresearch/sam2/blob/2b90b9f5ceec907a1c18123530e92e794ad901a4/sam2/sam2_image_predictor.py) y los [eventos de Gradio 6.31.0](https://github.com/gradio-app/gradio/blob/gradio%406.31.0/gradio/events.py). El estado de la revisión local y sus límites se registra en [validacion_fase2.md](validacion_fase2.md).
 
-## E3: verificación con pesos reales y flujo automático (2026-11-11)
+## E3: integración automática y verificación de Gradio (2026-11-19)
 
-**Alcance probado hasta ahora:** solo pruebas locales de interfaz (17). **La inferencia de punta a punta con pesos reales no se ha ejecutado** (sin GPU ni Hugging Face en el entorno de redacción; en Drive no existe `e3_demo_smoke.json`). Para ejecutarla: abrir `notebooks/E3_demo_verificacion_colab.ipynb` en Colab (GPU T4), ejecutar las celdas en orden y descargar `/content/e3_demo_smoke.json` y `/content/e3_demo_mask.png`. Modo cubierto por ese notebook: **puntos manuales con SAM 2.1 tiny congelado**. No guardar la visualización en GitHub (licencia de Sen1Floods11 pendiente).
+El backend y la UI ahora conectan dos estrategias: puntos manuales, y puntos automáticos de DINOv3→sonda de etapa 5→SAM. La comparación opcional usa el decoder `a3_tuned` oficial fijado por etapa 7. El cargador verifica la identidad y el hash del bundle automático y del checkpoint ajustado. La UI desactiva clics cuando está seleccionado el modo automático y declara que `a3_tuned` no se evaluó con clics manuales.
 
-**Cómo conectar el flujo automático (no implementado):** en `demo_backend.py`, añadir `segment_automatic(image)` que (1) cargue DINOv3 con `features.load_frozen_dino` y obtenga la rejilla de características, (2) calcule la probabilidad con `probe.probabilities` y el bundle de sonda del régimen (`official_complete_bundle`, generado en la etapa 5, almacenado en Drive), (3) llame a `automatic_prompts.infer_points(predictor, image, probability, valid, policy, positive_threshold)` con la política y el umbral fijados (`configs/prompts.yaml`, C=0.1, umbral 0.7) y (4) devuelva la máscara. Requisitos: `HF_TOKEN` (DINOv3 gated), el bundle de sonda y el decoder `a3_tuned` de la etapa 6 (de Drive). Debe probarse en Colab contra la fila `a1_points` de la etapa 7 (mismo chip, mismo IoU).
+**Estado:** integración de código preparada; **no se ejecutó la prueba de punta a punta**. Colab denegó la T4 por límite de uso. La inferencia requiere Colab o Hugging Face Spaces con GPU, el secreto `HF_TOKEN` para DINOv3 gated y los artefactos del proyecto en Drive. No se generó ni se necesita un enlace público de Gradio; el notebook usa el proxy privado autenticado de Colab. La UI y las máscaras permanecen sin evidencia real de esta corrida.
 
-## Evidencia revisada el 18 de noviembre
-
-Roberto ejecutó la ruta manual congelada en Tesla T4 y guardó una máscara de 512 × 512 con 23 252 positivos sobre Ghana_1033830. El ZIP, el JSON y el notebook ejecutado concuerdan. La [auditoría y el notebook](evidence/e3/demo_20261111_roberto/README.md) detallan el alcance. La validación interactiva de Gradio, el decoder ajustado y la integración de prompts automáticos continúan pendientes.
+Notebook preparado: [E3_demo_automatica_a3_tuned_colab.ipynb](../../notebooks/E3_demo_automatica_a3_tuned_colab.ipynb). Su código se fija al commit fuente y busca los insumos por las rutas de Drive enumeradas allí. El notebook acepta Python 3.12/3.13, pero aún requiere ejecución y revisión en GPU. La prueba anterior del backend manual congelado sobre Ghana_1033830 está documentada en [su auditoría](evidence/e3/demo_20261111_roberto/README.md).
 
 ## Decoder ajustado de la demo: `a3_tuned` (decisión 2026-11-18)
 
@@ -178,4 +176,4 @@ Roberto ejecutó la ruta manual congelada en Tesla T4 y guardó una máscara de 
 
 - Solo se carga desde un archivo **local** (`DEMO_DECODER_CHECKPOINT`, p. ej. copia desde Drive en Colab); el código rechaza decoder remoto con este tipo y verifica tamaño y SHA-256 antes de deserializar (`weights_only=True`). No se aloja públicamente mientras la licencia de Sen1Floods11 siga pendiente.
 - Se ajustó con puntos **automáticos**; con clics manuales **no está evaluado**. La interfaz lo indica.
-- Estado: código y pruebas sintéticas (`tests/demo`); la carga real y la comparación en GPU siguen **pendientes**.
+- Estado: cargador de `a3_tuned` e integración con la UI preparados; la carga real, el flujo automático y la comparación en GPU siguen **pendientes de verificación**.
