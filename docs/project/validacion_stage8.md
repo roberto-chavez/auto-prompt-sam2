@@ -12,7 +12,7 @@ El protocolo se congeló antes de abrir los conjuntos reservados: hash canónico
 
 La ejecución ocurrió en Colab T4 el 18 de noviembre. El resumen público [`stage8_results_summary.json`](evidence/e3/stage8_results_summary.json) registra estado `complete`, el commit fuente `0cd7b39c0564df2c31322eaac06fa4a866f4de37`, el hash del protocolo, el hash del par de etapa 7 y el SHA-256 esperado del reporte íntegro: `aa95eee0fb110e4e94d39728d5d86ac1fcba06881fa8ea6c940e2c4e4e771f76`.
 
-El reporte íntegro y el log se recuperaron de Drive el 2026-11-18 (ver «Verificación del reporte»); el notebook ejecutado no se encontró en Drive. No están archivados en este clon; el conector de Drive no devolvió esos archivos en esta sesión, por lo que no se volvió a descargar ni recalcular el hash. No se afirma una verificación independiente del reporte íntegro. La tabla de resultados agregados que sigue se basa en el resumen publicado.
+El reporte íntegro se recuperó de Drive el 2026-11-18 y su SHA-256 se verificó (ver «Verificación del reporte»); no se versiona porque contiene resultados por chip mientras la licencia siga pendiente. El log final también se recuperó de Drive y está archivado en este repositorio. El notebook ejecutado no se encontró en Drive; el notebook versionado no conserva salidas de ejecución. La tabla de resultados agregados que sigue se basa en el resumen publicado.
 
 ## Resultados agregados
 
